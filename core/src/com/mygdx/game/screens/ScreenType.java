@@ -1,0 +1,19 @@
+package com.mygdx.game.screens;
+
+import com.badlogic.gdx.Screen;
+
+public enum ScreenType {
+	GAME (MainGameScreen.class),
+	LOAD (LoadingScreen.class),
+	MENU (MainMenuScreen.class);
+	
+	private final Class<? extends AbstractScreen> screenClass;
+	
+	ScreenType (Class<? extends AbstractScreen> screenClass) {
+		this.screenClass = screenClass;
+	}
+	
+	public Class<? extends Screen> getScreenClass() {
+		return screenClass;
+	}
+}

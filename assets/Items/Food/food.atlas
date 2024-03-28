@@ -1,0 +1,166 @@
+food-0.png
+size: 32, 190
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Beaf
+  rotate: false
+  xy: 1, 91
+  size: 16, 15
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Calamari
+  rotate: false
+  xy: 1, 142
+  size: 15, 14
+  orig: 16, 16
+  offset: 1, 1
+  index: -1
+Fish
+  rotate: false
+  xy: 1, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+FortuneCookie
+  rotate: false
+  xy: 1, 174
+  size: 14, 14
+  orig: 16, 16
+  offset: 1, 1
+  index: -1
+Honey
+  rotate: true
+  xy: 1, 158
+  size: 14, 15
+  orig: 16, 16
+  offset: 1, 0
+  index: -1
+Noodle
+  rotate: false
+  xy: 1, 19
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Nut
+  rotate: false
+  xy: 1, 108
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: -1
+Nut2
+  rotate: false
+  xy: 1, 125
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: -1
+Octopus
+  rotate: false
+  xy: 1, 37
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Onigiri
+  rotate: true
+  xy: 19, 1
+  size: 15, 11
+  orig: 16, 16
+  offset: 0, 2
+  index: -1
+Seed1
+  rotate: false
+  xy: 19, 63
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Seed2
+  rotate: false
+  xy: 19, 73
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Seed3
+  rotate: false
+  xy: 19, 83
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+SeedBig1
+  rotate: false
+  xy: 19, 18
+  size: 10, 13
+  orig: 10, 13
+  offset: 0, 0
+  index: -1
+SeedBig2
+  rotate: false
+  xy: 19, 33
+  size: 10, 13
+  orig: 10, 13
+  offset: 0, 0
+  index: -1
+SeedBig3
+  rotate: false
+  xy: 19, 48
+  size: 10, 13
+  orig: 10, 13
+  offset: 0, 0
+  index: -1
+SeedLarge
+  rotate: true
+  xy: 18, 160
+  size: 14, 13
+  orig: 14, 13
+  offset: 0, 0
+  index: -1
+SeedLargeWhite
+  rotate: false
+  xy: 17, 176
+  size: 14, 13
+  orig: 14, 13
+  offset: 0, 0
+  index: -1
+Shrimp
+  rotate: false
+  xy: 1, 55
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Sushi
+  rotate: true
+  xy: 18, 126
+  size: 15, 13
+  orig: 16, 16
+  offset: 0, 1
+  index: -1
+Sushi2
+  rotate: true
+  xy: 18, 143
+  size: 15, 13
+  orig: 16, 16
+  offset: 0, 1
+  index: -1
+TeaLeaf
+  rotate: false
+  xy: 18, 108
+  size: 13, 16
+  orig: 16, 16
+  offset: 1, 0
+  index: -1
+Yakitori
+  rotate: false
+  xy: 1, 73
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1

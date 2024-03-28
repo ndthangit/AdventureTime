@@ -1,0 +1,61 @@
+dialog.png
+size: 1054, 62
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ChoiceBox
+  rotate: false
+  xy: 973, 19
+  size: 64, 20
+  orig: 64, 20
+  offset: 0, 0
+  index: -1
+DialogBox
+  rotate: false
+  xy: 319, 1
+  size: 300, 58
+  orig: 300, 58
+  offset: 0, 0
+  index: -1
+DialogBoxFaceset
+  rotate: false
+  xy: 621, 1
+  size: 300, 58
+  orig: 300, 58
+  offset: 0, 0
+  index: -1
+DialogInfo
+  rotate: false
+  xy: 973, 1
+  size: 80, 16
+  orig: 80, 16
+  offset: 0, 0
+  index: -1
+DialogueBoxSimple
+  rotate: false
+  xy: 1, 1
+  size: 316, 60
+  orig: 316, 60
+  offset: 0, 0
+  index: -1
+FacesetBox
+  rotate: false
+  xy: 923, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+NoButton
+  rotate: false
+  xy: 973, 41
+  size: 26, 16
+  orig: 26, 16
+  offset: 0, 0
+  index: -1
+YesButton
+  rotate: false
+  xy: 1001, 41
+  size: 26, 16
+  orig: 26, 16
+  offset: 0, 0
+  index: -1
