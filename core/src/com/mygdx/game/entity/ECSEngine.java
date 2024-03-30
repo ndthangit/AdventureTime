@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.entity.component.Box2DComponent;
 import com.mygdx.game.entity.component.PlayerComponent;
+import com.mygdx.game.entity.system.PlayerCameraSystem;
 import com.mygdx.game.entity.system.PlayerMovementSystem;
 
 public class ECSEngine extends PooledEngine{
@@ -32,6 +33,7 @@ public class ECSEngine extends PooledEngine{
 		fixtureDef = new FixtureDef();
 		
 		this.addSystem(new PlayerMovementSystem(game));
+		this.addSystem(new PlayerCameraSystem(game));
 	}
 	
 	
@@ -52,7 +54,7 @@ public class ECSEngine extends PooledEngine{
 		box2DComponent.height = height;
 		
 		PolygonShape pShape = new PolygonShape();
-		pShape.setAsBox(width * 0.25f, height * 0.25f);
+		pShape.setAsBox(width * 0.5f, height * 0.5f);
 		fixtureDef.filter.categoryBits = CoreGame.BIT_PLAYER;
 		fixtureDef.filter.maskBits = CoreGame.BIT_GROUND ;
 		fixtureDef.shape = pShape;
@@ -61,6 +63,7 @@ public class ECSEngine extends PooledEngine{
 		pShape.dispose();
 		player.add(box2DComponent);
 		this.addEntity(player);
+		
 	}
 	
 	private void resetBodiesAndFixtureDefinition() {

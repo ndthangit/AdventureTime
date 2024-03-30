@@ -38,6 +38,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.audio.AudioManager;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.input.InputManager;
+import com.mygdx.game.map.MapManager;
 import com.mygdx.game.screens.ScreenType;
 
 public class CoreGame extends Game {
@@ -49,17 +50,20 @@ public class CoreGame extends Game {
 	private OrthographicCamera gameCamera;
 	private FitViewport screenViewport;
 	
-	public static final float UNIT_SCALE = 1 / 32f;
+	public static final float UNIT_SCALE = 3 / 64f;
 	public static final short BIT_PLAYER = 1 << 0;
 	public static final short BIT_GROUND = 1 << 1;
+	
+	public static final BodyDef BODY_DEF = new BodyDef();
+	public static final FixtureDef FIXTURE_DEF = new FixtureDef();
 	
 	private World world;
 	private WorldContactListener worldContactListener;
 	private Box2DDebugRenderer box2DDebugRenderer;
 	
-	
 	private AssetManager assetManager;
 	private AudioManager audioManager;
+	private MapManager mapManager;
 	
 	private Stage stage;
 	private Skin skin;
@@ -68,6 +72,8 @@ public class CoreGame extends Game {
 	private InputManager inputManager;
 	
 	private ECSEngine ecsEngine;
+	
+	
 
 	@Override
 	public void create () {
@@ -90,6 +96,9 @@ public class CoreGame extends Game {
 		loadAsset.getGameAssetUI();
 		stage = new Stage(new FitViewport(1280, 720), spriteBatch);
 		
+		// map
+		mapManager = new MapManager(this);
+		
 		//audio
 		audioManager = new AudioManager(this);
 		
@@ -97,13 +106,14 @@ public class CoreGame extends Game {
 		inputManager = new InputManager();
 		Gdx.input.setInputProcessor(new InputMultiplexer(inputManager, stage));
 		
-		//entity
-		ecsEngine = new ECSEngine(this);
-		
 		//set first screen
 		gameCamera = new OrthographicCamera();
 		screenViewport = new FitViewport(16, 9, gameCamera);
 		screenCache = new EnumMap<ScreenType, Screen> (ScreenType.class);	
+		
+		//entity
+		ecsEngine = new ECSEngine(this);
+				
 		setScreen(ScreenType.LOAD);		
 	}
 
@@ -160,6 +170,10 @@ public class CoreGame extends Game {
 		return audioManager;
 	}
 
+	public MapManager getMapManager() {
+		return mapManager;
+	}
+
 	public void setScreen(final ScreenType screenType) {
 		final Screen screen = screenCache.get(screenType);
 		if (screen == null) {
@@ -177,6 +191,20 @@ public class CoreGame extends Game {
 			Gdx.app.debug(TAG, "Switching to screen: " + screenType);
 			setScreen(screen);
 		}
+	}
+	
+	public static void resetBodiesAndFixtureDefinition() {
+		BODY_DEF.gravityScale = 1;
+		BODY_DEF.type = BodyDef.BodyType.StaticBody;
+		BODY_DEF.fixedRotation = false;
+		
+		FIXTURE_DEF.isSensor = false;
+		FIXTURE_DEF.restitution = 0;
+		FIXTURE_DEF.friction = 0;
+		FIXTURE_DEF.density = 0;
+		FIXTURE_DEF.filter.categoryBits = 0x0001;
+		FIXTURE_DEF.filter.maskBits = -1;
+		FIXTURE_DEF.shape = null;
 	}
 	
 	@Override
