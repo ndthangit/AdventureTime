@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.entity.component.AnimationComponent;
 import com.mygdx.game.entity.component.Box2DComponent;
 import com.mygdx.game.entity.component.PlayerComponent;
 import com.mygdx.game.entity.system.PlayerCameraSystem;
@@ -52,6 +53,8 @@ public class ECSEngine extends PooledEngine{
 		box2DComponent.body.setUserData("PLAYER");
 		box2DComponent.width = width;
 		box2DComponent.height = height;
+//		box2DComponent.renderPosition.set(box2DComponent.body.getPosition());
+		box2DComponent.renderPosition = box2DComponent.body.getPosition();
 		
 		PolygonShape pShape = new PolygonShape();
 		pShape.setAsBox(width * 0.5f, height * 0.5f);
@@ -62,6 +65,10 @@ public class ECSEngine extends PooledEngine{
 		
 		pShape.dispose();
 		player.add(box2DComponent);
+		
+		//animation component
+		final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
+		player.add(animationComponent);
 		this.addEntity(player);
 		
 	}

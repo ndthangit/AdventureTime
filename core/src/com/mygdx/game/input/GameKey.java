@@ -9,8 +9,9 @@ public enum GameKey {
 	RIGHT(Input.Keys.D, Input.Keys.RIGHT), 
 	SELECT(Input.Keys.U, Input.Keys.NUM_4), 
 	ATTACK(Input.Keys.J, Input.Keys.NUM_1), 
-	BACK(Input.Keys.O, Input.Keys.NUM_6);
-	
+	BACK(Input.Keys.O, Input.Keys.NUM_6),
+	CHANGE_MAP_1 (Input.Keys.NUM_1),
+	CHANGE_MAP_2 (Input.Keys.NUM_2);
 	final int[] keyCode;
 	
 	GameKey(final int... keyCode) {

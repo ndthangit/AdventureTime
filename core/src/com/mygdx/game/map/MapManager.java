@@ -19,7 +19,7 @@ public class MapManager {
 	private final Array<Body> bodies;
 	private final AssetManager assetManager;
 	
-	private MapType currentMapType;
+	private MapType currentMapType, nextMapType;
 	private Map currentMap;
 	private final EnumMap<MapType, Map>mapCache;
 	private final Array<MapListener> listeners;
@@ -38,8 +38,12 @@ public class MapManager {
 		listeners.add(listener);
 	}
 	
-	public void setMap(final MapType type) {
-		if (currentMapType == type) {
+	public void loadMap() {
+		
+	}
+	
+	public void setMap() {
+		if (currentMapType == nextMapType) {
 			return;
 		}
 		
@@ -50,13 +54,14 @@ public class MapManager {
 		}
 		
 		// set new map
-		Gdx.app.debug(TAG, "Changing to map " + type);
-		currentMap = mapCache.get(type);
+		Gdx.app.debug(TAG, "Changing to map " + nextMapType);
+		currentMap = mapCache.get(nextMapType);
+		currentMapType = nextMapType;
+		final TiledMap tiledMap = assetManager.get(nextMapType.getFilePath(), TiledMap.class);
 		if (currentMap == null) {
-			Gdx.app.debug(TAG, "Creating new map of type" + type);
-			final TiledMap tiledMap = assetManager.get(type.getFilePath(), TiledMap.class);
+			Gdx.app.debug(TAG, "Creating new map of type" + nextMapType);
 			currentMap = new Map(tiledMap);
-			mapCache.put(type, currentMap);
+			mapCache.put(nextMapType, currentMap);
 		}
 		
 		// create map entities/bodies
@@ -97,6 +102,18 @@ public class MapManager {
 	
 	public Map getCurrentMap() {
 		return currentMap;
+	}
+
+	public MapType getCurrentMapType() {
+		return currentMapType;
+	}
+
+	public MapType getNextMapType() {
+		return nextMapType;
+	}
+
+	public void setNextMapType(MapType nextMapType) {
+		this.nextMapType = nextMapType;
 	}
 
 }

@@ -39,7 +39,9 @@ import com.mygdx.game.audio.AudioManager;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.input.InputManager;
 import com.mygdx.game.map.MapManager;
+import com.mygdx.game.map.MapType;
 import com.mygdx.game.screens.ScreenType;
+import com.mygdx.game.view.GameRenderer;
 
 public class CoreGame extends Game {
 	
@@ -50,7 +52,7 @@ public class CoreGame extends Game {
 	private OrthographicCamera gameCamera;
 	private FitViewport screenViewport;
 	
-	public static final float UNIT_SCALE = 3 / 64f;
+	public static final float UNIT_SCALE = 4 / 64f;
 	public static final short BIT_PLAYER = 1 << 0;
 	public static final short BIT_GROUND = 1 << 1;
 	
@@ -73,7 +75,7 @@ public class CoreGame extends Game {
 	
 	private ECSEngine ecsEngine;
 	
-	
+	private GameRenderer gameRenderer;
 
 	@Override
 	public void create () {
@@ -109,11 +111,16 @@ public class CoreGame extends Game {
 		//set first screen
 		gameCamera = new OrthographicCamera();
 		screenViewport = new FitViewport(16, 9, gameCamera);
-		screenCache = new EnumMap<ScreenType, Screen> (ScreenType.class);	
+			
 		
 		//entity
 		ecsEngine = new ECSEngine(this);
-				
+		
+		//gamerenderer
+		gameRenderer = new GameRenderer(this);
+		
+		screenCache = new EnumMap<ScreenType, Screen> (ScreenType.class);		
+		mapManager.setNextMapType(MapType.MAP_1);
 		setScreen(ScreenType.LOAD);		
 	}
 
@@ -211,6 +218,7 @@ public class CoreGame extends Game {
 	public void render()  {
 		super.render();
 		ecsEngine.update(Gdx.graphics.getDeltaTime());
+		gameRenderer.render(Gdx.graphics.getDeltaTime());
 		stage.getViewport().apply();
 		stage.act();
 		stage.draw();

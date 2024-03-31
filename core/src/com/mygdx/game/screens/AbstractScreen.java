@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.audio.AudioManager;
 import com.mygdx.game.input.KeyInputListener;
+import com.mygdx.game.map.MapManager;
 import com.mygdx.game.input.InputManager;
 
 public abstract class AbstractScreen<T extends Table> implements Screen, KeyInputListener {
@@ -23,6 +24,7 @@ public abstract class AbstractScreen<T extends Table> implements Screen, KeyInpu
 	protected T screenUI;
 	protected InputManager inputManager;
 	protected AudioManager audioManager;
+	protected MapManager mapManager;
 	
 	public AbstractScreen(final CoreGame context, Skin skin) {
 		this.game = context;
@@ -30,7 +32,7 @@ public abstract class AbstractScreen<T extends Table> implements Screen, KeyInpu
 		world = context.getWorld();
 		box2DDebugRenderer = context.getBox2DDebugRenderer();
 		inputManager = game.getInputManager();
-		
+		mapManager = game.getMapManager();
 		
 		stage = context.getStage();
 		this.screenUI = (T) getscreenUI(skin);

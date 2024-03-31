@@ -8,6 +8,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -29,8 +30,10 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 		super(game, game.getLoadAsset().getloadingSkin());
 		this.assetManager = game.getAssetManager();
 		this.loadAsset = game.getLoadAsset();
+		this.mapManager = game.getMapManager();
 		
-		assetManager.load("maps/Demo-abandon-village-map.tmx", TiledMap.class);
+		//load characters and effects
+		assetManager.load("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", TextureAtlas.class);
 		
 		//audio
 		isMusicLoaded = false;
@@ -46,6 +49,7 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 	
 	@Override
 	public void show() {
+		assetManager.load(mapManager.getNextMapType().getFilePath(), TiledMap.class);
 		super.show();
 	}
 	
@@ -79,8 +83,10 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
 	@Override
 	public void keyPressed(InputManager manager, GameKey gameKey) {
-		game.setScreen(ScreenType.GAME);
-		
+		if (gameKey != GameKey.CHANGE_MAP_1 && gameKey != GameKey.CHANGE_MAP_2) {
+			mapManager.setMap();
+			game.setScreen(ScreenType.GAME);
+		}
 	}
 
 	@Override
