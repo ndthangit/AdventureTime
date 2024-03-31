@@ -63,10 +63,10 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 		
 		ScreenUtils.clear(0, 0, 0, 1);
 		
-		if (!isMusicLoaded && assetManager.isLoaded(AudioType.PEACEFUL.getFilePath())) {
-			isMusicLoaded = true;
-			audioManager.playAudio(AudioType.PEACEFUL);
-		}
+//		if (!isMusicLoaded && assetManager.isLoaded(AudioType.PEACEFUL.getFilePath())) {
+//			isMusicLoaded = true;
+//			audioManager.playAudio(AudioType.PEACEFUL);
+//		}
 		
 		if (assetManager.update()) {
 			((LoadingUI) screenUI).setPressButton();

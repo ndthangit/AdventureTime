@@ -7,12 +7,12 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 public class PlayerComponent implements Component, Poolable{
 
 	public boolean hasAxe; 
-	public Vector2 speed= new Vector2();
+	public Vector2 speed = new Vector2();
 	
 	@Override
 	public void reset() {
 		hasAxe = false;
-		speed.set(0,0) ;
+		speed.set(0,0);
 	}
 
 }
