@@ -12,13 +12,17 @@ import com.mygdx.game.CoreGame;
 import com.mygdx.game.entity.component.AnimationComponent;
 import com.mygdx.game.entity.component.Box2DComponent;
 import com.mygdx.game.entity.component.PlayerComponent;
+import com.mygdx.game.entity.system.AnimationSystem;
+import com.mygdx.game.entity.system.PlayerAnimationSystem;
 import com.mygdx.game.entity.system.PlayerCameraSystem;
 import com.mygdx.game.entity.system.PlayerMovementSystem;
+import com.mygdx.game.view.AnimationType;
 
 public class ECSEngine extends PooledEngine{
 	
 	public static final ComponentMapper<PlayerComponent> playerCmpMapper = ComponentMapper.getFor(PlayerComponent.class);
 	public static final ComponentMapper<Box2DComponent> box2dCmpMapper = ComponentMapper.getFor(Box2DComponent.class);
+	public static final ComponentMapper<AnimationComponent> aniCmpMapper = ComponentMapper.getFor(AnimationComponent.class);
 	
 	private final World world;
 	private final BodyDef bodyDef;
@@ -35,6 +39,8 @@ public class ECSEngine extends PooledEngine{
 		
 		this.addSystem(new PlayerMovementSystem(game));
 		this.addSystem(new PlayerCameraSystem(game));
+		this.addSystem(new AnimationSystem(game));
+		this.addSystem(new PlayerAnimationSystem(game));
 	}
 	
 	
@@ -68,6 +74,9 @@ public class ECSEngine extends PooledEngine{
 		
 		//animation component
 		final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
+		animationComponent.aniType = AnimationType.HERO_DOWN;
+		animationComponent.width = 12 * CoreGame.UNIT_SCALE;
+		animationComponent.height = 12 * CoreGame.UNIT_SCALE;
 		player.add(animationComponent);
 		this.addEntity(player);
 		

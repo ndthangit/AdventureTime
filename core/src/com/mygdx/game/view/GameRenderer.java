@@ -1,14 +1,19 @@
 package com.mygdx.game.view;
 
+import java.util.EnumMap;
+
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -42,14 +47,16 @@ public class GameRenderer implements Disposable, MapListener{
 	private final GLProfiler profiler;
 	private final Box2DDebugRenderer b2dDebugRenderer;
 	private final World world;
+	private final EnumMap<AnimationType, Animation<Sprite>> animationCache;
 	
-	private Sprite dummySprite;
 	
 	public GameRenderer (CoreGame game) {
 		this.assetManager = game.getAssetManager();
 		this.viewport = game.getScreenViewport();
 		this.gameCamera = game.getGameCamera();
 		this.spriteBatch = game.getSpriteBatch();
+		
+		animationCache = new EnumMap<AnimationType, Animation<Sprite>>(AnimationType.class);
 		
 		animatedEntities = game.getEcsEngine().getEntitiesFor(Family.all(AnimationComponent.class, Box2DComponent.class).get());
 		
@@ -95,11 +102,37 @@ public class GameRenderer implements Disposable, MapListener{
 	
 	private void renderEntity(Entity entity, float delta) {
 		final Box2DComponent box2DComponent = ECSEngine.box2dCmpMapper.get(entity);
+		final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(entity);
 		
-		
-		box2DComponent.renderPosition.lerp(box2DComponent.body.getPosition(), delta);
-		dummySprite.setBounds(box2DComponent.renderPosition.x - box2DComponent.width * 0.5f, box2DComponent.renderPosition.y - box2DComponent.height * 0.5f, box2DComponent.width, box2DComponent.height);
-		dummySprite.draw(spriteBatch);
+		if (aniComponent.aniType != null) {
+			final Animation<Sprite> animation = getAnimation(aniComponent.aniType);
+			final Sprite frame = animation.getKeyFrame(aniComponent.aniTime);
+			box2DComponent.renderPosition.lerp(box2DComponent.body.getPosition(), delta);
+			frame.setBounds(box2DComponent.renderPosition.x - aniComponent.width * 0.5f, box2DComponent.renderPosition.y - aniComponent.height * 0.5f, aniComponent.width, aniComponent.height);
+			frame.draw(spriteBatch);
+		}
+	}
+
+	private Animation<Sprite> getAnimation(AnimationType aniType) {
+		Animation<Sprite> animation = animationCache.get(aniType);
+		if (animation == null) {
+			Gdx.app.debug(TAG, "Creating new animation of type " + aniType);
+			final AtlasRegion atlasRegion = assetManager.get(aniType.getAtlasPath(), TextureAtlas.class).findRegion(aniType.getAtlasKey());
+			final TextureRegion[][] textureRegions = atlasRegion.split(16, 16);
+			animation = new Animation<Sprite>(aniType.getFrameTime(), getKeyFrame(textureRegions, aniType.getColIndex()), Animation.PlayMode.LOOP);
+			animationCache.put(aniType, animation);
+		}
+		return animation;
+	}
+
+	private Array<? extends Sprite> getKeyFrame(TextureRegion[][] textureRegions, int colIndex) {
+		final Array<Sprite> keyFrame = new Array<Sprite>();
+		for (TextureRegion[] subRegions : textureRegions) {
+			final Sprite sprite = new Sprite(subRegions[colIndex]);
+			sprite.setOriginCenter();
+			keyFrame.add(sprite);
+		}
+		return keyFrame;
 	}
 
 	@Override
@@ -115,10 +148,10 @@ public class GameRenderer implements Disposable, MapListener{
 	public void mapChange(Map map) {
 		mapRenderer.setMap(map.getTiledMap());
 		map.getTiledMap().getLayers().getByType(TiledMapTileLayer.class, tiledMapLayers);
-		if (dummySprite == null) {
-			dummySprite = assetManager.get("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", TextureAtlas.class).createSprite("Dead");
-			dummySprite.setOriginCenter();
-		}
+//		if (dummySprite == null) {
+//			dummySprite = assetManager.get("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", TextureAtlas.class).createSprite("Dead");
+//			dummySprite.setOriginCenter();
+//		}
 		
 	}
 
