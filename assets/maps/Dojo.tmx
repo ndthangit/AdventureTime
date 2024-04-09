@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="4">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="4">
  <tileset firstgid="1" name="Pipes" tilewidth="16" tileheight="16" tilecount="45" columns="15">
   <image source="../Backgrounds/Tilesets/Pipes.png" width="240" height="48"/>
  </tileset>
@@ -35,9 +35,7 @@
  <tileset firstgid="770" name="Interior" tilewidth="16" tileheight="16" tilecount="320" columns="16">
   <image source="../Backgrounds/Tilesets/Interior/TilesetInterior.png" width="256" height="320"/>
  </tileset>
- <tileset firstgid="1090" name="full" tilewidth="16" tileheight="16" tilecount="1120" columns="28">
-  <image source="../Backgrounds/Tilesets/tileset.png" width="448" height="640"/>
- </tileset>
+ <tileset firstgid="1090" source="full.tsx"/>
  <tileset firstgid="2210" name="TilesetHouse" tilewidth="16" tileheight="16" tilecount="759" columns="33">
   <image source="../Backgrounds/Tilesets/TilesetHouse.png" width="528" height="368"/>
  </tileset>
@@ -53,10 +51,8 @@
  <tileset firstgid="3856" name="Element" tilewidth="16" tileheight="16" tilecount="240" columns="16">
   <image source="../Backgrounds/Tilesets/TilesetElement.png" width="256" height="240"/>
  </tileset>
- <tileset firstgid="4096" name="Dungeon" tilewidth="16" tileheight="16" tilecount="48" columns="12">
-  <image source="../Backgrounds/Tilesets/TilesetDungeon.png" width="192" height="64"/>
- </tileset>
- <layer id="1" name="Base" width="20" height="20" locked="1">
+ <tileset firstgid="4096" source="Dungeon.tsx"/>
+ <layer id="1" name="Base" width="20" height="20">
   <data encoding="csv">
 1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,
 1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,
@@ -80,7 +76,7 @@
 1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929,1929
 </data>
  </layer>
- <layer id="2" name="Wall" width="20" height="20" locked="1">
+ <layer id="2" name="Wall" width="20" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 2331,2332,2333,2331,2332,2333,2331,2332,2333,2331,2332,2333,2331,2332,2333,2331,2332,2333,2331,2332,
@@ -104,7 +100,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="5" name="Floor" width="20" height="20" visible="0" locked="1">
+ <layer id="5" name="Floor" width="20" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -113,7 +109,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,1298,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,4101,0,0,0,0,0,0,0,
 0,0,0,0,0,0,1966,1967,1967,1967,1967,1967,1967,1967,1969,0,0,0,0,0,
 0,536872432,1520,0,0,0,1994,1995,1995,1995,1995,1995,1995,1995,1997,0,1492,0,0,0,
 0,0,0,1520,0,0,1994,1995,1995,1995,1995,1995,1995,1995,1997,0,1073743316,0,0,0,
@@ -128,7 +124,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="4" name="Interiors" width="20" height="20" locked="1">
+ <layer id="4" name="Interiors" width="20" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -157,4 +153,28 @@
    <point/>
   </object>
  </objectgroup>
+ <layer id="7" name="gameObject" width="20" height="20">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,4113,4113,4113,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
 </map>

@@ -9,13 +9,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.input.GameKey;
+import com.mygdx.game.input.InputManager;
 
 public class MainMenuScreen extends AbstractScreen{
 	private SpriteBatch batch;
 	private Sprite sprite;
 	Texture texture;
 	public MainMenuScreen(CoreGame context) {
-		super(context);
+		super(context, null);
 		batch = new SpriteBatch();
 		texture = new Texture(Gdx.files.internal("HUD/Shuriken.png"));
 		sprite = new Sprite(texture, 20, 20, 50, 50);
@@ -45,8 +47,18 @@ public class MainMenuScreen extends AbstractScreen{
 //	}
 
 	@Override
-	protected Table getscreenUI(Skin skin) {
+	protected Table getscreenUI(Skin skin, CoreGame game) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void keyPressed(InputManager manager, GameKey gameKey) {
+
+	}
+
+	@Override
+	public void keyUp(InputManager manager, GameKey gameKey) {
+
 	}
 }

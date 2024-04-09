@@ -44,7 +44,8 @@ import com.mygdx.game.screens.ScreenType;
 import com.mygdx.game.view.GameRenderer;
 
 public class CoreGame extends Game {
-	
+
+
 	private static final String TAG = CoreGame.class.getSimpleName();
 	
 	private SpriteBatch spriteBatch;
@@ -55,7 +56,8 @@ public class CoreGame extends Game {
 	public static final float UNIT_SCALE = 4 / 64f;
 	public static final short BIT_PLAYER = 1 << 0;
 	public static final short BIT_GROUND = 1 << 1;
-	
+	public static final short BIT_GAME_OBJECT = 1 << 2;
+
 	public static final BodyDef BODY_DEF = new BodyDef();
 	public static final FixtureDef FIXTURE_DEF = new FixtureDef();
 	

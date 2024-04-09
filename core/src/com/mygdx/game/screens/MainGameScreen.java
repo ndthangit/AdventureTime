@@ -1,29 +1,11 @@
 package com.mygdx.game.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.profiling.GLProfiler;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.ChainShape;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.input.GameKey;
 import com.mygdx.game.input.InputManager;
-import com.mygdx.game.map.CollisionArea;
 import com.mygdx.game.map.Map;
 import com.mygdx.game.map.MapListener;
-import com.mygdx.game.map.MapManager;
 import com.mygdx.game.map.MapType;
 import com.mygdx.game.ui.GameUI;
 
@@ -76,8 +58,8 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 	}
 
 	@Override
-	protected GameUI getscreenUI(Skin skin) {
-		return new GameUI(skin);
+	protected GameUI getscreenUI(Skin skin, CoreGame game) {
+		return new GameUI(skin, this.game);
 	}
 
 	@Override

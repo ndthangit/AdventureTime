@@ -1,7 +1,6 @@
 package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -35,11 +34,11 @@ public abstract class AbstractScreen<T extends Table> implements Screen, KeyInpu
 		mapManager = game.getMapManager();
 		
 		stage = context.getStage();
-		this.screenUI = (T) getscreenUI(skin);
+		this.screenUI = (T) getscreenUI(skin, game);
 		audioManager = context.getAudioManager();
 	}
 	
-	protected abstract Table getscreenUI(final Skin skin);	
+	protected abstract Table getscreenUI(final Skin skin, CoreGame game);
 	
 	@Override
 	public void resize(int width, int height) {

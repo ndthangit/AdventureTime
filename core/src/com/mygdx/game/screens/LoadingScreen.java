@@ -1,13 +1,8 @@
 package com.mygdx.game.screens;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -17,7 +12,6 @@ import com.mygdx.game.CoreGame;
 import com.mygdx.game.LoadAsset;
 import com.mygdx.game.audio.AudioType;
 import com.mygdx.game.input.GameKey;
-import com.mygdx.game.input.KeyInputListener;
 import com.mygdx.game.input.InputManager;
 import com.mygdx.game.ui.LoadingUI;
 
@@ -77,8 +71,8 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 	}
 
 	@Override
-	protected Table getscreenUI(Skin skin) {
-		return new LoadingUI(skin);
+	protected Table getscreenUI(Skin skin, CoreGame game) {
+		return new LoadingUI(skin, this.game);
 	}
 
 	@Override

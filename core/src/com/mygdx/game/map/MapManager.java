@@ -11,9 +11,14 @@ import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.entity.ECSEngine;
 
-public class MapManager {
+import com.badlogic.ashley.core.Entity;
+
+public class  MapManager {
 	public static final String TAG = MapManager.class.getSimpleName();
+
+	private final ECSEngine ecsEngine;
 	
 	private final World world;
 	private final Array<Body> bodies;
@@ -23,11 +28,13 @@ public class MapManager {
 	private Map currentMap;
 	private final EnumMap<MapType, Map>mapCache;
 	private final Array<MapListener> listeners;
-	
+	private Array<Entity> gameObjectsToRemove;
+
 	public MapManager(final CoreGame game) {
 		currentMapType = null;
 		currentMap = null;
 		world = game.getWorld();
+		ecsEngine = game.getEcsEngine();
 		assetManager = game.getAssetManager();
 		bodies = new Array<Body>();
 		mapCache = new EnumMap<MapType, Map>(MapType.class);
@@ -51,6 +58,8 @@ public class MapManager {
 			// clean map entities and body
 			world.getBodies(bodies);
 			destroyCollisionArea();
+			
+			destroyGameObjects();
 		}
 		
 		// set new map
@@ -66,9 +75,30 @@ public class MapManager {
 		
 		// create map entities/bodies
 		spawnCollisionAreas();
+		spawnGameObjects();
 		
 		for (final MapListener listener: listeners) {
 			listener.mapChange(currentMap);
+		}
+	}
+
+	private void spawnGameObjects() {
+		for (final GameObject gameObject: currentMap.getGameObjects()) {
+			ecsEngine.createGameObject(gameObject);
+		}
+	}
+
+	private void destroyGameObjects() {
+		if (ecsEngine!= null) {
+			for(final Entity entity: ecsEngine.getEntities()) {
+				if (ECSEngine.gameObjCmpMapper.get(entity) != null) {
+					gameObjectsToRemove.add(entity);
+				}
+			}
+			for (final Entity entity: gameObjectsToRemove) {
+				ecsEngine.removeEntity(entity);
+			}
+			gameObjectsToRemove.clear();
 		}
 	}
 

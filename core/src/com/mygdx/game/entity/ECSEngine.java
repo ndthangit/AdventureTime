@@ -3,19 +3,19 @@ package com.mygdx.game.entity;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.entity.component.AnimationComponent;
 import com.mygdx.game.entity.component.Box2DComponent;
+import com.mygdx.game.entity.component.GameObjectComponent;
 import com.mygdx.game.entity.component.PlayerComponent;
 import com.mygdx.game.entity.system.AnimationSystem;
 import com.mygdx.game.entity.system.PlayerAnimationSystem;
 import com.mygdx.game.entity.system.PlayerCameraSystem;
 import com.mygdx.game.entity.system.PlayerMovementSystem;
+import com.mygdx.game.map.GameObject;
 import com.mygdx.game.view.AnimationType;
 
 public class ECSEngine extends PooledEngine{
@@ -23,19 +23,22 @@ public class ECSEngine extends PooledEngine{
 	public static final ComponentMapper<PlayerComponent> playerCmpMapper = ComponentMapper.getFor(PlayerComponent.class);
 	public static final ComponentMapper<Box2DComponent> box2dCmpMapper = ComponentMapper.getFor(Box2DComponent.class);
 	public static final ComponentMapper<AnimationComponent> aniCmpMapper = ComponentMapper.getFor(AnimationComponent.class);
+	public static final ComponentMapper<GameObjectComponent> gameObjCmpMapper = ComponentMapper.getFor(GameObjectComponent.class);
 	
 	private final World world;
-	private final BodyDef bodyDef;
-	private final FixtureDef fixtureDef;
-	
-	
+
+	private final Vector2 localPosition;
+	private final Vector2 posBeforeRotation;
+	private final Vector2 posAfterRotation;
 	
 	public ECSEngine(CoreGame game) {
 		super();
 		
 		world = game.getWorld();
-		bodyDef = new BodyDef();
-		fixtureDef = new FixtureDef();
+
+		localPosition = new Vector2();
+		posBeforeRotation = new Vector2();
+		posAfterRotation = new Vector2();
 		
 		this.addSystem(new PlayerMovementSystem(game));
 		this.addSystem(new PlayerCameraSystem(game));
@@ -48,26 +51,29 @@ public class ECSEngine extends PooledEngine{
 		final Entity player = this.createEntity();
 		
 		final PlayerComponent playerComponent = this.createComponent(PlayerComponent.class);
+		playerComponent.maxLife = 12;
+		playerComponent.life = playerComponent.maxLife;
 		playerComponent.speed.set(6, 6);
 		player.add(playerComponent);
-		
-		resetBodiesAndFixtureDefinition();
+
+		CoreGame.resetBodiesAndFixtureDefinition();
 		final Box2DComponent box2DComponent = this.createComponent(Box2DComponent.class);
-		bodyDef.position.set(playerSpawnLocation.x, playerSpawnLocation.y);
-		bodyDef.type = BodyDef.BodyType.DynamicBody;
-		box2DComponent.body = world.createBody(bodyDef);
-		box2DComponent.body.setUserData("PLAYER");
+		CoreGame.BODY_DEF.position.set(playerSpawnLocation.x, playerSpawnLocation.y);
+		CoreGame.BODY_DEF.fixedRotation = true;
+		CoreGame.BODY_DEF.type = BodyDef.BodyType.DynamicBody;
+		box2DComponent.body = world.createBody(CoreGame.BODY_DEF);
+		box2DComponent.body.setUserData(player);
 		box2DComponent.width = width;
 		box2DComponent.height = height;
 //		box2DComponent.renderPosition.set(box2DComponent.body.getPosition());
 		box2DComponent.renderPosition = box2DComponent.body.getPosition();
 		
 		PolygonShape pShape = new PolygonShape();
-		pShape.setAsBox(width * 0.5f, height * 0.5f);
-		fixtureDef.filter.categoryBits = CoreGame.BIT_PLAYER;
-		fixtureDef.filter.maskBits = CoreGame.BIT_GROUND ;
-		fixtureDef.shape = pShape;
-		box2DComponent.body.createFixture(fixtureDef);	
+		pShape.setAsBox(width * 1f, height * 1f);
+		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_PLAYER;
+		CoreGame.FIXTURE_DEF.filter.maskBits = CoreGame.BIT_GROUND ;
+		CoreGame.FIXTURE_DEF.shape = pShape;
+		box2DComponent.body.createFixture(CoreGame.FIXTURE_DEF);
 		
 		pShape.dispose();
 		player.add(box2DComponent);
@@ -81,19 +87,58 @@ public class ECSEngine extends PooledEngine{
 		this.addEntity(player);
 		
 	}
-	
-	private void resetBodiesAndFixtureDefinition() {
-		bodyDef.gravityScale = 1;
-		bodyDef.type = BodyDef.BodyType.StaticBody;
-		bodyDef.fixedRotation = false;
-		
-		fixtureDef.isSensor = false;
-		fixtureDef.restitution = 0;
-		fixtureDef.friction = 0;
-		fixtureDef.density = 0;
-		fixtureDef.filter.categoryBits = 0x0001;
-		fixtureDef.filter.maskBits = -1;
-		fixtureDef.shape = null;
-		
-	} 
+
+	public void createGameObject(final GameObject gameObject) {
+		final Entity gameObjEntity = this.createEntity();
+
+		final GameObjectComponent gameObjectComponent = this.createComponent(GameObjectComponent.class);
+		gameObjectComponent.animationIndex = gameObject.getAnimationIndex();
+		gameObjectComponent.type = gameObject.getType();
+
+
+		final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
+		animationComponent.aniType = null;
+		animationComponent.width = gameObject.getWidth();
+		animationComponent.height = gameObject.getHeight();
+		gameObjEntity.add(animationComponent);
+
+		CoreGame.resetBodiesAndFixtureDefinition();
+		final float halfW = gameObject.getWidth() / 2;
+		final float halfH = gameObject.getHeight() / 2;
+		final float angleRad = -gameObject.getRotDegree() * MathUtils.degreesToRadians;
+		final Box2DComponent box2DComponent = this.createComponent(Box2DComponent.class);
+		CoreGame.BODY_DEF.type = BodyDef.BodyType.StaticBody;
+		CoreGame.BODY_DEF.position.set(gameObject.getPosition().x + halfW, gameObject.getPosition().y + halfH);
+		box2DComponent.body = world.createBody(CoreGame.BODY_DEF);
+		box2DComponent.body.setUserData(gameObjEntity);
+		box2DComponent.width = gameObject.getWidth();
+		box2DComponent.height = gameObject.getHeight();
+//		box2DComponent.renderPosition.set(box2DComponent.body.getPosition());
+
+		// save position before rotation - Tiled is rotated around the bottom left corner instead of the center of a Tile
+
+		localPosition.set(-halfW, -halfH);
+		posBeforeRotation.set(box2DComponent.body.getWorldPoint(localPosition));
+		// rotate body
+		box2DComponent.body.setTransform(box2DComponent.body.getPosition(), angleRad);
+		// get position after rotation
+		posAfterRotation.set(box2DComponent.body.getWorldPoint(localPosition));
+		//adjust position to its original value before the rotation
+		box2DComponent.body.setTransform(box2DComponent.body.getPosition().add(posBeforeRotation).sub(posAfterRotation), angleRad);
+		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x - animationComponent.width * 0.5f, box2DComponent.body.getPosition().y - animationComponent.height * 0.5f);
+
+
+		//animation component
+		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_GAME_OBJECT;
+		CoreGame.FIXTURE_DEF.filter.maskBits = CoreGame.BIT_PLAYER;
+		PolygonShape pShape = new PolygonShape();
+		pShape.setAsBox(halfW, halfH);
+		CoreGame.FIXTURE_DEF.shape = pShape;
+		box2DComponent.body.createFixture(CoreGame.FIXTURE_DEF);
+		pShape.dispose();
+		gameObjEntity.add(box2DComponent);
+
+		this.addEntity(gameObjEntity);
+	}
+
 }

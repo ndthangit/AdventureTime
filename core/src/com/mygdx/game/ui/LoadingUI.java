@@ -7,13 +7,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.mygdx.game.CoreGame;
 
 public class LoadingUI extends Table{
 	private final ProgressBar progressBar;
 	private final TextButton pressAnyKeyButton;
 	private final TextButton textButton;
 	
-	public LoadingUI(Skin skin) {
+	public LoadingUI(Skin skin, CoreGame game) {
 		super(skin);
 		setFillParent(true);		
 		progressBar = null;

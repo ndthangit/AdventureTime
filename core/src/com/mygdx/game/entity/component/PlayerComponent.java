@@ -6,6 +6,8 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 
 public class PlayerComponent implements Component, Poolable{
 
+	public int life;
+	public int maxLife;
 	public boolean hasAxe; 
 	public Vector2 speed = new Vector2();
 	

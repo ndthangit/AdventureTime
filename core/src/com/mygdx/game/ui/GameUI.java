@@ -1,5 +1,8 @@
 package com.mygdx.game.ui;
 
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -8,17 +11,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Scaling;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.entity.component.PlayerComponent;
 
 public class GameUI extends Table{
-	
+	private final CoreGame game;
 	private final Image heartImage[];
 	private final Table heartTable;
 	public int life;
 	public int maxlife;
 	
-	public GameUI(Skin skin) {
+	public GameUI(Skin skin, CoreGame game) {
 		super(skin);
-		life = 9;
+		this.game = game;
+		life = 12;
 		maxlife = 12;
 		heartTable = new Table();
 		setFillParent(true);
