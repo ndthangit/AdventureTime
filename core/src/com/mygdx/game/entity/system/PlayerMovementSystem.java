@@ -33,8 +33,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 		
 		
 		if (directionChange) {
-			directionChange = false;
-			b2dComponent.body.applyLinearImpulse(speedx - b2dComponent.body.getLinearVelocity().x * b2dComponent.body.getMass(), 
+			b2dComponent.body.applyLinearImpulse(speedx - b2dComponent.body.getLinearVelocity().x * b2dComponent.body.getMass(),
 												 speedy - b2dComponent.body.getLinearVelocity().y * b2dComponent.body.getMass(), 
 												 b2dComponent.body.getWorldCenter().x, 
 												 b2dComponent.body.getWorldCenter().y, true);

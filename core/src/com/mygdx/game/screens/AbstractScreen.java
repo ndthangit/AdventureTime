@@ -25,7 +25,7 @@ public abstract class AbstractScreen<T extends Table> implements Screen, KeyInpu
 	protected AudioManager audioManager;
 	protected MapManager mapManager;
 	
-	public AbstractScreen(final CoreGame context, Skin skin) {
+	public AbstractScreen(final CoreGame context) {
 		this.game = context;
 		viewPort = context.getScreenViewport();
 		world = context.getWorld();
@@ -34,7 +34,7 @@ public abstract class AbstractScreen<T extends Table> implements Screen, KeyInpu
 		mapManager = game.getMapManager();
 		
 		stage = context.getStage();
-		this.screenUI = (T) getscreenUI(skin, game);
+		
 		audioManager = context.getAudioManager();
 	}
 	

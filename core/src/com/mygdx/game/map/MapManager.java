@@ -39,6 +39,7 @@ public class  MapManager {
 		bodies = new Array<Body>();
 		mapCache = new EnumMap<MapType, Map>(MapType.class);
 		listeners = new Array<MapListener>();
+		gameObjectsToRemove = new Array<Entity>();;
 	}
 	
 	public void addMapListener(final MapListener listener) {
@@ -58,9 +59,9 @@ public class  MapManager {
 			// clean map entities and body
 			world.getBodies(bodies);
 			destroyCollisionArea();
-			
 			destroyGameObjects();
 		}
+		
 		
 		// set new map
 		Gdx.app.debug(TAG, "Changing to map " + nextMapType);
@@ -89,7 +90,6 @@ public class  MapManager {
 	}
 
 	private void destroyGameObjects() {
-		if (ecsEngine!= null) {
 			for(final Entity entity: ecsEngine.getEntities()) {
 				if (ECSEngine.gameObjCmpMapper.get(entity) != null) {
 					gameObjectsToRemove.add(entity);
@@ -99,7 +99,6 @@ public class  MapManager {
 				ecsEngine.removeEntity(entity);
 			}
 			gameObjectsToRemove.clear();
-		}
 	}
 
 	private void spawnCollisionAreas() {

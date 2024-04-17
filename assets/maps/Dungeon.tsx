@@ -5,6 +5,9 @@
   <properties>
    <property name="type" value="TRAP"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
   <animation>
    <frame tileid="16" duration="500"/>
    <frame tileid="17" duration="500"/>

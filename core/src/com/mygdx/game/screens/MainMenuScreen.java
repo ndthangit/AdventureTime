@@ -17,7 +17,7 @@ public class MainMenuScreen extends AbstractScreen{
 	private Sprite sprite;
 	Texture texture;
 	public MainMenuScreen(CoreGame context) {
-		super(context, null);
+		super(context);
 		batch = new SpriteBatch();
 		texture = new Texture(Gdx.files.internal("HUD/Shuriken.png"));
 		sprite = new Sprite(texture, 20, 20, 50, 50);

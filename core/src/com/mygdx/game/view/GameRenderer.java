@@ -31,6 +31,8 @@ import com.mygdx.game.entity.component.GameObjectComponent;
 import com.mygdx.game.map.Map;
 import com.mygdx.game.map.MapListener;
 
+import static com.mygdx.game.CoreGame.FIXED_TIME_STEP;
+
 public class GameRenderer implements Disposable, MapListener{
 	
 	public static final String TAG = GameRenderer.class.getSimpleName();
@@ -96,14 +98,15 @@ public class GameRenderer implements Disposable, MapListener{
 
 		for (final Entity entity: gameObjectEntities) {
 			renderGameObject(entity, delta);
+
 		}
 
 		for (final Entity entity: animatedEntities) {
 			renderEntity(entity, delta);
-		}
+	;	}
 		spriteBatch.end();
 		b2dDebugRenderer.render(world, viewport.getCamera().combined);
-		world.step(1/60f, 6, 2);
+//		world.step(FIXED_TIME_STEP, 6, 2);
 		profiler.reset();
 	}
 
@@ -116,7 +119,7 @@ public class GameRenderer implements Disposable, MapListener{
 			final Animation<Sprite> animation = mapAnimations.get(gameObjectComponent.animationIndex);
 			final Sprite frame = animation.getKeyFrame(aniComponent.aniTime);
 			box2DComponent.renderPosition.lerp(box2DComponent.body.getPosition(), delta);
-			frame.setBounds(box2DComponent.renderPosition.x, box2DComponent.renderPosition.y, aniComponent.width, aniComponent.height);
+			frame.setBounds(box2DComponent.renderPosition.x - aniComponent.width / 2, box2DComponent.renderPosition.y - aniComponent.height / 2, aniComponent.width, aniComponent.height);
 			frame.setOriginCenter();
 			frame.setRotation(box2DComponent.body.getAngle() * MathUtils.degreesToRadians);
 			frame.draw(spriteBatch);
@@ -124,6 +127,7 @@ public class GameRenderer implements Disposable, MapListener{
 	}
 
 	private void renderEntity(Entity entity, float delta) {
+		
 		final Box2DComponent box2DComponent = ECSEngine.box2dCmpMapper.get(entity);
 		final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(entity);
 		

@@ -11,10 +11,7 @@ import com.mygdx.game.entity.component.AnimationComponent;
 import com.mygdx.game.entity.component.Box2DComponent;
 import com.mygdx.game.entity.component.GameObjectComponent;
 import com.mygdx.game.entity.component.PlayerComponent;
-import com.mygdx.game.entity.system.AnimationSystem;
-import com.mygdx.game.entity.system.PlayerAnimationSystem;
-import com.mygdx.game.entity.system.PlayerCameraSystem;
-import com.mygdx.game.entity.system.PlayerMovementSystem;
+import com.mygdx.game.entity.system.*;
 import com.mygdx.game.map.GameObject;
 import com.mygdx.game.view.AnimationType;
 
@@ -44,6 +41,7 @@ public class ECSEngine extends PooledEngine{
 		this.addSystem(new PlayerCameraSystem(game));
 		this.addSystem(new AnimationSystem(game));
 		this.addSystem(new PlayerAnimationSystem(game));
+		this.addSystem(new PlayerCollisionSystem(game));
 	}
 	
 	
@@ -65,13 +63,13 @@ public class ECSEngine extends PooledEngine{
 		box2DComponent.body.setUserData(player);
 		box2DComponent.width = width;
 		box2DComponent.height = height;
-//		box2DComponent.renderPosition.set(box2DComponent.body.getPosition());
 		box2DComponent.renderPosition = box2DComponent.body.getPosition();
-		
+//		box2DComponent.renderPosition.set(box2DComponent.body.getPosition());
+
 		PolygonShape pShape = new PolygonShape();
-		pShape.setAsBox(width * 1f, height * 1f);
+		pShape.setAsBox(width * 0.5f, height * 0.5f);
 		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_PLAYER;
-		CoreGame.FIXTURE_DEF.filter.maskBits = CoreGame.BIT_GROUND ;
+		CoreGame.FIXTURE_DEF.filter.maskBits = CoreGame.BIT_GROUND | CoreGame.BIT_GAME_OBJECT;
 		CoreGame.FIXTURE_DEF.shape = pShape;
 		box2DComponent.body.createFixture(CoreGame.FIXTURE_DEF);
 		
@@ -94,6 +92,7 @@ public class ECSEngine extends PooledEngine{
 		final GameObjectComponent gameObjectComponent = this.createComponent(GameObjectComponent.class);
 		gameObjectComponent.animationIndex = gameObject.getAnimationIndex();
 		gameObjectComponent.type = gameObject.getType();
+		gameObjEntity.add(gameObjectComponent);
 
 
 		final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
@@ -113,7 +112,7 @@ public class ECSEngine extends PooledEngine{
 		box2DComponent.body.setUserData(gameObjEntity);
 		box2DComponent.width = gameObject.getWidth();
 		box2DComponent.height = gameObject.getHeight();
-//		box2DComponent.renderPosition.set(box2DComponent.body.getPosition());
+
 
 		// save position before rotation - Tiled is rotated around the bottom left corner instead of the center of a Tile
 
@@ -125,8 +124,8 @@ public class ECSEngine extends PooledEngine{
 		posAfterRotation.set(box2DComponent.body.getWorldPoint(localPosition));
 		//adjust position to its original value before the rotation
 		box2DComponent.body.setTransform(box2DComponent.body.getPosition().add(posBeforeRotation).sub(posAfterRotation), angleRad);
-		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x - animationComponent.width * 0.5f, box2DComponent.body.getPosition().y - animationComponent.height * 0.5f);
-
+//		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x - animationComponent.width * 1f, box2DComponent.body.getPosition().y - animationComponent.height * 1f);
+		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
 
 		//animation component
 		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_GAME_OBJECT;

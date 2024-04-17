@@ -11,12 +11,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Scaling;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.entity.component.AnimationComponent;
+import com.mygdx.game.entity.component.Box2DComponent;
+import com.mygdx.game.entity.component.GameObjectComponent;
 import com.mygdx.game.entity.component.PlayerComponent;
 
 public class GameUI extends Table{
 	private final CoreGame game;
 	private final Image heartImage[];
 	private final Table heartTable;
+	private final Entity player;
+	private final PlayerComponent playerCmp;
 	public int life;
 	public int maxlife;
 	
@@ -25,34 +30,35 @@ public class GameUI extends Table{
 		this.game = game;
 		life = 12;
 		maxlife = 12;
+		player = game.getEcsEngine().getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
+		playerCmp = player.getComponent(PlayerComponent.class);
 		heartTable = new Table();
 		setFillParent(true);
-		heartImage = new Image[3];
+		heartImage = new Image[ (int) playerCmp.maxLife/4];
 		updateHeart();
 	}
 	
 	public void updateHeart() {
 		int i;
-		for (i=4; i<=maxlife; i += 4) {
+		for (i=4; i<=playerCmp.maxLife; i += 4) {
 			heartImage[(int)(i/4)-1] = new Image(setHeartImage(4));
 			heartImage[(int)(i/4)-1].setScale(3);
 		}
 		
-		for (i=4; i<=life; i+= 4) {
+		for (i=4; i<=playerCmp.life; i+= 4) {
 			heartImage[(int)(i/4)-1] = new Image(setHeartImage(0));
 			heartImage[(int)(i/4)-1].setScale(3);	
 		}
 		
-		if (i<=maxlife) {
+		if (i<=playerCmp.maxLife) {
 			heartImage[(int)(i/4)-1] = new Image(setHeartImage(i-life));
 			heartImage[(int)(i/4)-1].setScale(3);
 			i += 4;
 		}
-		
-		for (i=0; i<3; i++) {
+		for (i=0; i<playerCmp.maxLife/4; i++) {
 			heartTable.add(heartImage[i]).expand(false, true).top().padTop(50).left().padLeft(20).padRight(20);
 		}
-		add(heartTable).expand().left().top();		
+		add(heartTable).expand().left().top();
 	}
 	
 	private Texture setHeartImage(int i) {

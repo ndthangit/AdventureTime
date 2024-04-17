@@ -13,6 +13,7 @@ import com.mygdx.game.LoadAsset;
 import com.mygdx.game.audio.AudioType;
 import com.mygdx.game.input.GameKey;
 import com.mygdx.game.input.InputManager;
+import com.mygdx.game.ui.GameUI;
 import com.mygdx.game.ui.LoadingUI;
 
 public class LoadingScreen extends AbstractScreen<LoadingUI> {
@@ -21,11 +22,11 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 	private boolean isMusicLoaded;
 	
 	public LoadingScreen(CoreGame game) {
-		super(game, game.getLoadAsset().getloadingSkin());
+		super(game);
 		this.assetManager = game.getAssetManager();
 		this.loadAsset = game.getLoadAsset();
 		this.mapManager = game.getMapManager();
-		
+		this.screenUI = (LoadingUI) getscreenUI(game.getLoadAsset().getGameSkin(), game);
 		//load characters and effects
 		assetManager.load("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", TextureAtlas.class);
 		

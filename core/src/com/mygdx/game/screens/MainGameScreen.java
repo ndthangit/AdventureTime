@@ -18,17 +18,13 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 	
 	
 	public MainGameScreen (CoreGame game) {
-		super(game, game.getLoadAsset().getGameSkin());
-//		mapRender = new OrthogonalTiledMapRenderer(null, CoreGame.UNIT_SCALE, game.getSpriteBatch());
-//		gameCamera = game.getGameCamera();
-//		profiler = new GLProfiler(Gdx.graphics);
-//		this.assetManager = game.getAssetManager();
-//		profiler.enable();
+		super(game);
 		mapManager = game.getMapManager();
 		mapManager.addMapListener(this);
 		mapManager.setMap();
-		
 		game.getEcsEngine().createPlayer(mapManager.getCurrentMap().getStartPosition(), 0.75f, 0.75f);
+		this.screenUI = (GameUI) getscreenUI(game.getLoadAsset().getGameSkin(), game);
+		game.setGameUI(screenUI);
 	}
 
 	@Override

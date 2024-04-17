@@ -41,6 +41,7 @@ import com.mygdx.game.input.InputManager;
 import com.mygdx.game.map.MapManager;
 import com.mygdx.game.map.MapType;
 import com.mygdx.game.screens.ScreenType;
+import com.mygdx.game.ui.GameUI;
 import com.mygdx.game.view.GameRenderer;
 
 public class CoreGame extends Game {
@@ -57,6 +58,7 @@ public class CoreGame extends Game {
 	public static final short BIT_PLAYER = 1 << 0;
 	public static final short BIT_GROUND = 1 << 1;
 	public static final short BIT_GAME_OBJECT = 1 << 2;
+	public static final float FIXED_TIME_STEP = 1/ 60f;
 
 	public static final BodyDef BODY_DEF = new BodyDef();
 	public static final FixtureDef FIXTURE_DEF = new FixtureDef();
@@ -71,6 +73,7 @@ public class CoreGame extends Game {
 	
 	private Stage stage;
 	private Skin skin;
+	private GameUI gameUI; 
 	private LoadAsset loadAsset;
 	
 	private InputManager inputManager;
@@ -78,6 +81,8 @@ public class CoreGame extends Game {
 	private ECSEngine ecsEngine;
 	
 	private GameRenderer gameRenderer;
+
+	private float accumulator = 0;
 
 	@Override
 	public void create () {
@@ -100,8 +105,7 @@ public class CoreGame extends Game {
 		loadAsset.getGameAssetUI();
 		stage = new Stage(new FitViewport(1280, 720), spriteBatch);
 		
-		// map
-		mapManager = new MapManager(this);
+
 		
 		//audio
 		audioManager = new AudioManager(this);
@@ -113,10 +117,13 @@ public class CoreGame extends Game {
 		//set first screen
 		gameCamera = new OrthographicCamera();
 		screenViewport = new FitViewport(16, 9, gameCamera);
-			
-		
+
+
 		//entity
 		ecsEngine = new ECSEngine(this);
+
+		// map
+		mapManager = new MapManager(this);
 		
 		//gamerenderer
 		gameRenderer = new GameRenderer(this);
@@ -183,6 +190,18 @@ public class CoreGame extends Game {
 		return mapManager;
 	}
 
+	public WorldContactListener getWorldContactListener() {
+		return worldContactListener;
+	}
+
+	public GameUI getGameUI() {
+		return gameUI;
+	}
+
+	public void setGameUI(GameUI gameUI) {
+		this.gameUI = gameUI;
+	}
+
 	public void setScreen(final ScreenType screenType) {
 		final Screen screen = screenCache.get(screenType);
 		if (screen == null) {
@@ -219,10 +238,17 @@ public class CoreGame extends Game {
 	@Override
 	public void render()  {
 		super.render();
+
+		final float deltaTime = Math.min(0.25f, Gdx.graphics.getDeltaTime());
+		accumulator += deltaTime;
 		ecsEngine.update(Gdx.graphics.getDeltaTime());
-		gameRenderer.render(Gdx.graphics.getDeltaTime());
+		while (accumulator >= FIXED_TIME_STEP) {
+			world.step(FIXED_TIME_STEP, 6, 2);
+			accumulator -=  FIXED_TIME_STEP;
+		}
+		gameRenderer.render( accumulator/FIXED_TIME_STEP);
 		stage.getViewport().apply();
-		stage.act();
+		stage.act(deltaTime);
 		stage.draw();
 	}
 	
