@@ -22,36 +22,32 @@ public class GameUI extends Table{
 	private final Table heartTable;
 	private final Entity player;
 	private final PlayerComponent playerCmp;
-	public int life;
-	public int maxlife;
 	
 	public GameUI(Skin skin, CoreGame game) {
 		super(skin);
 		this.game = game;
-		life = 12;
-		maxlife = 12;
 		player = game.getEcsEngine().getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
 		playerCmp = player.getComponent(PlayerComponent.class);
 		heartTable = new Table();
 		setFillParent(true);
 		heartImage = new Image[ (int) playerCmp.maxLife/4];
-		updateHeart();
+		createHeart();
 	}
-	
-	public void updateHeart() {
+
+	public void createHeart() {
 		int i;
 		for (i=4; i<=playerCmp.maxLife; i += 4) {
 			heartImage[(int)(i/4)-1] = new Image(setHeartImage(4));
 			heartImage[(int)(i/4)-1].setScale(3);
 		}
-		
+
 		for (i=4; i<=playerCmp.life; i+= 4) {
 			heartImage[(int)(i/4)-1] = new Image(setHeartImage(0));
-			heartImage[(int)(i/4)-1].setScale(3);	
+			heartImage[(int)(i/4)-1].setScale(3);
 		}
-		
+
 		if (i<=playerCmp.maxLife) {
-			heartImage[(int)(i/4)-1] = new Image(setHeartImage(i-life));
+			heartImage[(int)(i/4)-1] = new Image(setHeartImage(i-playerCmp.life));
 			heartImage[(int)(i/4)-1].setScale(3);
 			i += 4;
 		}
@@ -59,6 +55,30 @@ public class GameUI extends Table{
 			heartTable.add(heartImage[i]).expand(false, true).top().padTop(50).left().padLeft(20).padRight(20);
 		}
 		add(heartTable).expand().left().top();
+	}
+	
+	public void updateHeart() {
+		int i;
+		heartTable.clearChildren();
+		for (i=4; i<=playerCmp.maxLife; i += 4) {
+			heartImage[(int)(i/4)-1] = new Image(setHeartImage(4));
+			heartImage[(int)(i/4)-1].setScale(3);
+		}
+
+		for (i=4; i<=playerCmp.life; i+= 4) {
+			heartImage[(int)(i/4)-1] = new Image(setHeartImage(0));
+			heartImage[(int)(i/4)-1].setScale(3);
+		}
+
+		if (i<=playerCmp.maxLife) {
+			heartImage[(int)(i/4)-1] = new Image(setHeartImage(i-playerCmp.life));
+			heartImage[(int)(i/4)-1].setScale(3);
+			i += 4;
+		}
+
+		for (i=0; i<playerCmp.maxLife/4; i++) {
+			heartTable.add(heartImage[i]).expand(false, true).top().padTop(50).left().padLeft(20).padRight(20);
+		}
 	}
 	
 	private Texture setHeartImage(int i) {

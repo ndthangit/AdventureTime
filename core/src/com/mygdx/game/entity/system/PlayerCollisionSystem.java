@@ -8,14 +8,15 @@ import com.mygdx.game.CoreGame;
 import com.mygdx.game.WorldContactListener.PlayerCollisionListener;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.GameObjectComponent;
+import com.mygdx.game.entity.component.PlayerComponent;
 import com.mygdx.game.entity.component.RemoveComponent;
 import com.mygdx.game.map.GameObjectType;
 
 public class PlayerCollisionSystem extends IteratingSystem implements PlayerCollisionListener {
-
+    CoreGame game;
     public PlayerCollisionSystem(final CoreGame game) {
         super(Family.all(RemoveComponent.class).get());
-
+        this.game = game;
         game.getWorldContactListener().addPlayerCollisionListener(this);
     }
 
@@ -27,12 +28,17 @@ public class PlayerCollisionSystem extends IteratingSystem implements PlayerColl
     @Override
     public void playerCollision(Entity player, Entity gameObj) {
         final GameObjectComponent gameObjCmp = ECSEngine.gameObjCmpMapper.get(gameObj);
+        final PlayerComponent playerCmp = ECSEngine.playerCmpMapper.get(player);
         if (gameObjCmp.type == GameObjectType.TRAP) {
         	
         }
         if (gameObjCmp.type == GameObjectType.TRAP) {
             // decrease life
-            gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));;
+            if (playerCmp.life > 0) {
+                playerCmp.life -= 1;
+                game.getGameUI().updateHeart();
+            }
+//            gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));;
         }
     }
 }
