@@ -30,6 +30,9 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 		//load characters and effects
 		assetManager.load("Items/Weapons/weapon.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", TextureAtlas.class);
+		assetManager.load("Actor/Monsters/Beast2/beast2.atlas", TextureAtlas.class);
+		assetManager.load("Actor/Monsters/Beast/beast.atlas", TextureAtlas.class);
+		assetManager.load("Actor/Monsters/Cyclope/cyclope.atlas", TextureAtlas.class);
 
 		//audio
 		isMusicLoaded = false;

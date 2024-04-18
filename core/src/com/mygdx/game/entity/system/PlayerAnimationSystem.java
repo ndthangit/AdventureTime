@@ -25,45 +25,45 @@ public class PlayerAnimationSystem extends IteratingSystem {
 		if(b2DComponent.body.getLinearVelocity().equals(Vector2.Zero)) {
 			aniComponent.aniTime = 0;
 			if (playerComponent.isAttack) {
-				if (aniComponent.aniType == AnimationType.HERO_DOWN) {
-					aniComponent.aniType = AnimationType.HERO_ATTACK_DOWN;
+				if (aniComponent.aniType == AnimationType.DOWN) {
+					aniComponent.aniType = AnimationType.ATTACK_DOWN;
 				}
-				else if (aniComponent.aniType == AnimationType.HERO_UP) {
-					aniComponent.aniType = AnimationType.HERO_ATTACK_UP;
+				else if (aniComponent.aniType == AnimationType.UP) {
+					aniComponent.aniType = AnimationType.ATTACK_UP;
 				}
-				else if (aniComponent.aniType == AnimationType.HERO_LEFT) {
-					aniComponent.aniType = AnimationType.HERO_ATTACK_LEFT;
+				else if (aniComponent.aniType == AnimationType.LEFT) {
+					aniComponent.aniType = AnimationType.ATTACK_LEFT;
 				}
-				else if (aniComponent.aniType == AnimationType.HERO_RIGHT) {
-					aniComponent.aniType = AnimationType.HERO_ATTACK_RIGHT;
+				else if (aniComponent.aniType == AnimationType.RIGHT) {
+					aniComponent.aniType = AnimationType.ATTACK_RIGHT;
 				}
 			}
 			else {
-				if (aniComponent.aniType == AnimationType.HERO_ATTACK_DOWN) {
-					aniComponent.aniType = AnimationType.HERO_DOWN;
+				if (aniComponent.aniType == AnimationType.ATTACK_DOWN) {
+					aniComponent.aniType = AnimationType.DOWN;
 				}
-				else if (aniComponent.aniType == AnimationType.HERO_ATTACK_UP) {
-					aniComponent.aniType = AnimationType.HERO_UP;
+				else if (aniComponent.aniType == AnimationType.ATTACK_UP) {
+					aniComponent.aniType = AnimationType.UP;
 				}
-				else if (aniComponent.aniType == AnimationType.HERO_ATTACK_LEFT) {
-					aniComponent.aniType = AnimationType.HERO_LEFT;
+				else if (aniComponent.aniType == AnimationType.ATTACK_LEFT) {
+					aniComponent.aniType = AnimationType.LEFT;
 				}
-				else if (aniComponent.aniType == AnimationType.HERO_ATTACK_RIGHT) {
-					aniComponent.aniType = AnimationType.HERO_RIGHT;
+				else if (aniComponent.aniType == AnimationType.ATTACK_RIGHT) {
+					aniComponent.aniType = AnimationType.RIGHT;
 				}
 			}
 		}
 		else if (b2DComponent.body.getLinearVelocity().x > 0) {
-			aniComponent.aniType = AnimationType.HERO_RIGHT;
+			aniComponent.aniType = AnimationType.RIGHT;
 		}
 		else if (b2DComponent.body.getLinearVelocity().x < 0) {
-			aniComponent.aniType = AnimationType.HERO_LEFT;
+			aniComponent.aniType = AnimationType.LEFT;
 		}
 		else if (b2DComponent.body.getLinearVelocity().y > 0) {
-			aniComponent.aniType = AnimationType.HERO_UP;
+			aniComponent.aniType = AnimationType.UP;
 		}
 		else if (b2DComponent.body.getLinearVelocity().y < 0) {
-			aniComponent.aniType = AnimationType.HERO_DOWN;
+			aniComponent.aniType = AnimationType.DOWN;
 		}
 		
 	}

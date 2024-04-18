@@ -36,16 +36,16 @@ public class PlayerAttackSystem extends IteratingSystem{
 		final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(entity);
 		int direction = 0;
 		if (playerComponent.isAttack) {
-			if (aniComponent.aniType == AnimationType.HERO_ATTACK_DOWN) {
+			if (aniComponent.aniType == AnimationType.ATTACK_DOWN) {
 				direction = 0;
 			}
-			else if (aniComponent.aniType == AnimationType.HERO_ATTACK_UP) {
+			else if (aniComponent.aniType == AnimationType.ATTACK_UP) {
 				direction = 2;
 			}
-			else if (aniComponent.aniType == AnimationType.HERO_ATTACK_LEFT) {
+			else if (aniComponent.aniType == AnimationType.ATTACK_LEFT) {
 				direction = 1;
 			}
-			else if (aniComponent.aniType == AnimationType.HERO_ATTACK_RIGHT) {
+			else if (aniComponent.aniType == AnimationType.ATTACK_RIGHT) {
 				direction = 3;
 			}
 			ImmutableArray<Entity> weaponEnities = game.getEcsEngine().getEntitiesFor(Family.all(WeaponComponent.class, Box2DComponent.class).get());

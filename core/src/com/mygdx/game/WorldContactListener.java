@@ -75,17 +75,16 @@ public class WorldContactListener implements ContactListener {
 				listener.playerCollision(player, gameObj);
 			}
 		}
-		if (hasWeapon && hasGameObj) {
-			for (final PlayerCollisionListener listener : listeners) {
-				listener.weaponCollision(weapon, gameObj);
-			}
-		}
+//		if (hasWeapon && hasGameObj) {
+//			for (final PlayerCollisionListener listener : listeners) {
+//				listener.weaponCollision(weapon, gameObj);
+//			}
+//		}
 	}
 
 	@Override
 	public void endContact(Contact contact) {
 
-		
 	}
 
 	@Override

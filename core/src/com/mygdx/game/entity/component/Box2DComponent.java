@@ -6,7 +6,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
 public class Box2DComponent implements Component, Poolable{
-	
 	public Body body;
 	public float width;
 	public float height;

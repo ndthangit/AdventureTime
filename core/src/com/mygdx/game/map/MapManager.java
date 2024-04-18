@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.character.enemy.Enemy;
 import com.mygdx.game.entity.ECSEngine;
 
 import com.badlogic.ashley.core.Entity;
@@ -28,7 +29,7 @@ public class  MapManager {
 	private Map currentMap;
 	private final EnumMap<MapType, Map>mapCache;
 	private final Array<MapListener> listeners;
-	private Array<Entity> gameObjectsToRemove;
+	private Array<Entity> entityToRemove;
 
 	public MapManager(final CoreGame game) {
 		currentMapType = null;
@@ -39,7 +40,7 @@ public class  MapManager {
 		bodies = new Array<Body>();
 		mapCache = new EnumMap<MapType, Map>(MapType.class);
 		listeners = new Array<MapListener>();
-		gameObjectsToRemove = new Array<Entity>();;
+		entityToRemove = new Array<Entity>();;
 	}
 	
 	public void addMapListener(final MapListener listener) {
@@ -60,6 +61,7 @@ public class  MapManager {
 			world.getBodies(bodies);
 			destroyCollisionArea();
 			destroyGameObjects();
+			destroyEnemy();
 		}
 		
 		
@@ -77,6 +79,7 @@ public class  MapManager {
 		// create map entities/bodies
 		spawnCollisionAreas();
 		spawnGameObjects();
+		spawnEnemy();
 		
 		for (final MapListener listener: listeners) {
 			listener.mapChange(currentMap);
@@ -90,15 +93,34 @@ public class  MapManager {
 	}
 
 	private void destroyGameObjects() {
-			for(final Entity entity: ecsEngine.getEntities()) {
-				if (ECSEngine.gameObjCmpMapper.get(entity) != null) {
-					gameObjectsToRemove.add(entity);
-				}
+		for(final Entity entity: ecsEngine.getEntities()) {
+			if (ECSEngine.gameObjCmpMapper.get(entity) != null) {
+				entityToRemove.add(entity);
 			}
-			for (final Entity entity: gameObjectsToRemove) {
-				ecsEngine.removeEntity(entity);
+		}
+		for (final Entity entity: entityToRemove) {
+			ecsEngine.removeEntity(entity);
+		}
+		entityToRemove.clear();
+	}
+
+	private void spawnEnemy() {
+		for (final Enemy enemy: currentMap.getEnemies()) {
+			Gdx.app.debug(TAG, "not null");
+			ecsEngine.createEnemy(enemy);
+		}
+	}
+
+	private void destroyEnemy() {
+		for(final Entity entity: ecsEngine.getEntities()) {
+			if (ECSEngine.enemyCmpMapper.get(entity) != null) {
+				entityToRemove.add(entity);
 			}
-			gameObjectsToRemove.clear();
+		}
+		for (final Entity entity: entityToRemove) {
+			ecsEngine.removeEntity(entity);
+		}
+		entityToRemove.clear();
 	}
 
 	private void spawnCollisionAreas() {

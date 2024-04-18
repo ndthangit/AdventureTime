@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.character.player.PlayerType;
 import com.mygdx.game.input.GameKey;
 import com.mygdx.game.input.InputManager;
 import com.mygdx.game.items.weapon.Weapon;
@@ -27,7 +28,7 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 		mapManager = game.getMapManager();
 		mapManager.addMapListener(this);
 		mapManager.setMap();
-		game.getEcsEngine().createPlayer(mapManager.getCurrentMap().getStartPosition(), 0.75f, 0.75f);
+		game.getEcsEngine().createPlayer(mapManager.getCurrentMap().getStartPosition(), PlayerType.BLACK_NINJA_MAGE, 0.75f, 0.75f);
 		
 		this.screenUI = (GameUI) getscreenUI(game.getLoadAsset().getGameSkin(), game);
 		

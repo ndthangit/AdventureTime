@@ -59,6 +59,7 @@ public class CoreGame extends Game {
 	public static final short BIT_GROUND = 1 << 1;
 	public static final short BIT_GAME_OBJECT = 1 << 2;
 	public static final short BIT_WEAPON = 1 << 3;
+	public static final short BIT_ENEMY = 1 << 4;
 	public static final float FIXED_TIME_STEP = 1/ 60f;
 
 	public static final BodyDef BODY_DEF = new BodyDef();

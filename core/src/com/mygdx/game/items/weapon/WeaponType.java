@@ -1,14 +1,15 @@
 package com.mygdx.game.items.weapon;
 
 public enum WeaponType {
-    BIG_SWORD ("Items/Weapons/weapon.atlas", "SpriteInHand", 0.05f);
+    BIG_SWORD ("Items/Weapons/weapon.atlas", 0.05f);
+
     private final String atlasPath;
     private final String atlasKey;
     private final float frameTime;
 
-    WeaponType(String atlasPath, String atlasKey, float frameTime) {
+    WeaponType(String atlasPath, float frameTime) {
         this.atlasPath = atlasPath;
-        this.atlasKey = atlasKey;
+        this.atlasKey = "SpriteInHand";
         this.frameTime = frameTime;
     }
 

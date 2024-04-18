@@ -10,6 +10,6 @@ public class WeaponComponent implements Component, Pool.Poolable {
     public int direction;
     @Override
     public void reset() {
-
+        direction = 0;
     }
 }

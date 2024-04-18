@@ -3,19 +3,18 @@ package com.mygdx.game.entity.component;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.mygdx.game.character.player.PlayerType;
+import com.mygdx.game.view.AnimationType;
 
-public class PlayerComponent implements Component, Poolable{
-
-	public int life;
-	public int maxLife;
-	public boolean hasAxe;
+public class PlayerComponent extends EntityComponent implements Component, Poolable{
+	public PlayerType aniType;
 	public boolean isAttack;
-	public Vector2 speed = new Vector2();
 	
 	@Override
 	public void reset() {
-		hasAxe = false;
-		speed.set(0,0);
+		super.reset();
+		aniType = null;
+
 	}
 
 }

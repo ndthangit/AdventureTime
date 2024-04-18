@@ -1,0 +1,12 @@
+cyclope.png
+size: 194, 192
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Walk
+  rotate: false
+  xy: 1, 1
+  size: 192, 190
+  orig: 192, 192
+  offset: 0, 0
+  index: -1

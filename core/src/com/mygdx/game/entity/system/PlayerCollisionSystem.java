@@ -35,7 +35,7 @@ public class PlayerCollisionSystem extends IteratingSystem implements PlayerColl
                 playerCmp.life -= 1;
                 game.getGameUI().updateHeart();
             }
-//            gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));;
+            gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));;
         }
     }
 

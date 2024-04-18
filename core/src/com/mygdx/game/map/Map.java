@@ -21,6 +21,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.character.enemy.Enemy;
+import com.mygdx.game.character.enemy.EnemyType;
 
 public class Map {
 	public static String TAG = Map.class.getSimpleName();
@@ -29,6 +31,7 @@ public class Map {
 	private final Array<CollisionArea>collisionAreas;
 	private final Vector2 startPosition;
 	private final Array<GameObject> gameObject;
+	private final Array<Enemy> enemies;
 	private final IntMap<Animation<Sprite>> mapAnimations;
 
 	public Map(final TiledMap tiledMap) {
@@ -40,8 +43,10 @@ public class Map {
 		parsePlayerLayer();
 
 		gameObject = new Array<GameObject>();
+		enemies = new Array<Enemy>();
 		mapAnimations = new IntMap<Animation<Sprite>>();
 		parseGameObjectLayer();
+		parseEnemyLayer();
 	}
 
 	private void parsePlayerLayer() {
@@ -59,22 +64,6 @@ public class Map {
 			}
 		}
 	}
-
-//	private void parsePlayerLayer() {
-//		final MapLayer playerLayer = tiledMap.getLayers().get("playerStartPosition");
-//		if (playerLayer == null) {
-//			Gdx.app.debug(TAG, "There is no player start position");
-//			return;
-//		}
-//		final MapObjects objects = playerLayer.getObjects();
-//		for (MapObject obj: objects) {
-//			if (obj instanceof RectangleMapObject) {
-//				final RectangleMapObject rectangleMapObject = (RectangleMapObject) obj;
-//				Rectangle rectangle = rectangleMapObject.getRectangle();
-//				startPosition.set(rectangle.x * CoreGame.UNIT_SCALE, rectangle.y * CoreGame.UNIT_SCALE);
-//			}
-//		}
-//	}
 
 	private void parseGameObjectLayer() {
 		final MapLayer gameObjectsLayer = tiledMap.getLayers().get("gameObjects");
@@ -113,6 +102,24 @@ public class Map {
 			final float width = tiledMapObjProperties.get("width", Float.class) * CoreGame.UNIT_SCALE ;
 			final float height = tiledMapObjProperties.get("height", Float.class) * CoreGame.UNIT_SCALE;
 			gameObject.add(new GameObject(gameObjType, new Vector2(tiledMapObject.getX()*CoreGame.UNIT_SCALE, tiledMapObject.getY()*CoreGame.UNIT_SCALE), width, height, tiledMapObject.getRotation(), animationIndex));
+		}
+	}
+
+	private void parseEnemyLayer() {
+		final MapLayer enemyLayer = tiledMap.getLayers().get("enemy");
+		if (enemyLayer == null) {
+			Gdx.app.debug(TAG, "There is no enemy layer");
+			return;
+		}
+		EnemyType enemyType;
+		for (final MapObject obj: enemyLayer.getObjects()) {
+			if (obj instanceof RectangleMapObject) {
+				final RectangleMapObject rectangleMapObject = (RectangleMapObject) obj;
+				Rectangle rectangle = rectangleMapObject.getRectangle();
+				enemyType = EnemyType.valueOf(rectangleMapObject.getName());
+
+				enemies.add(new Enemy(enemyType, new Vector2(rectangle.x*CoreGame.UNIT_SCALE, rectangle.y*CoreGame.UNIT_SCALE), 12, 12));
+			}
 		}
 	}
 
@@ -196,6 +203,10 @@ public class Map {
 
 	public Array<GameObject> getGameObjects() {
 		return gameObject;
+	}
+
+	public Array<Enemy> getEnemies() {
+		return enemies;
 	}
 
 	public IntMap<Animation<Sprite>> getMapAnimations() {

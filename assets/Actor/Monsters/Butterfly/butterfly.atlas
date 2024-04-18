@@ -1,0 +1,12 @@
+butterfly.png
+size: 192, 192
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+SpriteSheet
+  rotate: false
+  xy: 1, 1
+  size: 190, 190
+  orig: 192, 192
+  offset: 0, 2
+  index: -1
