@@ -21,8 +21,37 @@ public class PlayerAnimationSystem extends IteratingSystem {
 	protected void processEntity(Entity entity, float deltaTime) {
 		final Box2DComponent b2DComponent = ECSEngine.box2dCmpMapper.get(entity);
 		final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(entity);
+		final PlayerComponent playerComponent = ECSEngine.playerCmpMapper.get(entity);
 		if(b2DComponent.body.getLinearVelocity().equals(Vector2.Zero)) {
 			aniComponent.aniTime = 0;
+			if (playerComponent.isAttack) {
+				if (aniComponent.aniType == AnimationType.HERO_DOWN) {
+					aniComponent.aniType = AnimationType.HERO_ATTACK_DOWN;
+				}
+				else if (aniComponent.aniType == AnimationType.HERO_UP) {
+					aniComponent.aniType = AnimationType.HERO_ATTACK_UP;
+				}
+				else if (aniComponent.aniType == AnimationType.HERO_LEFT) {
+					aniComponent.aniType = AnimationType.HERO_ATTACK_LEFT;
+				}
+				else if (aniComponent.aniType == AnimationType.HERO_RIGHT) {
+					aniComponent.aniType = AnimationType.HERO_ATTACK_RIGHT;
+				}
+			}
+			else {
+				if (aniComponent.aniType == AnimationType.HERO_ATTACK_DOWN) {
+					aniComponent.aniType = AnimationType.HERO_DOWN;
+				}
+				else if (aniComponent.aniType == AnimationType.HERO_ATTACK_UP) {
+					aniComponent.aniType = AnimationType.HERO_UP;
+				}
+				else if (aniComponent.aniType == AnimationType.HERO_ATTACK_LEFT) {
+					aniComponent.aniType = AnimationType.HERO_LEFT;
+				}
+				else if (aniComponent.aniType == AnimationType.HERO_ATTACK_RIGHT) {
+					aniComponent.aniType = AnimationType.HERO_RIGHT;
+				}
+			}
 		}
 		else if (b2DComponent.body.getLinearVelocity().x > 0) {
 			aniComponent.aniType = AnimationType.HERO_RIGHT;

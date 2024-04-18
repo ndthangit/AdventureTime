@@ -18,7 +18,9 @@ import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.*;
@@ -28,6 +30,7 @@ import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.AnimationComponent;
 import com.mygdx.game.entity.component.Box2DComponent;
 import com.mygdx.game.entity.component.GameObjectComponent;
+import com.mygdx.game.entity.component.WeaponComponent;
 import com.mygdx.game.map.Map;
 import com.mygdx.game.map.MapListener;
 
@@ -44,6 +47,7 @@ public class GameRenderer implements Disposable, MapListener{
 
 	private final ImmutableArray<Entity> gameObjectEntities;
 	private final ImmutableArray<Entity> animatedEntities;
+	private final ImmutableArray<Entity> weaponEntities;
 	private final OrthogonalTiledMapRenderer mapRenderer;
 	private final Array<TiledMapTileLayer> tiledMapLayers;
 	
@@ -66,7 +70,8 @@ public class GameRenderer implements Disposable, MapListener{
 
 		gameObjectEntities = game.getEcsEngine().getEntitiesFor(Family.all(GameObjectComponent.class, Box2DComponent.class, AnimationComponent.class).get());
 		animatedEntities = game.getEcsEngine().getEntitiesFor(Family.all(AnimationComponent.class, Box2DComponent.class).exclude(GameObjectComponent.class).get());
-		
+		weaponEntities = game.getEcsEngine().getEntitiesFor(Family.all(WeaponComponent.class, AnimationComponent.class, Box2DComponent.class).get());
+
 		this.mapRenderer = new OrthogonalTiledMapRenderer(null, CoreGame.UNIT_SCALE, game.getSpriteBatch());
 		game.getMapManager().addMapListener(this);
 		tiledMapLayers = new Array<TiledMapTileLayer>();
@@ -103,11 +108,17 @@ public class GameRenderer implements Disposable, MapListener{
 
 		for (final Entity entity: animatedEntities) {
 			renderEntity(entity, delta);
-	;	}
+		}
+		
+		for (final Entity entity: weaponEntities) {
+			renderWeapon(entity, delta);
+		}
+		eventChecker();
 		spriteBatch.end();
 		b2dDebugRenderer.render(world, viewport.getCamera().combined);
 //		world.step(FIXED_TIME_STEP, 6, 2);
 		profiler.reset();
+
 	}
 
 	private void renderGameObject(Entity entity, float delta) {
@@ -140,12 +151,26 @@ public class GameRenderer implements Disposable, MapListener{
 		}
 	}
 
+	private void renderWeapon(Entity entity, float delta) {
+		final Box2DComponent box2DComponent = ECSEngine.box2dCmpMapper.get(entity);
+		final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(entity);
+		final WeaponComponent weaponComponent = ECSEngine.weaponCmpMapper.get(entity);
+		final AtlasRegion atlasRegion = assetManager.get(weaponComponent.type.getAtlasPath(), TextureAtlas.class).findRegion(weaponComponent.type.getAtlasKey());
+		final Sprite frame;
+		frame = new Sprite(atlasRegion);
+		box2DComponent.renderPosition.lerp(box2DComponent.body.getPosition(), delta);
+		frame.setBounds(box2DComponent.renderPosition.x - aniComponent.width / 2, box2DComponent.renderPosition.y - aniComponent.height / 2, aniComponent.width, aniComponent.height);
+		frame.setOriginCenter();
+		frame.setRotation(-weaponComponent.direction * 90);
+		frame.draw(spriteBatch);
+	}
+
 	private Animation<Sprite> getAnimation(AnimationType aniType) {
 		Animation<Sprite> animation = animationCache.get(aniType);
 		if (animation == null) {
 			Gdx.app.debug(TAG, "Creating new animation of type " + aniType);
 			final AtlasRegion atlasRegion = assetManager.get(aniType.getAtlasPath(), TextureAtlas.class).findRegion(aniType.getAtlasKey());
-			final TextureRegion[][] textureRegions = atlasRegion.split(46, 48);
+			final TextureRegion[][] textureRegions = atlasRegion.split(48, 48);
 			animation = new Animation<Sprite>(aniType.getFrameTime(), getKeyFrame(textureRegions, aniType.getColIndex()), Animation.PlayMode.LOOP);
 			animationCache.put(aniType, animation);
 		}
@@ -160,6 +185,34 @@ public class GameRenderer implements Disposable, MapListener{
 			keyFrame.add(sprite);
 		}
 		return keyFrame;
+	}
+
+	private void eventChecker() {
+		if (weaponEntities.size()>0) {
+			Entity weapon = weaponEntities.first();
+			Box2DComponent wb2dComponent = ECSEngine.box2dCmpMapper.get(weapon);
+			AnimationComponent animationComponent = ECSEngine.aniCmpMapper.get(weapon);
+			Rectangle rectangle1 = new Rectangle();
+			Rectangle rectangle2 = new Rectangle();
+			rectangle1.x = wb2dComponent.body.getPosition().x ;
+			rectangle1.y = wb2dComponent.body.getPosition().y;
+			rectangle1.height = animationComponent.height;
+			rectangle1.width = animationComponent.width;
+			Box2DComponent gb2dComponent;
+			AnimationComponent ganiComponent;
+			for (Entity gameObj: gameObjectEntities) {
+				gb2dComponent = ECSEngine.box2dCmpMapper.get(gameObj);
+				ganiComponent = ECSEngine.aniCmpMapper.get(gameObj);
+				rectangle2.height = ganiComponent.height;
+				rectangle2.width = ganiComponent.width;
+				rectangle2.x = gb2dComponent.body.getPosition().x;
+				rectangle2.y = gb2dComponent.body.getPosition().y;
+				
+				if (Intersector.overlaps(rectangle1, rectangle2)) {
+					Gdx.app.debug(TAG, "Overlaps " + rectangle1 + " and " + rectangle2);
+				}
+			}
+		}
 	}
 
 	@Override

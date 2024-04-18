@@ -1,9 +1,14 @@
 package com.mygdx.game.screens;
 
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.input.GameKey;
 import com.mygdx.game.input.InputManager;
+import com.mygdx.game.items.weapon.Weapon;
+import com.mygdx.game.items.weapon.WeaponType;
 import com.mygdx.game.map.Map;
 import com.mygdx.game.map.MapListener;
 import com.mygdx.game.map.MapType;
@@ -23,13 +28,16 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 		mapManager.addMapListener(this);
 		mapManager.setMap();
 		game.getEcsEngine().createPlayer(mapManager.getCurrentMap().getStartPosition(), 0.75f, 0.75f);
+		
 		this.screenUI = (GameUI) getscreenUI(game.getLoadAsset().getGameSkin(), game);
+		
 		game.setGameUI(screenUI);
 	}
 
 	@Override
 	public void show() {
 		super.show();
+		
 //		mapRender.setMap(assetManager.get(mapManager.getCurrentMapType().getFilePath(), TiledMap.class));
 	}
 	

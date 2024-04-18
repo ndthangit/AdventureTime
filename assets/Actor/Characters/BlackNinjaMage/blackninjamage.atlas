@@ -1,61 +1,54 @@
 blackninjamage.png
-size: 242, 344
+size: 192, 336
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 Attack
   rotate: false
-  xy: 1, 195
-  size: 190, 48
+  xy: 0, 48
+  size: 192, 48
   orig: 192, 48
-  offset: 2, 0
+  offset: 0, 0
   index: -1
 Dead
   rotate: false
-  xy: 193, 101
-  size: 48, 40
+  xy: 0, 0
+  size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Idle
   rotate: false
-  xy: 1, 295
-  size: 188, 48
+  xy: 0, 96
+  size: 192, 48
   orig: 192, 48
-  offset: 2, 0
+  offset: 0, 0
   index: -1
 Item
   rotate: false
-  xy: 193, 1
+  xy: 48, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-Jump
-  rotate: false
-  xy: 1, 245
-  size: 190, 48
-  orig: 192, 48
-  offset: 0, 0
-  index: -1
 Special1
   rotate: false
-  xy: 193, 51
+  xy: 96, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Special2
   rotate: false
-  xy: 193, 143
+  xy: 144, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Walk
   rotate: false
-  xy: 1, 1
-  size: 190, 192
+  xy: 0, 144
+  size: 192, 192
   orig: 192, 192
   offset: 0, 0
   index: -1

@@ -4,7 +4,12 @@ public enum AnimationType {
 	HERO_DOWN("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", "Walk", 0.05f,0),
 	HERO_UP("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", "Walk", 0.05f, 1),
 	HERO_LEFT("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", "Walk", 0.05f, 2),
-	HERO_RIGHT("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", "Walk", 0.05f, 3);
+	HERO_RIGHT("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", "Walk", 0.05f, 3),
+	
+	HERO_ATTACK_DOWN("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", "Attack", 0.05f, 0),
+	HERO_ATTACK_UP("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", "Attack", 0.05f, 1),
+	HERO_ATTACK_LEFT("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", "Attack", 0.05f, 2),
+	HERO_ATTACK_RIGHT("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", "Attack", 0.05f, 3);
 
 	public String getAtlasPath() {
 		return atlasPath;

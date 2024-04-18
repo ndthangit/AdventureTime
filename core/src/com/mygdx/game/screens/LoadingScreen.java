@@ -28,8 +28,9 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 		this.mapManager = game.getMapManager();
 		this.screenUI = (LoadingUI) getscreenUI(game.getLoadAsset().getGameSkin(), game);
 		//load characters and effects
+		assetManager.load("Items/Weapons/weapon.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", TextureAtlas.class);
-		
+
 		//audio
 		isMusicLoaded = false;
 		for (final AudioType audioType: AudioType.values()) {

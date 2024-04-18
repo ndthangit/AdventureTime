@@ -60,6 +60,22 @@ public class Map {
 		}
 	}
 
+//	private void parsePlayerLayer() {
+//		final MapLayer playerLayer = tiledMap.getLayers().get("playerStartPosition");
+//		if (playerLayer == null) {
+//			Gdx.app.debug(TAG, "There is no player start position");
+//			return;
+//		}
+//		final MapObjects objects = playerLayer.getObjects();
+//		for (MapObject obj: objects) {
+//			if (obj instanceof RectangleMapObject) {
+//				final RectangleMapObject rectangleMapObject = (RectangleMapObject) obj;
+//				Rectangle rectangle = rectangleMapObject.getRectangle();
+//				startPosition.set(rectangle.x * CoreGame.UNIT_SCALE, rectangle.y * CoreGame.UNIT_SCALE);
+//			}
+//		}
+//	}
+
 	private void parseGameObjectLayer() {
 		final MapLayer gameObjectsLayer = tiledMap.getLayers().get("gameObjects");
 		if (gameObjectsLayer == null) {

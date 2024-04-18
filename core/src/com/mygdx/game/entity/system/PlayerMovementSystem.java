@@ -12,8 +12,9 @@ import com.mygdx.game.input.InputManager;
 import com.mygdx.game.input.KeyInputListener;
 
 public class PlayerMovementSystem extends IteratingSystem implements KeyInputListener {
-	
+
 	private boolean directionChange;
+	private boolean isAttack;
 	private int xFactor;
 	private int yFactor;
 
@@ -31,7 +32,15 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 		float speedx = speed > 0 ? playerComponent.speed.x * xFactor / speed : 0;
 		float speedy = speed > 0 ? playerComponent.speed.y * yFactor / speed : 0;
 		
-		
+		if (isAttack) {
+			playerComponent.isAttack = true;
+			speedx = 0;
+			speedy = 0;
+		}
+		else {
+			playerComponent.isAttack = false;
+		}
+
 		if (directionChange) {
 			b2dComponent.body.applyLinearImpulse(speedx - b2dComponent.body.getLinearVelocity().x * b2dComponent.body.getMass(),
 												 speedy - b2dComponent.body.getLinearVelocity().y * b2dComponent.body.getMass(), 
@@ -59,6 +68,9 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 			directionChange = true;
 			xFactor = 1;
 			break;
+		case ATTACK:
+			isAttack = true;
+			break;
 		default:
 			break;
 		}
@@ -82,6 +94,9 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 		case RIGHT:
 			directionChange = true;
 			xFactor = manager.isKeyPressed(GameKey.LEFT) ? -1: 0;
+			break;
+		case ATTACK:
+			isAttack = false;
 			break;
 		default:
 			break;

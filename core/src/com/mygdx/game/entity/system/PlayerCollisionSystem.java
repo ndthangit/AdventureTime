@@ -30,15 +30,20 @@ public class PlayerCollisionSystem extends IteratingSystem implements PlayerColl
         final GameObjectComponent gameObjCmp = ECSEngine.gameObjCmpMapper.get(gameObj);
         final PlayerComponent playerCmp = ECSEngine.playerCmpMapper.get(player);
         if (gameObjCmp.type == GameObjectType.TRAP) {
-        	
-        }
-        if (gameObjCmp.type == GameObjectType.TRAP) {
             // decrease life
             if (playerCmp.life > 0) {
                 playerCmp.life -= 1;
                 game.getGameUI().updateHeart();
             }
 //            gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));;
+        }
+    }
+
+    @Override
+    public void weaponCollision(Entity weapon, Entity gameObj) {
+        final GameObjectComponent gameObjCmp = ECSEngine.gameObjCmpMapper.get(gameObj);
+        if (gameObjCmp.type == GameObjectType.TRAP) {
+            gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));;
         }
     }
 }

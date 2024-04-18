@@ -7,13 +7,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game.CoreGame;
-import com.mygdx.game.entity.component.AnimationComponent;
-import com.mygdx.game.entity.component.Box2DComponent;
-import com.mygdx.game.entity.component.GameObjectComponent;
-import com.mygdx.game.entity.component.PlayerComponent;
+import com.mygdx.game.entity.component.*;
 import com.mygdx.game.entity.system.*;
+import com.mygdx.game.items.weapon.Weapon;
 import com.mygdx.game.map.GameObject;
 import com.mygdx.game.view.AnimationType;
+
+import static com.mygdx.game.items.weapon.WeaponType.BIG_SWORD;
 
 public class ECSEngine extends PooledEngine{
 	
@@ -21,7 +21,9 @@ public class ECSEngine extends PooledEngine{
 	public static final ComponentMapper<Box2DComponent> box2dCmpMapper = ComponentMapper.getFor(Box2DComponent.class);
 	public static final ComponentMapper<AnimationComponent> aniCmpMapper = ComponentMapper.getFor(AnimationComponent.class);
 	public static final ComponentMapper<GameObjectComponent> gameObjCmpMapper = ComponentMapper.getFor(GameObjectComponent.class);
-	
+	public static final ComponentMapper<WeaponComponent> weaponCmpMapper = ComponentMapper.getFor(WeaponComponent.class);
+
+
 	private final World world;
 
 	private final Vector2 localPosition;
@@ -42,6 +44,7 @@ public class ECSEngine extends PooledEngine{
 		this.addSystem(new AnimationSystem(game));
 		this.addSystem(new PlayerAnimationSystem(game));
 		this.addSystem(new PlayerCollisionSystem(game));
+		this.addSystem(new PlayerAttackSystem(game));
 	}
 	
 	
@@ -79,8 +82,8 @@ public class ECSEngine extends PooledEngine{
 		//animation component
 		final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
 		animationComponent.aniType = AnimationType.HERO_DOWN;
-		animationComponent.width = 12 * CoreGame.UNIT_SCALE;
-		animationComponent.height = 12 * CoreGame.UNIT_SCALE;
+		animationComponent.width = 16 * CoreGame.UNIT_SCALE;
+		animationComponent.height = 16 * CoreGame.UNIT_SCALE;
 		player.add(animationComponent);
 		this.addEntity(player);
 		
@@ -140,4 +143,57 @@ public class ECSEngine extends PooledEngine{
 		this.addEntity(gameObjEntity);
 	}
 
+	public void createPlayerWeapon(final Weapon weapon) {
+		final Entity weaponEntity = this.createEntity();
+
+		final WeaponComponent weaponComponent = this.createComponent(WeaponComponent.class);
+		weaponComponent.type = weapon.type;
+		weaponComponent.direction = weapon.direction;
+		weaponEntity.add(weaponComponent);
+
+
+		final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
+		animationComponent.aniType = null;
+		animationComponent.width = weapon.getWidth();
+		animationComponent.height = weapon.getHeight();
+		weaponEntity.add(animationComponent);
+
+		CoreGame.resetBodiesAndFixtureDefinition();
+		final float halfW = weapon.getWidth() / 2;
+		final float halfH = weapon.getHeight() / 2;
+		final float angleRad = -weapon.getDirection() * MathUtils.degreesToRadians * 90;
+		final Box2DComponent box2DComponent = this.createComponent(Box2DComponent.class);
+		CoreGame.BODY_DEF.type = BodyDef.BodyType.DynamicBody;
+		CoreGame.BODY_DEF.position.set(weapon.getPosition().x + weapon.posDirection[weapon.direction].x , weapon.getPosition().y + weapon.posDirection[weapon.direction].y);
+		box2DComponent.body = world.createBody(CoreGame.BODY_DEF);
+		box2DComponent.body.setUserData(weaponEntity);
+		box2DComponent.width = weapon.getWidth();
+		box2DComponent.height = weapon.getHeight();
+
+
+		// save position before rotation - Tiled is rotated around the bottom left corner instead of the center of a Tile
+
+		localPosition.set(0, 0);
+		posBeforeRotation.set(box2DComponent.body.getWorldPoint(localPosition));
+		// rotate body
+		box2DComponent.body.setTransform(box2DComponent.body.getPosition(), angleRad);
+		// get position after rotation
+		posAfterRotation.set(box2DComponent.body.getWorldPoint(localPosition));
+//		adjust position to its original value before the rotation
+		box2DComponent.body.setTransform(box2DComponent.body.getPosition().add(posBeforeRotation).sub(posAfterRotation), angleRad);
+//		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x - animationComponent.width * 1f, box2DComponent.body.getPosition().y - animationComponent.height * 1f);
+		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
+
+		//animation component
+		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_WEAPON;
+		CoreGame.FIXTURE_DEF.filter.maskBits = CoreGame.BIT_GAME_OBJECT;
+		PolygonShape pShape = new PolygonShape();
+		pShape.setAsBox(halfW, halfH);
+		CoreGame.FIXTURE_DEF.shape = pShape;
+		box2DComponent.body.createFixture(CoreGame.FIXTURE_DEF);
+		pShape.dispose();
+		weaponEntity.add(box2DComponent);
+
+		this.addEntity(weaponEntity);
+	}
 }

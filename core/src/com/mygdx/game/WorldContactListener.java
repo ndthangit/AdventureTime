@@ -7,10 +7,13 @@ import com.badlogic.gdx.utils.Array;
 
 import static com.mygdx.game.CoreGame.BIT_GAME_OBJECT;
 import static com.mygdx.game.CoreGame.BIT_PLAYER;
+import static com.mygdx.game.CoreGame.BIT_WEAPON;
 
 public class WorldContactListener implements ContactListener {
 	private final Array<PlayerCollisionListener> listeners;
-
+	private boolean hasPlayer;
+	private boolean hasGameObj;
+	private boolean hasWeapon;
     public WorldContactListener() {
         this.listeners = new Array<PlayerCollisionListener>();
     }
@@ -22,6 +25,7 @@ public class WorldContactListener implements ContactListener {
 	public void beginContact(Contact contact) {
 		final Entity player;
 		final Entity gameObj;
+		final Entity weapon;
 		final Body bodyA = contact.getFixtureA().getBody();
 		final Body bodyB = contact.getFixtureB().getBody();
 		final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
@@ -29,26 +33,52 @@ public class WorldContactListener implements ContactListener {
 
 		if ((catFixA & BIT_PLAYER) == BIT_PLAYER) {
 			player = (Entity) bodyA.getUserData();
+			hasPlayer = true;
 		}
 		else if((catFixB & BIT_PLAYER) == BIT_PLAYER){
 			player = (Entity) bodyB.getUserData();
+			hasPlayer = true;
 		}
 		else {
-			return;
+			player = null;
+			hasPlayer = false;
 		}
 
 		if ((catFixA & BIT_GAME_OBJECT) == BIT_GAME_OBJECT) {
 			gameObj = (Entity) bodyA.getUserData();
+			hasGameObj = true;
 		}
 		else if((catFixB & BIT_GAME_OBJECT) == BIT_GAME_OBJECT){
 			gameObj = (Entity) bodyB.getUserData();
+			hasGameObj = true;
 		}
 		else {
-			return;
+			gameObj = null;
+			hasGameObj = false;
 		}
-
-		for (final PlayerCollisionListener listener : listeners) {
-			listener.playerCollision(player, gameObj);
+		
+		if ((catFixA & BIT_WEAPON) == BIT_WEAPON) {
+			weapon = (Entity) bodyA.getUserData();
+			hasWeapon = true;
+		}
+		else if((catFixB & BIT_WEAPON) == BIT_WEAPON){
+			weapon = (Entity) bodyB.getUserData();
+			hasWeapon = true;
+		}
+		else {
+			weapon = null;
+			hasWeapon = false;
+		}
+		
+		if (hasPlayer && hasGameObj) {
+			for (final PlayerCollisionListener listener : listeners) {
+				listener.playerCollision(player, gameObj);
+			}
+		}
+		if (hasWeapon && hasGameObj) {
+			for (final PlayerCollisionListener listener : listeners) {
+				listener.weaponCollision(weapon, gameObj);
+			}
 		}
 	}
 
@@ -72,5 +102,6 @@ public class WorldContactListener implements ContactListener {
 	
 	public interface PlayerCollisionListener{
 		void playerCollision(final Entity player, final Entity gameObj);
+		void weaponCollision(final Entity weapon, final Entity gameObj);
 	}
 }
