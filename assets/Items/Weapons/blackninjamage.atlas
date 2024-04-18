@@ -1,0 +1,61 @@
+blackninjamage.png
+size: 240, 336
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Attack
+  rotate: false
+  xy: 0, 0
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+Dead
+  rotate: false
+  xy: 192, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Idle
+  rotate: false
+  xy: 0, 48
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+Item
+  rotate: false
+  xy: 192, 48
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Jump
+  rotate: false
+  xy: 0, 96
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+Special1
+  rotate: false
+  xy: 192, 96
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Special2
+  rotate: false
+  xy: 0, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Walk
+  rotate: false
+  xy: 48, 144
+  size: 192, 192
+  orig: 192, 192
+  offset: 0, 0
+  index: -1
