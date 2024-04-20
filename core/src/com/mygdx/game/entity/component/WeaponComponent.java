@@ -8,8 +8,10 @@ import com.mygdx.game.items.weapon.WeaponType;
 public class WeaponComponent implements Component, Pool.Poolable {
     public WeaponType type;
     public int direction;
+    public int attack;
     @Override
     public void reset() {
+        attack = 0;
         direction = 0;
     }
 }

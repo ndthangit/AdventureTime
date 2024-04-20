@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 import com.mygdx.game.character.player.PlayerType;
 import com.mygdx.game.view.AnimationType;
 
-public class PlayerComponent extends EntityComponent implements Component, Poolable{
+public class PlayerComponent extends EntityComponent {
 	public PlayerType aniType;
 	public boolean isAttack;
 	

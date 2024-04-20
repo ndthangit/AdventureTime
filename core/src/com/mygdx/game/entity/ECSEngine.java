@@ -15,8 +15,6 @@ import com.mygdx.game.items.weapon.Weapon;
 import com.mygdx.game.map.GameObject;
 import com.mygdx.game.view.AnimationType;
 
-import static com.mygdx.game.items.weapon.WeaponType.BIG_SWORD;
-
 public class ECSEngine extends PooledEngine{
 
 	public static final ComponentMapper<PlayerComponent> playerCmpMapper = ComponentMapper.getFor(PlayerComponent.class);
@@ -46,7 +44,7 @@ public class ECSEngine extends PooledEngine{
 		this.addSystem(new PlayerCameraSystem(game));
 		this.addSystem(new AnimationSystem(game));
 		this.addSystem(new PlayerAnimationSystem(game));
-		this.addSystem(new PlayerCollisionSystem(game));
+		this.addSystem(new CollisionSystem(game));
 		this.addSystem(new PlayerAttackSystem(game));
 	}
 
@@ -75,7 +73,7 @@ public class ECSEngine extends PooledEngine{
 		PolygonShape pShape = new PolygonShape();
 		pShape.setAsBox(width * 0.5f, height * 0.5f);
 		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_PLAYER;
-		CoreGame.FIXTURE_DEF.filter.maskBits = CoreGame.BIT_GROUND | CoreGame.BIT_GAME_OBJECT;
+		CoreGame.FIXTURE_DEF.filter.maskBits = -1;
 		CoreGame.FIXTURE_DEF.shape = pShape;
 		box2DComponent.body.createFixture(CoreGame.FIXTURE_DEF);
 
@@ -151,6 +149,7 @@ public class ECSEngine extends PooledEngine{
 		final WeaponComponent weaponComponent = this.createComponent(WeaponComponent.class);
 		weaponComponent.type = weapon.type;
 		weaponComponent.direction = weapon.direction;
+		weaponComponent.attack = weapon.type.getAttack();
 		weaponEntity.add(weaponComponent);
 
 		// animation component
@@ -185,7 +184,7 @@ public class ECSEngine extends PooledEngine{
 		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
 		//animation component
 		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_WEAPON;
-		CoreGame.FIXTURE_DEF.filter.maskBits = CoreGame.BIT_GAME_OBJECT;
+		CoreGame.FIXTURE_DEF.filter.maskBits = -1;
 		PolygonShape pShape = new PolygonShape();
 		pShape.setAsBox(halfW, halfH);
 		CoreGame.FIXTURE_DEF.shape = pShape;
@@ -199,12 +198,13 @@ public class ECSEngine extends PooledEngine{
 	public void createEnemy(final Enemy enemy) {
 		final Entity enemyEnity = this.createEntity();
 
-		// gameobject component
+		// enemy component
 		final EnemyComponent enemyComponent = this.createComponent(EnemyComponent.class);
 		enemyComponent.maxLife = enemy.getType().getMaxLife();
 		enemyComponent.life = enemyComponent.maxLife;
 		enemyComponent.type = enemy.getType();
 		enemyComponent.speed.set(enemy.getType().getSpeed(), enemy.getType().getSpeed());
+		enemyComponent.attack = enemy.getType().getAttack();
 		enemyEnity.add(enemyComponent);
 
 		// animation component

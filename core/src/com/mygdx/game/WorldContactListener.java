@@ -5,20 +5,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 
-import static com.mygdx.game.CoreGame.BIT_GAME_OBJECT;
-import static com.mygdx.game.CoreGame.BIT_PLAYER;
-import static com.mygdx.game.CoreGame.BIT_WEAPON;
+import static com.mygdx.game.CoreGame.*;
 
 public class WorldContactListener implements ContactListener {
-	private final Array<PlayerCollisionListener> listeners;
+	private final Array<CollisionListener> listeners;
 	private boolean hasPlayer;
 	private boolean hasGameObj;
 	private boolean hasWeapon;
+	private boolean hasEnemy;
     public WorldContactListener() {
-        this.listeners = new Array<PlayerCollisionListener>();
+
+		this.listeners = new Array<CollisionListener>();
     }
 
-	public void addPlayerCollisionListener(PlayerCollisionListener listener) {
+	public void addPlayerCollisionListener(CollisionListener listener) {
+
 		listeners.add(listener);
 	}
     @Override
@@ -26,6 +27,7 @@ public class WorldContactListener implements ContactListener {
 		final Entity player;
 		final Entity gameObj;
 		final Entity weapon;
+		final Entity enemy;
 		final Body bodyA = contact.getFixtureA().getBody();
 		final Body bodyB = contact.getFixtureB().getBody();
 		final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
@@ -69,22 +71,44 @@ public class WorldContactListener implements ContactListener {
 			weapon = null;
 			hasWeapon = false;
 		}
+
+		if ((catFixA & BIT_ENEMY) == BIT_ENEMY) {
+			enemy = (Entity) bodyA.getUserData();
+			hasEnemy = true;
+		}
+		else if((catFixB & BIT_ENEMY) == BIT_ENEMY){
+			enemy = (Entity) bodyB.getUserData();
+			hasEnemy = true;
+		}
+		else {
+			enemy = null;
+			hasEnemy = false;
+		}
 		
 		if (hasPlayer && hasGameObj) {
-			for (final PlayerCollisionListener listener : listeners) {
+			for (final CollisionListener listener : listeners) {
 				listener.playerCollision(player, gameObj);
 			}
 		}
-//		if (hasWeapon && hasGameObj) {
-//			for (final PlayerCollisionListener listener : listeners) {
-//				listener.weaponCollision(weapon, gameObj);
-//			}
-//		}
+		else if (hasPlayer && hasEnemy) {
+			for (final CollisionListener listener : listeners) {
+				listener.playerVSEnemy(player, enemy);
+			}
+		}
+		else if (hasWeapon && hasEnemy) {
+			for (final CollisionListener listener : listeners) {
+				listener.weaponVSEnemy(weapon, enemy);
+			}
+		}
+
 	}
 
 	@Override
 	public void endContact(Contact contact) {
-
+		final Body bodyA = contact.getFixtureA().getBody();
+		final Body bodyB = contact.getFixtureB().getBody();
+		bodyA.applyLinearImpulse(-bodyA.getLinearVelocity().x*bodyA.getMass(), -bodyA.getLinearVelocity().y*bodyA.getMass(), bodyA.getPosition().x, bodyA.getPosition().y, true);
+		bodyB.applyLinearImpulse(-bodyB.getLinearVelocity().x*bodyB.getMass(), -bodyB.getLinearVelocity().y*bodyB.getMass(), bodyB.getPosition().x, bodyB.getPosition().y, true);
 	}
 
 	@Override
@@ -98,9 +122,15 @@ public class WorldContactListener implements ContactListener {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public int checkEntity (int fixture) {
+		return 0;
+	}
 	
-	public interface PlayerCollisionListener{
+	public interface CollisionListener{
 		void playerCollision(final Entity player, final Entity gameObj);
 		void weaponCollision(final Entity weapon, final Entity gameObj);
+		void playerVSEnemy(final Entity player, final Entity enemy);
+		void weaponVSEnemy(final Entity weapon, final Entity enemy);
 	}
 }
