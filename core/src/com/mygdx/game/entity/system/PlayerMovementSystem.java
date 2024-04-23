@@ -17,10 +17,12 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 	private boolean isAttack;
 	private int xFactor;
 	private int yFactor;
+	private float time;
 
 	public PlayerMovementSystem(final CoreGame game) {
 		super(Family.all(PlayerComponent.class, Box2DComponent.class).get());
 		game.getInputManager().addInputListener(this);
+		time = 0;
 	}
 
 	@Override
@@ -32,12 +34,20 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 		float speedx = speed > 0 ? playerComponent.speed.x * xFactor / speed : 0;
 		float speedy = speed > 0 ? playerComponent.speed.y * yFactor / speed : 0;
 		
-		if (isAttack) {
-			playerComponent.isAttack = true;
-			speedx = 0;
-			speedy = 0;
+		if (isAttack && time < 0.75f) {
+			time += deltaTime;
+			if (time < 0.5f) {
+				playerComponent.isAttack = true;
+				speedx = 0;
+				speedy = 0;
+			}
+			else {
+				playerComponent.isAttack = false;
+			}
 		}
 		else {
+			isAttack = false;
+			time = 0;
 			playerComponent.isAttack = false;
 		}
 
@@ -94,9 +104,6 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 		case RIGHT:
 			directionChange = true;
 			xFactor = manager.isKeyPressed(GameKey.LEFT) ? -1: 0;
-			break;
-		case ATTACK:
-			isAttack = false;
 			break;
 		default:
 			break;

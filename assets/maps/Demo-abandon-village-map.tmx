@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="10">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="11">
  <tileset firstgid="1" name="Ground" tilewidth="16" tileheight="16" tilecount="572" columns="22">
   <image source="../Backgrounds/Tilesets/TilesetFloor.png" width="352" height="417"/>
  </tileset>
@@ -52,7 +52,7 @@
 265,265,265,265,89,265,265,265,89,89,1250,1082,1082,1082,1082,1082,1082,1082,1082,1082,1082,1082,1082,1082,1082,1082,1082,1082,1082,1082
 </data>
  </layer>
- <layer id="2" name="house" width="30" height="30">
+ <layer id="2" name="wall" width="30" height="30">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,934,0,635,0,0,0,0,0,635,0,936,697,698,697,698,697,698,0,0,0,0,
 0,0,0,577,578,579,580,0,0,934,0,655,639,0,0,661,639,655,0,936,717,697,717,697,717,697,698,0,0,0,
@@ -199,6 +199,7 @@
    <polygon points="-0.625,-0.9375 5.33333,-0.927083 7.29167,1.07292 9.28125,6.15625 9.21875,10.9063 6.32292,14 -1.625,13.9063 -4.70833,10.9167 -4.71875,6.10417 -2.65625,1"/>
   </object>
  </objectgroup>
+ <objectgroup id="9" name="hidden"/>
  <objectgroup id="8" name="playerStartPosition">
   <object id="9" x="296" y="360.75">
    <point/>

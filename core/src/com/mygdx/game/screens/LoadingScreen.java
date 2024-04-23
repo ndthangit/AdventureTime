@@ -33,6 +33,8 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 		assetManager.load("Actor/Monsters/Beast2/beast2.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Monsters/Beast/beast.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Monsters/Cyclope/cyclope.atlas", TextureAtlas.class);
+		assetManager.load("FX/Effect.atlas", TextureAtlas.class);
+
 
 		//audio
 		isMusicLoaded = false;
@@ -71,8 +73,6 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 			((LoadingUI) screenUI).setPressButton();
 		}
 		
-//		((LoadingUI) screenUI).setProgress(assetManager.getProgress());
-		
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
 	@Override
 	public void keyPressed(InputManager manager, GameKey gameKey) {
-		if (gameKey != GameKey.CHANGE_MAP_1 && gameKey != GameKey.CHANGE_MAP_2) {
+		if (gameKey != GameKey.CHANGE_MAP_1 && gameKey != GameKey.CHANGE_MAP_2 && assetManager.isFinished()) {
 			mapManager.setMap();
 			game.setScreen(ScreenType.GAME);
 		}

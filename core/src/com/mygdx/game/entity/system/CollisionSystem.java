@@ -62,6 +62,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         final EnemyComponent enemyCmp = ECSEngine.enemyCmpMapper.get(enemy);
         enemyCmp.life -= weaponCmp.attack;
         if (enemyCmp.life <= 0) {
+            // thêm tạo cửa sổ để them do
             enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
         }
     }

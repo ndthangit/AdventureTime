@@ -1,0 +1,19 @@
+Effect.png
+size: 384, 32
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+SlashCurved
+  rotate: false
+  xy: 0, 0
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1
+Smoke
+  rotate: false
+  xy: 192, 0
+  size: 192, 32
+  orig: 192, 32
+  offset: 0, 0
+  index: -1

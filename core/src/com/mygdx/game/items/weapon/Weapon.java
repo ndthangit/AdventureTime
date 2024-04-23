@@ -1,17 +1,33 @@
 package com.mygdx.game.items.weapon;
 
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.effect.Effect;
+import com.mygdx.game.effect.EffectType;
+import com.mygdx.game.entity.ECSEngine;
+import com.mygdx.game.entity.component.EffectComponent;
+import com.mygdx.game.view.DirectionType;
+
+import java.util.EnumMap;
 
 import static com.mygdx.game.CoreGame.UNIT_SCALE;
 
 public class Weapon {
     public WeaponType type;
     public Vector2 position;
-    public int direction;
+    public DirectionType direction;
     public Vector2 posDirection[];
+    public Vector2 effDirection[];
+    public Effect effect;
     public float width;
     public float height;
-    public int getDirection() {
+    public DirectionType getDirection() {
         return direction;
     }
 
@@ -27,28 +43,25 @@ public class Weapon {
         return height;
     }
 
-    
-
-    public void setPosition(Vector2 position) {
-        this.position = position;
-    }
-
-    public void setDirection(int direction) {
-        this.direction = direction;
-    }
-
-    public Weapon(WeaponType type, Vector2 position, int direction, Vector2 speed, float width, float height) {
+    public Weapon(WeaponType type, Effect effect, Vector2 position, DirectionType direction, Vector2 speed, float width, float height) {
         this.position = position;
         this.direction = direction;
         this.posDirection = new Vector2[4];
+        this.effDirection = new Vector2[4];
         this.width = width;
         this.height = height;
         this.type = type;
+        this.effect = effect;
         posDirection[0] = new Vector2(-UNIT_SCALE , -14 * UNIT_SCALE);
         posDirection[1] = new Vector2(-14 * UNIT_SCALE, -4 * UNIT_SCALE);
         posDirection[2] = new Vector2(-4 * UNIT_SCALE, 14 * UNIT_SCALE);
         posDirection[3] = new Vector2(14 * UNIT_SCALE, -4 * UNIT_SCALE);
 
+
+        effDirection[0] = new Vector2(-4* UNIT_SCALE , -14 * UNIT_SCALE);
+        effDirection[1] = new Vector2(-14 * UNIT_SCALE, -1 * UNIT_SCALE);
+        effDirection[2] = new Vector2( - UNIT_SCALE, 14 * UNIT_SCALE);
+        effDirection[3] = new Vector2(14 * UNIT_SCALE, -7 * UNIT_SCALE);
     }
 
 }
