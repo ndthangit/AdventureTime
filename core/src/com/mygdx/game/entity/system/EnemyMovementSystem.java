@@ -19,8 +19,9 @@ public class EnemyMovementSystem extends IteratingSystem {
         final EnemyComponent enemyCompnent = ECSEngine.enemyCmpMapper.get(entity);
         final Box2DComponent b2dComponent = ECSEngine.box2dCmpMapper.get(entity);
 
-        b2dComponent.body.applyLinearImpulse( -enemyCompnent.speed.x - b2dComponent.body.getLinearVelocity().x * b2dComponent.body.getMass(),
-                -enemyCompnent.speed.y - b2dComponent.body.getLinearVelocity().y * b2dComponent.body.getMass(),
+        b2dComponent.body.applyLinearImpulse( 0 - b2dComponent.body.getLinearVelocity().x * b2dComponent.body.getMass(),
+                0
+                        - b2dComponent.body.getLinearVelocity().y * b2dComponent.body.getMass(),
                 b2dComponent.body.getWorldCenter().x,
                 b2dComponent.body.getWorldCenter().y, true);
     }

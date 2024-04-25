@@ -145,6 +145,7 @@ public class CoreGame extends Game {
 	}
 	
 	public void setSkin(Skin skin) {
+
 		this.skin = skin;
 	}
 
