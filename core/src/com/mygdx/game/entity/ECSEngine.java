@@ -52,6 +52,7 @@ public class ECSEngine extends PooledEngine{
 		this.addSystem(new CollisionSystem(game));
 		this.addSystem(new PlayerAttackSystem(game));
 		this.addSystem(new EffectSystem(game));
+		this.addSystem(new EnemyMovementSystem(game));
 	}
 
 
