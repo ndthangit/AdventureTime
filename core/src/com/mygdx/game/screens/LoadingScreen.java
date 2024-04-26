@@ -33,6 +33,10 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 		assetManager.load("Actor/Monsters/Beast2/beast2.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Monsters/Beast/beast.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Monsters/Cyclope/cyclope.atlas", TextureAtlas.class);
+		assetManager.load("Actor/Monsters/SkullBlue/skullblue.atlas", TextureAtlas.class);
+		assetManager.load("Actor/Monsters/Slime2/slime2.atlas", TextureAtlas.class);
+		assetManager.load("Actor/Monsters/Slime4/slime4.atlas", TextureAtlas.class);
+		assetManager.load("Actor/Monsters/Reptile2/reptile2.atlas", TextureAtlas.class);
 		assetManager.load("FX/Effect.atlas", TextureAtlas.class);
 
 

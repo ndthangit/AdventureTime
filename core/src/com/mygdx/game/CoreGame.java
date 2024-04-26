@@ -132,7 +132,7 @@ public class CoreGame extends Game {
 		
 		screenCache = new EnumMap<ScreenType, Screen> (ScreenType.class);		
 		mapManager.setNextMapType(MapType.MAP_1);
-		setScreen(ScreenType.LOAD);		
+		setScreen(ScreenType.MENU);
 	}
 
 	public Stage getStage() {
@@ -265,4 +265,18 @@ public class CoreGame extends Game {
 		stage.dispose();
 	}
 
+	// function of menu
+	public void startGame() {
+		// Logic to start the game
+		setScreen(ScreenType.LOAD);
+	}
+
+	public void optionGame() {
+
+	}
+
+	public void quitGame() {
+		// Logic to quit the game
+		Gdx.app.exit(); // Exit the application
+	}
 }

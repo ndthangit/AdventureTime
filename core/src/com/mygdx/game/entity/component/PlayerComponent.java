@@ -9,7 +9,8 @@ import com.mygdx.game.view.AnimationType;
 public class PlayerComponent extends EntityComponent {
 	public PlayerType aniType;
 	public boolean isAttack;
-	
+	public boolean isSkill;
+
 	@Override
 	public void reset() {
 		super.reset();

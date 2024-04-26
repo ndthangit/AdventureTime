@@ -30,7 +30,7 @@ public class LoadAsset {
 		fontParameter.minFilter = Texture.TextureFilter.Linear;
 		fontParameter.magFilter = Texture.TextureFilter.Linear;
 		
-		final int[] sizeFonts = {16,24,28,36};
+		final int[] sizeFonts = {16,24,28,36,48};
 		for (int size: sizeFonts) {
 			fontParameter.size = size;
 			resources.put("font_"+size, fontGenerator.generateFont(fontParameter));
@@ -55,7 +55,7 @@ public class LoadAsset {
 		fontParameter.minFilter = Texture.TextureFilter.Linear;
 		fontParameter.magFilter = Texture.TextureFilter.Linear;
 		
-		final int[] sizeFonts = {16,24,28,36};
+		final int[] sizeFonts = {16,24,28,36,48};
 		for (int size: sizeFonts) {
 			fontParameter.size = size;
 			final BitmapFont bitMapFont = fontGenerator.generateFont(fontParameter);

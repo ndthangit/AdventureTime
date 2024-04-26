@@ -23,6 +23,10 @@
         "huge": {
             "font": "font_36",
             "fontColor": "white"
+        },
+        "title": {
+            "font": "font_48",
+            "fontColor": "white"
         }
     }
 }
