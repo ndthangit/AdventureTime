@@ -45,37 +45,27 @@ public abstract class AbstractScreen<T extends Table> implements Screen, KeyInpu
 		viewPort.update(width, height);
 		stage.getViewport().update(width, height, true);
 	}
-
 	@Override
 	public void show() {
 		inputManager.addInputListener(this);
 		stage.addActor(screenUI);
-		
 	}
-
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void hide() {
 		inputManager.removeinputListener(this);
 		stage.getRoot().removeActor(screenUI);
-		
 	}
-
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

@@ -2,8 +2,6 @@ package com.mygdx.game.map;
 
 import java.util.EnumMap;
 
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -14,11 +12,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.character.enemy.Enemy;
-import com.mygdx.game.character.player.PlayerType;
 import com.mygdx.game.entity.ECSEngine;
 
 import com.badlogic.ashley.core.Entity;
-import com.mygdx.game.entity.component.*;
 
 public class  MapManager {
 	public static final String TAG = MapManager.class.getSimpleName();
@@ -51,27 +47,22 @@ public class  MapManager {
 		listeners.add(listener);
 	}
 	
-	public void destroyMap() {
-		// clean map entities and body
-		world.getBodies(bodies);
-		destroyCollisionArea();
-		destroyGameObjects();
-		destroyEnemy();
-		destroyPlayer();
+	public void loadMap() {
+		
 	}
 	
 	public void setMap() {
 		if (currentMapType == nextMapType) {
 			return;
 		}
-		// chuyen sang destroymap
-//		if (currentMap != null) {
-//			// clean map entities and body
-//			world.getBodies(bodies);
-//			destroyCollisionArea();
-//			destroyGameObjects();
-//			destroyEnemy();
-//		}
+		
+		if (currentMap != null) {
+			// clean map entities and body
+			world.getBodies(bodies);
+			destroyCollisionArea();
+			destroyGameObjects();
+			destroyEnemy();
+		}
 		
 		
 		// set new map
@@ -86,23 +77,12 @@ public class  MapManager {
 		}
 		
 		// create map entities/bodies
-		spawnPlayer();
 		spawnCollisionAreas();
 		spawnGameObjects();
 		spawnEnemy();
 		
 		for (final MapListener listener: listeners) {
 			listener.mapChange(currentMap);
-		}
-	}
-
-	private void spawnPlayer() {
-		ecsEngine.createPlayer(this.getCurrentMap().getStartPosition(), PlayerType.BLACK_NINJA_MAGE, 0.75f, 0.75f);
-	}
-
-	private void destroyPlayer() {
-		for (Entity player :  ecsEngine.getEntitiesFor(Family.all(PlayerComponent.class, Box2DComponent.class, AnimationComponent.class).get())){
-			ecsEngine.removeEntity(player);
 		}
 	}
 
@@ -113,7 +93,7 @@ public class  MapManager {
 	}
 
 	private void destroyGameObjects() {
-		for(final Entity entity: ecsEngine.getEntitiesFor(Family.all(GameObjectComponent.class, Box2DComponent.class, AnimationComponent.class).get())) {
+		for(final Entity entity: ecsEngine.getEntities()) {
 			if (ECSEngine.gameObjCmpMapper.get(entity) != null) {
 				entityToRemove.add(entity);
 			}
@@ -126,12 +106,13 @@ public class  MapManager {
 
 	private void spawnEnemy() {
 		for (final Enemy enemy: currentMap.getEnemies()) {
+			Gdx.app.debug(TAG, "not null");
 			ecsEngine.createEnemy(enemy);
 		}
 	}
 
 	private void destroyEnemy() {
-		for(final Entity entity: ecsEngine.getEntitiesFor(Family.all(EnemyComponent.class, Box2DComponent.class, AnimationComponent.class).get())) {
+		for(final Entity entity: ecsEngine.getEntities()) {
 			if (ECSEngine.enemyCmpMapper.get(entity) != null) {
 				entityToRemove.add(entity);
 			}
