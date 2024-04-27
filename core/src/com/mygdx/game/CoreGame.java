@@ -265,7 +265,7 @@ public class CoreGame extends Game {
 	}
 
 	public void optionGame() {
-
+        setScreen(ScreenType.OPTION);
 	}
 
 	public boolean isSoundEnabled() {

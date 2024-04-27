@@ -10,21 +10,48 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.mygdx.game.CoreGame;
 
-public class MenuUI extends Table implements ApplicationListener {
-    private final TextButton startButton;
-    private final TextButton optionButton;
-    private final TextButton quitButton;
-    private Stage stage;
-    private Skin skin;
-    private Table table;
+public class MenuUI extends Table  {
+    private final Skin skin;
+    private final CoreGame game;
+    private Table menu;
+    private Table screen;
     private LoadingUI loadingUI;
     public MenuUI(Skin skin, CoreGame game) {
         super(skin);
         setFillParent(true);
+        this.skin = skin;
+        this.game = game;
         //Label titleLabel = new Label("Main Menu", skin, "title");
         //add(titleLabel).colspan(2).padBottom(50).row();
 //Tạo title cho game nhưng hiện tại đang bị lỗi
-        startButton = new TextButton("START", skin, "huge");
+        menu = new Table();
+        screen = new Table();
+        createScreen();
+        add(screen).expand().fill();
+        setDebug(false, false);
+    }
+
+    void createScreen() {
+        screen.clearChildren();
+        createTitle();
+        screen.add(menu).expand().fillX().bottom().padBottom(100).row();
+        createMenu();
+    }
+
+    void createTitle() {
+        TextButton title = new TextButton("ADVENTURE TIME", skin, "huge");
+        screen.add(title).expandX().fillX().padTop(200).top().row();
+    }
+
+    void createMenu() {
+        menu.clearChildren();
+        createStartGame();
+        createOptionGame();
+        createQuitGame();
+    }
+
+    void createStartGame() {
+        TextButton startButton = new TextButton("START", skin, "huge");
         startButton.getLabel().setWrap(true);
         startButton.addListener(new InputListener() {
             @Override
@@ -33,8 +60,10 @@ public class MenuUI extends Table implements ApplicationListener {
                 return true;
             }
         });
-
-        optionButton = new TextButton("OPTION", skin, "huge");
+        menu.add(startButton).expand().fillX().padBottom(50).row();
+    }
+    void createOptionGame() {
+        TextButton optionButton = new TextButton("OPTION", skin, "huge");
         optionButton.getLabel().setWrap(true);
         optionButton.addListener(new InputListener() {
             @Override
@@ -43,8 +72,11 @@ public class MenuUI extends Table implements ApplicationListener {
                 return true;
             }
         });
+        menu.add(optionButton).expand().fillX().padBottom(50).row();
+    }
 
-        quitButton = new TextButton("QUIT", skin, "huge");
+    void createQuitGame() {
+        TextButton quitButton = new TextButton("QUIT", skin, "huge");
         quitButton.getLabel().setWrap(true);
         quitButton.addListener(new InputListener() {
             @Override
@@ -53,43 +85,6 @@ public class MenuUI extends Table implements ApplicationListener {
                 return true;
             }
         });
-        add(startButton).expand().fillX().row();
-        add(optionButton).expand().fillX().row();
-        add(quitButton).expand().fillX().row();
-        setDebug(false, false);
-    }
-
-
-    @Override
-    public void create() {
-
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
-
-    @Override
-    public void render() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-
-
-    @Override
-    public void dispose() {
-        stage.dispose();
-        skin.dispose();
+        menu.add(quitButton).expand().fillX().padBottom(50).row();
     }
 }

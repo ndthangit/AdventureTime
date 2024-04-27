@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.mygdx.game.CoreGame;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-
+import com.mygdx.game.screens.OptionScreen;
 public class OptionUI extends Table {
     private final CheckBox soundCheckBox;
     private final CoreGame game;
@@ -19,10 +19,6 @@ public class OptionUI extends Table {
         soundCheckBox = new CheckBox("Sound", skin);
         soundCheckBox.setChecked(game.isSoundEnabled());
         soundCheckBox.addListener(new ChangeListener() {
-            //@Override
-            public void stateChanged(ChangeEvent e) {
-
-            }
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
