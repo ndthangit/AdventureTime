@@ -6,12 +6,15 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.character.enemy.Enemy;
 import com.mygdx.game.character.player.PlayerType;
 import com.mygdx.game.effect.Effect;
 import com.mygdx.game.entity.component.*;
 import com.mygdx.game.entity.system.*;
+import com.mygdx.game.items.food.Food;
+import com.mygdx.game.items.food.FoodType;
 import com.mygdx.game.items.weapon.Weapon;
 import com.mygdx.game.map.GameObject;
 import com.mygdx.game.view.AnimationType;
@@ -28,12 +31,15 @@ public class ECSEngine extends PooledEngine{
 	public static final ComponentMapper<WeaponComponent> weaponCmpMapper = ComponentMapper.getFor(WeaponComponent.class);
 	public static final ComponentMapper<EnemyComponent> enemyCmpMapper = ComponentMapper.getFor(EnemyComponent.class);
 	public static final ComponentMapper<EffectComponent> effectCmpMapper = ComponentMapper.getFor(EffectComponent.class);
+	public static final ComponentMapper<FoodComponent> foodCmpMapper = ComponentMapper.getFor(FoodComponent.class);
 
 	private final World world;
 
 	private final Vector2 localPosition;
 	private final Vector2 posBeforeRotation;
 	private final Vector2 posAfterRotation;
+
+	private final Array<Food> foodArray;
 
 	public ECSEngine(CoreGame game) {
 		super();
@@ -43,6 +49,8 @@ public class ECSEngine extends PooledEngine{
 		localPosition = new Vector2();
 		posBeforeRotation = new Vector2();
 		posAfterRotation = new Vector2();
+
+		foodArray = new Array<Food>();
 
 		// them system chon engine
 		this.addSystem(new PlayerMovementSystem(game));
@@ -55,8 +63,11 @@ public class ECSEngine extends PooledEngine{
 		this.addSystem(new EnemyMovementSystem(game));
 	}
 
+	public Array<Food> getFoodArray() {
+		return foodArray;
+	}
 
-	public void createPlayer(final Vector2 playerSpawnLocation,PlayerType type, final float width, final float height) {
+	public void createPlayer(final Vector2 playerSpawnLocation, PlayerType type, final float width, final float height, Weapon weapon) {
 		final Entity player = this.createEntity();
 
 		// player component
@@ -66,6 +77,7 @@ public class ECSEngine extends PooledEngine{
 		playerComponent.speed.set(type.getSpeed());
 		playerComponent.aniType = PlayerType.BLACK_NINJA_MAGE;
 		playerComponent.direction = DOWN;
+		playerComponent.weapon = weapon;
 		player.add(playerComponent);
 
 		// box2d component
@@ -267,5 +279,42 @@ public class ECSEngine extends PooledEngine{
 		effectComponent.direction = effect.getDirection();
 		effectEntity.add(effectComponent);
 		this.addEntity(effectEntity);
+	}
+
+	public void createFood(final FoodType foodType, final Vector2 foodPosition) {
+		final Entity foodEntity = this.createEntity();
+
+		//food component
+		FoodComponent foodComponent = this.createComponent(FoodComponent.class);
+		foodComponent.foodType = foodType;
+		foodComponent.timeRemain = foodType.getTime();
+		foodComponent.height = foodType.getHeight() * UNIT_SCALE;
+		foodComponent.width = foodType.getWidth() * UNIT_SCALE;
+		foodEntity.add(foodComponent);
+
+		//box2d component
+		CoreGame.resetBodiesAndFixtureDefinition();
+		final float halfW = foodType.getWidth() * UNIT_SCALE / 2;
+		final float halfH = foodType.getHeight() * UNIT_SCALE / 2;
+		final Box2DComponent box2DComponent = this.createComponent(Box2DComponent.class);
+		CoreGame.BODY_DEF.type = BodyDef.BodyType.DynamicBody;
+		CoreGame.BODY_DEF.position.set(foodPosition.x + halfW, foodPosition.y + halfH);
+		box2DComponent.body = world.createBody(CoreGame.BODY_DEF);
+		box2DComponent.body.setUserData(foodEntity);
+		box2DComponent.width = foodType.getWidth() * UNIT_SCALE;
+		box2DComponent.height = foodType.getHeight() * UNIT_SCALE;
+		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
+
+		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_GAME_OBJECT;
+		CoreGame.FIXTURE_DEF.filter.maskBits = CoreGame.BIT_PLAYER;
+		CoreGame.FIXTURE_DEF.isSensor = true;
+		PolygonShape pShape = new PolygonShape();
+		pShape.setAsBox(halfW, halfH);
+		CoreGame.FIXTURE_DEF.shape = pShape;
+		box2DComponent.body.createFixture(CoreGame.FIXTURE_DEF);
+		pShape.dispose();
+		foodEntity.add(box2DComponent);
+
+		this.addEntity(foodEntity);
 	}
 }

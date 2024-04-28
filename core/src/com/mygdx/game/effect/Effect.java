@@ -29,4 +29,8 @@ public class Effect {
         this.position = position;
         this.direction = direction;
     }
+
+    public void setDirection(DirectionType direction) {
+        this.direction = direction;
+    }
 }

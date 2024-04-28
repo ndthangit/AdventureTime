@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.items.food.Food;
 
 import static com.mygdx.game.CoreGame.*;
 
@@ -13,6 +14,7 @@ public class WorldContactListener implements ContactListener {
 	private boolean hasGameObj;
 	private boolean hasWeapon;
 	private boolean hasEnemy;
+	private boolean hasItem;
     public WorldContactListener() {
 
 		this.listeners = new Array<CollisionListener>();
@@ -24,6 +26,7 @@ public class WorldContactListener implements ContactListener {
 	}
     @Override
 	public void beginContact(Contact contact) {
+		reset();
 		final Entity player;
 		final Entity gameObj;
 		final Entity weapon;
@@ -100,7 +103,11 @@ public class WorldContactListener implements ContactListener {
 				listener.weaponVSEnemy(weapon, enemy);
 			}
 		}
+		else if (hasPlayer && hasItem) {
+			for (final CollisionListener listener : listeners) {
 
+			}
+		}
 	}
 
 	@Override
@@ -123,6 +130,14 @@ public class WorldContactListener implements ContactListener {
 		
 	}
 
+	void reset() {
+		hasPlayer = false;
+		hasGameObj = false;
+		hasItem = false;
+		hasEnemy = false;
+		hasWeapon = false;
+	}
+
 	public int checkEntity (int fixture) {
 		return 0;
 	}
@@ -132,5 +147,6 @@ public class WorldContactListener implements ContactListener {
 		void weaponCollision(final Entity weapon, final Entity gameObj);
 		void playerVSEnemy(final Entity player, final Entity enemy);
 		void weaponVSEnemy(final Entity weapon, final Entity enemy);
+		void playerVSItem(final Entity player, final Entity item);
 	}
 }

@@ -43,13 +43,13 @@ public class Weapon {
         return height;
     }
 
-    public Weapon(WeaponType type, Effect effect, Vector2 position, DirectionType direction, Vector2 speed, float width, float height) {
+    public Weapon(WeaponType type, Effect effect, Vector2 position, DirectionType direction) {
         this.position = position;
         this.direction = direction;
         this.posDirection = new Vector2[4];
         this.effDirection = new Vector2[4];
-        this.width = width;
-        this.height = height;
+        this.width = type.getWidth() * UNIT_SCALE;
+        this.height = type.getHeight() * UNIT_SCALE;
         this.type = type;
         this.effect = effect;
         posDirection[0] = new Vector2(-UNIT_SCALE , -14 * UNIT_SCALE);

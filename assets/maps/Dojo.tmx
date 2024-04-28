@@ -150,16 +150,7 @@
 </data>
  </layer>
  <objectgroup id="9" name="enemy">
-  <object id="12" name="BEAST2" x="113.5" y="131.25">
-   <point/>
-  </object>
   <object id="13" name="BEAST" x="225.5" y="104.25">
-   <point/>
-  </object>
-  <object id="14" name="BEAST" x="170.5" y="235.75">
-   <point/>
-  </object>
-  <object id="15" name="CYCLOPE" x="75" y="174.75">
    <point/>
   </object>
   <object id="16" name="CYCLOPE" x="269.25" y="185.5">

@@ -38,6 +38,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.audio.AudioManager;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.input.InputManager;
+import com.mygdx.game.items.food.FoodType;
 import com.mygdx.game.map.MapManager;
 import com.mygdx.game.map.MapType;
 import com.mygdx.game.screens.ScreenType;
@@ -85,6 +86,8 @@ public class CoreGame extends Game {
 	private GameRenderer gameRenderer;
 
 	private float accumulator = 0;
+
+
 
 	@Override
 	public void create () {

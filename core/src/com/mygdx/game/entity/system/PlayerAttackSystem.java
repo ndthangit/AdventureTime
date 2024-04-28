@@ -8,10 +8,12 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.character.player.PlayerType;
 import com.mygdx.game.effect.Effect;
 import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.*;
+import com.mygdx.game.items.food.FoodType;
 import com.mygdx.game.items.weapon.Weapon;
 import com.mygdx.game.items.weapon.WeaponType;
 import com.mygdx.game.view.AnimationType;
@@ -24,7 +26,7 @@ public class PlayerAttackSystem extends IteratingSystem{
 	public PlayerAttackSystem(CoreGame game) {
 		super(Family.all(AnimationComponent.class, PlayerComponent.class, Box2DComponent.class).get());
 		this.game = game;
-		
+
 	}
 
 	@Override
@@ -32,19 +34,22 @@ public class PlayerAttackSystem extends IteratingSystem{
 		final PlayerComponent playerComponent = ECSEngine.playerCmpMapper.get(entity);
 		final Box2DComponent b2DComponent = ECSEngine.box2dCmpMapper.get(entity);
 		if (playerComponent.isAttack) {
+			createWeapon(playerComponent, b2DComponent);
 
-			createWeapon(b2DComponent, playerComponent.direction);
 		}
 		else {
 			destroyWeapon();
 		}
 	}
 
-	void createWeapon(Box2DComponent b2DComponent, DirectionType direction) {
+	void createWeapon(PlayerComponent playerComponent, Box2DComponent b2DComponent) {
 		ImmutableArray<Entity> weaponEnities = game.getEcsEngine().getEntitiesFor(Family.all(WeaponComponent.class, Box2DComponent.class).get());
 		if (weaponEnities.size() == 0) {
-			Vector2 speed = new Vector2(0, 0);
-			Weapon weapon = new Weapon(WeaponType.BIG_SWORD,new Effect(EffectType.SLASHCURVED, b2DComponent.body.getPosition(), direction), b2DComponent.body.getPosition(), direction, speed,WeaponType.BIG_SWORD.getWidth()  * UNIT_SCALE,WeaponType.BIG_SWORD.getHeight() * UNIT_SCALE);
+			Weapon weapon = playerComponent.weapon;
+			weapon.position.set(b2DComponent.body.getPosition());
+			weapon.direction = playerComponent.direction;
+			weapon.effect.setPosition(b2DComponent.body.getPosition());
+			weapon.effect.setDirection(playerComponent.direction);
 			game.getEcsEngine().createPlayerWeapon(weapon);
 			game.getEcsEngine().createEffect(weapon.effect);
 		}

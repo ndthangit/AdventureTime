@@ -27,6 +27,7 @@ import com.mygdx.game.CoreGame;
 import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.*;
+import com.mygdx.game.items.food.Food;
 import com.mygdx.game.map.Map;
 import com.mygdx.game.map.MapListener;
 
@@ -45,6 +46,7 @@ public class GameRenderer implements Disposable, MapListener{
 	private final ImmutableArray<Entity> animatedEntities;
 	private final ImmutableArray<Entity> weaponEntities;
 	private final ImmutableArray<Entity> effectEntities;
+	private final ImmutableArray<Entity> itemEntities;
 	private final OrthogonalTiledMapRenderer mapRenderer;
 	private final Array<TiledMapTileLayer> tiledMapLayers;
 	
@@ -64,14 +66,15 @@ public class GameRenderer implements Disposable, MapListener{
 		this.viewport = game.getScreenViewport();
 		this.gameCamera = game.getGameCamera();
 		this.spriteBatch = game.getSpriteBatch();
-		
-		animationCache = new ObjectMap<String, EnumMap<AnimationType, Animation<Sprite>>>();
+
+        animationCache = new ObjectMap<String, EnumMap<AnimationType, Animation<Sprite>>>();
 		effectCache = new ObjectMap<String, EnumMap<EffectType, Animation<Sprite>>>();
 
 		gameObjectEntities = game.getEcsEngine().getEntitiesFor(Family.all(GameObjectComponent.class, Box2DComponent.class, AnimationComponent.class).get());
 		animatedEntities = game.getEcsEngine().getEntitiesFor(Family.all(AnimationComponent.class, Box2DComponent.class).get());
 		weaponEntities = game.getEcsEngine().getEntitiesFor(Family.all(WeaponComponent.class, AnimationComponent.class, Box2DComponent.class).get());
 		effectEntities = game.getEcsEngine().getEntitiesFor(Family.all(EffectComponent.class).get());
+		itemEntities = game.getEcsEngine().getEntitiesFor(Family.all(FoodComponent.class, Box2DComponent.class).get());
 		this.mapRenderer = new OrthogonalTiledMapRenderer(null, CoreGame.UNIT_SCALE, game.getSpriteBatch());
 		game.getMapManager().addMapListener(this);
 		tiledMapLayers = new Array<TiledMapTileLayer>();
@@ -101,6 +104,13 @@ public class GameRenderer implements Disposable, MapListener{
 				}
 			}
 
+			if (game.getEcsEngine().getFoodArray().size > 0) {
+				for(final Food food : game.getEcsEngine().getFoodArray()) {
+					game.getEcsEngine().createFood(food.type, food.position);
+				}
+				game.getEcsEngine().getFoodArray().clear();
+			}
+
 			for (final Entity entity : gameObjectEntities) {
 				renderGameObject(entity, delta);
 			}
@@ -115,6 +125,10 @@ public class GameRenderer implements Disposable, MapListener{
 
 			for (final Entity entity: effectEntities) {
 				rederEffect(entity, delta);
+			}
+
+			for (final Entity entity : itemEntities) {
+				renderItem(entity, delta);
 			}
 
 			spriteBatch.end();
@@ -166,6 +180,18 @@ public class GameRenderer implements Disposable, MapListener{
 		frame.setBounds(box2DComponent.renderPosition.x - aniComponent.width / 2, box2DComponent.renderPosition.y - aniComponent.height / 2, aniComponent.width, aniComponent.height);
 		frame.setOriginCenter();
 		frame.setRotation(-weaponComponent.direction.getCode() * 90);
+		frame.draw(spriteBatch);
+	}
+
+	private void renderItem(Entity entity, float delta) {
+		final FoodComponent foodComponent = ECSEngine.foodCmpMapper.get(entity);
+		final Box2DComponent box2DComponent = ECSEngine.box2dCmpMapper.get(entity);
+		final AtlasRegion atlasRegion = assetManager.get(foodComponent.foodType.getAtlasPath(), TextureAtlas.class).findRegion(foodComponent.foodType.getKey());
+		final Sprite frame;
+		frame = new Sprite(atlasRegion);
+		box2DComponent.renderPosition.lerp(box2DComponent.body.getPosition(), delta);
+		frame.setBounds(box2DComponent.renderPosition.x - box2DComponent.width/2, box2DComponent.renderPosition.y - box2DComponent.height / 2, box2DComponent.width, box2DComponent.height);
+		frame.setOriginCenter();
 		frame.draw(spriteBatch);
 	}
 

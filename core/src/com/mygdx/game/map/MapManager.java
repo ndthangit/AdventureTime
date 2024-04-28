@@ -7,6 +7,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.ChainShape;
@@ -15,10 +16,15 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.character.enemy.Enemy;
 import com.mygdx.game.character.player.PlayerType;
+import com.mygdx.game.effect.Effect;
+import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
 
 import com.badlogic.ashley.core.Entity;
 import com.mygdx.game.entity.component.*;
+import com.mygdx.game.items.weapon.Weapon;
+import com.mygdx.game.items.weapon.WeaponType;
+import com.mygdx.game.view.DirectionType;
 
 public class  MapManager {
 	public static final String TAG = MapManager.class.getSimpleName();
@@ -97,7 +103,9 @@ public class  MapManager {
 	}
 
 	private void spawnPlayer() {
-		ecsEngine.createPlayer(this.getCurrentMap().getStartPosition(), PlayerType.BLACK_NINJA_MAGE, 0.75f, 0.75f);
+		Weapon weapon = new Weapon(WeaponType.BIG_SWORD,new Effect(EffectType.SLASHCURVED, this.getCurrentMap().getStartPosition(), DirectionType.DOWN), this.getCurrentMap().getStartPosition(), DirectionType.DOWN);
+
+		ecsEngine.createPlayer(this.getCurrentMap().getStartPosition(), PlayerType.BLACK_NINJA_MAGE, 0.75f, 0.75f, weapon);
 	}
 
 	private void destroyPlayer() {

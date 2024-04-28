@@ -39,25 +39,7 @@ public class MainMenuScreen extends AbstractScreen<MenuUI>{
 	
 	@Override
 	public void render(float delta) {
-//		ScreenUtils.clear(0, 0, 0, 1);
-//		Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
-//		batch.begin();
-//		batch.draw(sprite, 10, 10);
-//		batch.end();
 	}
-//public MainMenuScreen(CoreGame game) {
-//		
-//		super(game);
-//		
-//		this.assetManager = game.getAssetManager();
-//		assetManager.load("maps/Demo-abandon-village-map.tmx", TiledMap.class);
-//	}
-//
-//	@Override
-//	public void render(float delta) {
-//		
-//		ScreenUtils.clear(0, 0, 0, 1);
-//	}
 
 	@Override
 	protected Table getscreenUI(Skin skin, CoreGame game) {
