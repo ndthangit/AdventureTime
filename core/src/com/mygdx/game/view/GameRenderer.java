@@ -27,6 +27,7 @@ import com.mygdx.game.CoreGame;
 import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.*;
+import com.mygdx.game.items.Item;
 import com.mygdx.game.items.food.Food;
 import com.mygdx.game.map.GameObjectType;
 import com.mygdx.game.map.Map;
@@ -76,7 +77,7 @@ public class GameRenderer implements Disposable, MapListener{
 		animatedEntities = game.getEcsEngine().getEntitiesFor(Family.all(AnimationComponent.class, Box2DComponent.class).get());
 		weaponEntities = game.getEcsEngine().getEntitiesFor(Family.all(WeaponComponent.class, AnimationComponent.class, Box2DComponent.class).get());
 		effectEntities = game.getEcsEngine().getEntitiesFor(Family.all(EffectComponent.class).get());
-		itemEntities = game.getEcsEngine().getEntitiesFor(Family.all(FoodComponent.class, Box2DComponent.class).get());
+		itemEntities = game.getEcsEngine().getEntitiesFor(Family.all(ItemComponent.class, Box2DComponent.class).get());
 		hideEntities = game.getEcsEngine().getEntitiesFor(Family.all(HideLayerComponent.class, AnimationComponent.class).get());
 		this.mapRenderer = new OrthogonalTiledMapRenderer(null, CoreGame.UNIT_SCALE, game.getSpriteBatch());
 		game.getMapManager().addMapListener(this);
@@ -107,11 +108,11 @@ public class GameRenderer implements Disposable, MapListener{
 				}
 			}
 
-			if (game.getEcsEngine().getFoodArray().size > 0) {
-				for(final Food food : game.getEcsEngine().getFoodArray()) {
-					game.getEcsEngine().createFood(food.type, food.position);
+			if (game.getEcsEngine().getItemArray().size > 0) {
+				for(final Item item : game.getEcsEngine().getItemArray()) {
+					game.getEcsEngine().createItem(item);
 				}
-				game.getEcsEngine().getFoodArray().clear();
+				game.getEcsEngine().getItemArray().clear();
 			}
 
 
@@ -205,9 +206,9 @@ public class GameRenderer implements Disposable, MapListener{
 	}
 
 	private void renderItem(Entity entity, float delta) {
-		final FoodComponent foodComponent = ECSEngine.foodCmpMapper.get(entity);
+		final ItemComponent itemComponent = ECSEngine.itemCmpMapper.get(entity);
 		final Box2DComponent box2DComponent = ECSEngine.box2dCmpMapper.get(entity);
-		final AtlasRegion atlasRegion = assetManager.get(foodComponent.foodType.getAtlasPath(), TextureAtlas.class).findRegion(foodComponent.foodType.getKey());
+		final AtlasRegion atlasRegion = assetManager.get(itemComponent.item.atlasPath, TextureAtlas.class).findRegion(itemComponent.item.key);
 		final Sprite frame;
 		frame = new Sprite(atlasRegion);
 		box2DComponent.renderPosition.lerp(box2DComponent.body.getPosition(), delta);

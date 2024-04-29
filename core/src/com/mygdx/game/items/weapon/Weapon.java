@@ -44,7 +44,7 @@ public class Weapon extends Item {
     }
 
     public Weapon(WeaponType type, Effect effect, Vector2 position, DirectionType direction) {
-        super(position, type.getAtlasPath(), type.getAtlasKeyIcon());
+        super(position, type.getAtlasPath(), type.getAtlasKeyIcon(), type.getWidth()*UNIT_SCALE, type.getHeight()*UNIT_SCALE);
         this.direction = direction;
         this.posDirection = new Vector2[4];
         this.effDirection = new Vector2[4];

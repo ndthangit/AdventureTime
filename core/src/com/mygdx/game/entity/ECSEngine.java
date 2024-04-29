@@ -13,6 +13,7 @@ import com.mygdx.game.character.player.PlayerType;
 import com.mygdx.game.effect.Effect;
 import com.mygdx.game.entity.component.*;
 import com.mygdx.game.entity.system.*;
+import com.mygdx.game.items.Item;
 import com.mygdx.game.items.food.Food;
 import com.mygdx.game.items.food.FoodType;
 import com.mygdx.game.items.weapon.Weapon;
@@ -31,7 +32,7 @@ public class ECSEngine extends PooledEngine{
 	public static final ComponentMapper<WeaponComponent> weaponCmpMapper = ComponentMapper.getFor(WeaponComponent.class);
 	public static final ComponentMapper<EnemyComponent> enemyCmpMapper = ComponentMapper.getFor(EnemyComponent.class);
 	public static final ComponentMapper<EffectComponent> effectCmpMapper = ComponentMapper.getFor(EffectComponent.class);
-	public static final ComponentMapper<FoodComponent> foodCmpMapper = ComponentMapper.getFor(FoodComponent.class);
+	public static final ComponentMapper<ItemComponent> itemCmpMapper = ComponentMapper.getFor(ItemComponent.class);
 	public static final ComponentMapper<HideLayerComponent> hideLayerCmpMapper = ComponentMapper.getFor(HideLayerComponent.class);
 
 	private final World world;
@@ -40,7 +41,7 @@ public class ECSEngine extends PooledEngine{
 	private final Vector2 posBeforeRotation;
 	private final Vector2 posAfterRotation;
 
-	private final Array<Food> foodArray;
+	private final Array<Item> itemArray;
 
 	public ECSEngine(CoreGame game) {
 		super();
@@ -51,7 +52,7 @@ public class ECSEngine extends PooledEngine{
 		posBeforeRotation = new Vector2();
 		posAfterRotation = new Vector2();
 
-		foodArray = new Array<Food>();
+		itemArray = new Array<Item>();
 
 		// them system chon engine
 		this.addSystem(new PlayerMovementSystem(game));
@@ -64,8 +65,8 @@ public class ECSEngine extends PooledEngine{
 		this.addSystem(new EnemyMovementSystem(game));
 	}
 
-	public Array<Food> getFoodArray() {
-		return foodArray;
+	public Array<Item> getItemArray() {
+		return itemArray;
 	}
 
 	public void createPlayer(final Vector2 playerSpawnLocation, PlayerType type, final float width, final float height, Weapon weapon) {
@@ -163,7 +164,8 @@ public class ECSEngine extends PooledEngine{
 		// hidelayer component
 		final HideLayerComponent hideLayerComponent = this.createComponent(HideLayerComponent.class);
 		hideLayerComponent.animationIndex = gameObject.getAnimationIndex();
-		hideLayerComponent.position = gameObject.getPosition();
+		hideLayerComponent.position = new Vector2(gameObject.getPosition().x + gameObject.getWidth()/2, gameObject.getPosition().y + gameObject.getHeight()/2);
+
 		gameObjEntity.add(hideLayerComponent);
 
 		// animation component
@@ -171,7 +173,7 @@ public class ECSEngine extends PooledEngine{
 		animationComponent.width = gameObject.getWidth();
 		animationComponent.height = gameObject.getHeight();
 		gameObjEntity.add(animationComponent);
-
+		this.addEntity(gameObjEntity);
 	}
 
 	public void createPlayerWeapon(final Weapon weapon) {
@@ -288,28 +290,27 @@ public class ECSEngine extends PooledEngine{
 		this.addEntity(effectEntity);
 	}
 
-	public void createFood(final FoodType foodType, final Vector2 foodPosition) {
-		final Entity foodEntity = this.createEntity();
+	public void createItem(final Item item) {
+		final Entity itemEntity = this.createEntity();
 
-		//food component
-		FoodComponent foodComponent = this.createComponent(FoodComponent.class);
-		foodComponent.foodType = foodType;
-		foodComponent.timeRemain = foodType.getTime();
-		foodComponent.height = foodType.getHeight() * UNIT_SCALE;
-		foodComponent.width = foodType.getWidth() * UNIT_SCALE;
-		foodEntity.add(foodComponent);
+		//item component
+		ItemComponent itemComponent = this.createComponent(ItemComponent.class);
+		itemComponent.height = item.height;
+		itemComponent.width = item.width;
+		itemComponent.item = item;
+		itemEntity.add(itemComponent);
 
 		//box2d component
 		CoreGame.resetBodiesAndFixtureDefinition();
-		final float halfW = foodType.getWidth() * UNIT_SCALE / 2;
-		final float halfH = foodType.getHeight() * UNIT_SCALE / 2;
+		final float halfW = item.width * UNIT_SCALE / 2;
+		final float halfH = item.height * UNIT_SCALE / 2;
 		final Box2DComponent box2DComponent = this.createComponent(Box2DComponent.class);
 		CoreGame.BODY_DEF.type = BodyDef.BodyType.DynamicBody;
-		CoreGame.BODY_DEF.position.set(foodPosition.x + halfW, foodPosition.y + halfH);
+		CoreGame.BODY_DEF.position.set(item.position.x + halfW, item.position.y + halfH);
 		box2DComponent.body = world.createBody(CoreGame.BODY_DEF);
-		box2DComponent.body.setUserData(foodEntity);
-		box2DComponent.width = foodType.getWidth() * UNIT_SCALE;
-		box2DComponent.height = foodType.getHeight() * UNIT_SCALE;
+		box2DComponent.body.setUserData(itemEntity);
+		box2DComponent.width = item.width;
+		box2DComponent.height = item.height;
 		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
 
 		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_ITEM;
@@ -320,8 +321,8 @@ public class ECSEngine extends PooledEngine{
 		CoreGame.FIXTURE_DEF.shape = pShape;
 		box2DComponent.body.createFixture(CoreGame.FIXTURE_DEF);
 		pShape.dispose();
-		foodEntity.add(box2DComponent);
+		itemEntity.add(box2DComponent);
 
-		this.addEntity(foodEntity);
+		this.addEntity(itemEntity);
 	}
 }

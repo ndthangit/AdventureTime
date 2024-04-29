@@ -64,7 +64,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             // thêm tạo cửa sổ để them do
             FoodType foodType = randomFood();
             Food food = new Food(foodType, box2dEnCmp.body.getPosition());
-            game.getEcsEngine().getFoodArray().add(food);
+            game.getEcsEngine().getItemArray().add(food);
             enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
         }
     }
@@ -72,7 +72,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
     @Override
     public void playerVSItem(Entity player, Entity item) {
         final PlayerComponent playerCmp = ECSEngine.playerCmpMapper.get(player);
-        final FoodComponent itemCmp = ECSEngine.foodCmpMapper.get(item);
+        final ItemComponent itemCmp = ECSEngine.itemCmpMapper.get(item);
 
         item.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
     }
