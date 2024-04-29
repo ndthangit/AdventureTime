@@ -276,11 +276,20 @@ public class CoreGame extends Game {
 	}
 
 	public void optionGame() {
-
+		setScreen(ScreenType.OPTION);
 	}
 
 	public void quitGame() {
 		// Logic to quit the game
 		Gdx.app.exit(); // Exit the application
 	}
+
+	public boolean isSoundEnabled() {
+		return audioManager.musicEnabled;
+	}
+
+	public void switchSound() {
+		audioManager.musicEnabled = audioManager.musicEnabled ? false : true;
+	}
+
 }

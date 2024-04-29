@@ -4,10 +4,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.mygdx.game.CoreGame;
 
 public class MenuUI extends Table  {
@@ -21,9 +18,7 @@ public class MenuUI extends Table  {
         setFillParent(true);
         this.skin = skin;
         this.game = game;
-        //Label titleLabel = new Label("Main Menu", skin, "title");
-        //add(titleLabel).colspan(2).padBottom(50).row();
-//Tạo title cho game nhưng hiện tại đang bị lỗi
+
         menu = new Table();
         screen = new Table();
         createScreen();

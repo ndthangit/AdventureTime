@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.mygdx.game.CoreGame;
 
 public class AudioManager {
+	public boolean musicEnabled = true;
 	private AudioType currentMusicType;
 	private Music currentMusic;
 	private final AssetManager assetManager;
@@ -18,6 +19,9 @@ public class AudioManager {
 	}
 	
 	public void playAudio(final AudioType type) {
+		if (!musicEnabled) {
+			return;
+		}
 		if (type.isMusic()) {
 			//play music
 			if (currentMusicType == type) {
