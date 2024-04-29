@@ -12,15 +12,15 @@ import com.mygdx.game.effect.Effect;
 import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.EffectComponent;
+import com.mygdx.game.items.Item;
 import com.mygdx.game.view.DirectionType;
 
 import java.util.EnumMap;
 
 import static com.mygdx.game.CoreGame.UNIT_SCALE;
 
-public class Weapon {
+public class Weapon extends Item {
     public WeaponType type;
-    public Vector2 position;
     public DirectionType direction;
     public Vector2 posDirection[];
     public Vector2 effDirection[];
@@ -44,7 +44,7 @@ public class Weapon {
     }
 
     public Weapon(WeaponType type, Effect effect, Vector2 position, DirectionType direction) {
-        this.position = position;
+        super(position, type.getAtlasPath(), type.getAtlasKeyIcon());
         this.direction = direction;
         this.posDirection = new Vector2[4];
         this.effDirection = new Vector2[4];

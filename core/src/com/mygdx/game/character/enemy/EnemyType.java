@@ -8,7 +8,10 @@ public enum EnemyType {
     SLIME2("Actor/Monsters/Slime2/slime2.atlas","SLIME2", 25, 2, 3),
     SLIME4("Actor/Monsters/Slime4/slime4.atlas","SLIME4",20, 3, 3),
     REPTILE2("Actor/Monsters/Reptile2/reptile2.atlas","REPTILE2", 25, 3, 4),
-    SKULLBLUE("Actor/Monsters/SkullBlue/skullblue.atlas", "SKULLBLUE", 20, 4, 4);
+    SKULLBLUE("Actor/Monsters/SkullBlue/skullblue.atlas", "SKULLBLUE", 20, 4, 4),
+    LARVA("Actor/Monsters/Larva/larva.atlas", "LARVA", 20, 4 , 3),
+    REDFIGHTER("Actor/Characters/RedFighter/redfighter.atlas", "REDFIGHTER", 30, 5, 4),
+    REDNINJA("Actor/Characters/RedNinja/redninja.atlas", "REDNINJA", 30, 4, 5);
     private final String atlasPath;
     private final String name;
     private final int maxLife;

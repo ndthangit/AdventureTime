@@ -35,10 +35,10 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
 
     @Override
     public void weaponCollision(Entity weapon, Entity gameObj) {
-//        final GameObjectComponent gameObjCmp = ECSEngine.gameObjCmpMapper.get(gameObj);
-//        if (gameObjCmp.type == GameObjectType.TRAP) {
-//            gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
-//        }
+        final GameObjectComponent gameObjCmp = ECSEngine.gameObjCmpMapper.get(gameObj);
+        if (gameObjCmp.type == GameObjectType.GRASS) {
+            gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+        }
     }
 
     @Override

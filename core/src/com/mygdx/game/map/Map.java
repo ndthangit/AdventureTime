@@ -32,6 +32,7 @@ public class Map {
 	private final Array<CollisionArea>collisionAreas;
 	private final Vector2 startPosition;
 	private final Array<GameObject> gameObject;
+	private final Array<GameObject> hideObject;
 	private final Array<Enemy> enemies;
 	private final IntMap<Animation<Sprite>> mapAnimations;
 
@@ -44,10 +45,12 @@ public class Map {
 		parsePlayerLayer();
 
 		gameObject = new Array<GameObject>();
+		hideObject = new Array<GameObject>();
 		enemies = new Array<Enemy>();
 		mapAnimations = new IntMap<Animation<Sprite>>();
 		parseGameObjectLayer();
 		parseEnemyLayer();
+		parseHideLayer();
 	}
 
 	private void parsePlayerLayer() {
@@ -72,7 +75,6 @@ public class Map {
 			Gdx.app.debug(TAG, "There is no gameObjects layer");
 			return;
 		}
-
 		for (final MapObject mapObj: gameObjectsLayer.getObjects()) {
 			if (!(mapObj instanceof TiledMapTileMapObject)) {
 				Gdx.app.debug(TAG, "GameObject of type " + mapObj + " is not supported");
@@ -83,11 +85,8 @@ public class Map {
 			final MapProperties tiledMapObjProperties = tiledMapObject.getProperties();
 			final MapProperties tileProperties = tiledMapObject.getTile().getProperties();
 			final GameObjectType gameObjType;
-			if (tiledMapObjProperties.containsKey("type")) {
-				gameObjType = GameObjectType.valueOf(tiledMapObjProperties.get("type", String.class));
-			}
-			else if (tileProperties.containsKey("type")) {
-				gameObjType = GameObjectType.valueOf(tileProperties.get("type", String.class));
+			if (mapObj.getName() != null) {
+				gameObjType = GameObjectType.valueOf(mapObj.getName());
 			}
 			else {
 				Gdx.app.debug(TAG, "There is no gameObject type defined for tile" + tiledMapObject.getProperties().get("id",Integer.class));
@@ -103,6 +102,33 @@ public class Map {
 			final float width = tiledMapObjProperties.get("width", Float.class) * CoreGame.UNIT_SCALE ;
 			final float height = tiledMapObjProperties.get("height", Float.class) * CoreGame.UNIT_SCALE;
 			gameObject.add(new GameObject(gameObjType, new Vector2(tiledMapObject.getX()*CoreGame.UNIT_SCALE, tiledMapObject.getY()*CoreGame.UNIT_SCALE), width, height, tiledMapObject.getRotation(), animationIndex));
+		}
+	}
+
+	private void parseHideLayer() {
+		final MapLayer hideLayer = tiledMap.getLayers().get("hide");
+		if (hideLayer == null) {
+			Gdx.app.debug(TAG, "There is no hide layer");
+			return;
+		}
+		for (final MapObject mapObj: hideLayer.getObjects()) {
+			if (!(mapObj instanceof TiledMapTileMapObject)) {
+				Gdx.app.debug(TAG, "GameObject of type " + mapObj + " is not supported");
+				continue;
+			}
+
+			final TiledMapTileMapObject tiledMapObject = (TiledMapTileMapObject) mapObj;
+			final MapProperties tiledMapObjProperties = tiledMapObject.getProperties();
+
+			final int  animationIndex = tiledMapObject.getTile().getId();
+			if (!createAnimation(animationIndex, tiledMapObject.getTile())) {
+				Gdx.app.log(TAG, "Could not create animation for tile " + tiledMapObjProperties.get("id",Integer.class));
+				continue;
+			}
+
+			final float width = tiledMapObjProperties.get("width", Float.class) * CoreGame.UNIT_SCALE ;
+			final float height = tiledMapObjProperties.get("height", Float.class) * CoreGame.UNIT_SCALE;
+			hideObject.add(new GameObject(GameObjectType.HIDE, new Vector2(tiledMapObject.getX()*CoreGame.UNIT_SCALE, tiledMapObject.getY()*CoreGame.UNIT_SCALE), width, height, tiledMapObject.getRotation(), animationIndex));
 		}
 	}
 
@@ -212,5 +238,9 @@ public class Map {
 
 	public IntMap<Animation<Sprite>> getMapAnimations() {
 		return mapAnimations;
+	}
+
+	public Array<GameObject> getHideObject() {
+		return hideObject;
 	}
 }

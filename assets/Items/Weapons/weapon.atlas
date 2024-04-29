@@ -1,19 +1,52 @@
 weapon.png
-size: 23, 88
-format: RGBA8888
-filter: Linear,Linear
-repeat: none
-Sprite
-  rotate: false
-  xy: 1, 1
-  size: 21, 48
-  orig: 21, 48
-  offset: 0, 0
-  index: -1
-SpriteInHand
-  rotate: false
-  xy: 1, 51
-  size: 21, 36
-  orig: 21, 36
-  offset: 0, 0
-  index: -1
+size:128,32
+filter:Linear,Linear
+repeat:xy
+Axe
+bounds:21,17,11,13
+AxeInHand
+bounds:35,7,11,8
+BigSword
+bounds:86,4,7,16
+BigSwordInHand
+bounds:61,18,7,12
+Bone
+bounds:43,18,7,12
+BoneInHand
+bounds:81,22,7,8
+Book
+bounds:66,7,9,9
+BookInHand
+bounds:10,3,12,9
+Club
+bounds:48,2,8,14
+ClubInHand
+bounds:103,2,8,10
+Fork
+bounds:77,3,7,16
+ForkInHand
+bounds:52,18,7,12
+Hammer
+bounds:10,14,9,16
+HammerInHand
+bounds:70,21,9,9
+Katana
+bounds:58,2,6,14
+KatanaInHand
+bounds:113,7,6,10
+Lance
+bounds:2,7,6,23
+LanceInHand
+bounds:103,14,6,16
+Sai
+bounds:34,17,7,13
+SaiInHand
+bounds:90,22,7,8
+Sword
+bounds:95,3,6,17
+SwordInHand
+bounds:111,19,6,11
+Whip
+bounds:24,2,9,13
+WhipInHand
+bounds:121,16,3,14

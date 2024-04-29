@@ -32,6 +32,7 @@ public class ECSEngine extends PooledEngine{
 	public static final ComponentMapper<EnemyComponent> enemyCmpMapper = ComponentMapper.getFor(EnemyComponent.class);
 	public static final ComponentMapper<EffectComponent> effectCmpMapper = ComponentMapper.getFor(EffectComponent.class);
 	public static final ComponentMapper<FoodComponent> foodCmpMapper = ComponentMapper.getFor(FoodComponent.class);
+	public static final ComponentMapper<HideLayerComponent> hideLayerCmpMapper = ComponentMapper.getFor(HideLayerComponent.class);
 
 	private final World world;
 
@@ -136,27 +137,16 @@ public class ECSEngine extends PooledEngine{
 		final float halfH = gameObject.getHeight() / 2;
 		final float angleRad = -gameObject.getRotDegree() * MathUtils.degreesToRadians;
 		final Box2DComponent box2DComponent = this.createComponent(Box2DComponent.class);
-		CoreGame.BODY_DEF.type = BodyDef.BodyType.DynamicBody;
+		CoreGame.BODY_DEF.type = BodyDef.BodyType.KinematicBody;
 		CoreGame.BODY_DEF.position.set(gameObject.getPosition().x + halfW, gameObject.getPosition().y + halfH);
 		box2DComponent.body = world.createBody(CoreGame.BODY_DEF);
 		box2DComponent.body.setUserData(gameObjEntity);
 		box2DComponent.width = gameObject.getWidth();
 		box2DComponent.height = gameObject.getHeight();
-
-		// save position before rotation - Tiled is rotated around the bottom left corner instead of the center of a Tile
-		localPosition.set(-halfW, -halfH);
-		posBeforeRotation.set(box2DComponent.body.getWorldPoint(localPosition));
-		// rotate body
-		box2DComponent.body.setTransform(box2DComponent.body.getPosition(), angleRad);
-		// get position after rotation
-		posAfterRotation.set(box2DComponent.body.getWorldPoint(localPosition));
-		//adjust position to its original value before the rotation
-		box2DComponent.body.setTransform(box2DComponent.body.getPosition().add(posBeforeRotation).sub(posAfterRotation), angleRad);
 		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
 
 		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_GAME_OBJECT;
 		CoreGame.FIXTURE_DEF.filter.maskBits = CoreGame.BIT_PLAYER|CoreGame.BIT_WEAPON;
-		CoreGame.FIXTURE_DEF.isSensor = true;
 		PolygonShape pShape = new PolygonShape();
 		pShape.setAsBox(halfW, halfH);
 		CoreGame.FIXTURE_DEF.shape = pShape;
@@ -165,6 +155,23 @@ public class ECSEngine extends PooledEngine{
 		gameObjEntity.add(box2DComponent);
 
 		this.addEntity(gameObjEntity);
+	}
+
+	public void createHideLayer(final GameObject gameObject) {
+		final Entity gameObjEntity = this.createEntity();
+
+		// hidelayer component
+		final HideLayerComponent hideLayerComponent = this.createComponent(HideLayerComponent.class);
+		hideLayerComponent.animationIndex = gameObject.getAnimationIndex();
+		hideLayerComponent.position = gameObject.getPosition();
+		gameObjEntity.add(hideLayerComponent);
+
+		// animation component
+		final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
+		animationComponent.width = gameObject.getWidth();
+		animationComponent.height = gameObject.getHeight();
+		gameObjEntity.add(animationComponent);
+
 	}
 
 	public void createPlayerWeapon(final Weapon weapon) {
@@ -188,7 +195,7 @@ public class ECSEngine extends PooledEngine{
 		final float halfH = weapon.getHeight() / 2;
 		final float angleRad = -weapon.getDirection().getCode() * MathUtils.degreesToRadians * 90;
 		final Box2DComponent box2DComponent = this.createComponent(Box2DComponent.class);
-		CoreGame.BODY_DEF.type = BodyDef.BodyType.KinematicBody;
+		CoreGame.BODY_DEF.type = BodyDef.BodyType.DynamicBody;
 		CoreGame.BODY_DEF.position.set(weapon.getPosition().x + weapon.posDirection[weapon.direction.getCode()].x , weapon.getPosition().y + weapon.posDirection[weapon.direction.getCode()].y);
 		box2DComponent.body = world.createBody(CoreGame.BODY_DEF);
 		box2DComponent.body.setUserData(weaponEntity);
@@ -305,7 +312,7 @@ public class ECSEngine extends PooledEngine{
 		box2DComponent.height = foodType.getHeight() * UNIT_SCALE;
 		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
 
-		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_GAME_OBJECT;
+		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_ITEM;
 		CoreGame.FIXTURE_DEF.filter.maskBits = CoreGame.BIT_PLAYER;
 		CoreGame.FIXTURE_DEF.isSensor = true;
 		PolygonShape pShape = new PolygonShape();

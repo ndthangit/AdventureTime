@@ -28,6 +28,7 @@ import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.*;
 import com.mygdx.game.items.food.Food;
+import com.mygdx.game.map.GameObjectType;
 import com.mygdx.game.map.Map;
 import com.mygdx.game.map.MapListener;
 
@@ -47,6 +48,7 @@ public class GameRenderer implements Disposable, MapListener{
 	private final ImmutableArray<Entity> weaponEntities;
 	private final ImmutableArray<Entity> effectEntities;
 	private final ImmutableArray<Entity> itemEntities;
+	private final ImmutableArray<Entity> hideEntities;
 	private final OrthogonalTiledMapRenderer mapRenderer;
 	private final Array<TiledMapTileLayer> tiledMapLayers;
 	
@@ -75,6 +77,7 @@ public class GameRenderer implements Disposable, MapListener{
 		weaponEntities = game.getEcsEngine().getEntitiesFor(Family.all(WeaponComponent.class, AnimationComponent.class, Box2DComponent.class).get());
 		effectEntities = game.getEcsEngine().getEntitiesFor(Family.all(EffectComponent.class).get());
 		itemEntities = game.getEcsEngine().getEntitiesFor(Family.all(FoodComponent.class, Box2DComponent.class).get());
+		hideEntities = game.getEcsEngine().getEntitiesFor(Family.all(HideLayerComponent.class, AnimationComponent.class).get());
 		this.mapRenderer = new OrthogonalTiledMapRenderer(null, CoreGame.UNIT_SCALE, game.getSpriteBatch());
 		game.getMapManager().addMapListener(this);
 		tiledMapLayers = new Array<TiledMapTileLayer>();
@@ -111,12 +114,14 @@ public class GameRenderer implements Disposable, MapListener{
 				game.getEcsEngine().getFoodArray().clear();
 			}
 
-			for (final Entity entity : gameObjectEntities) {
-				renderGameObject(entity, delta);
-			}
+
 
 			for (final Entity entity : animatedEntities) {
 				renderAnimated(entity, delta);
+			}
+
+			for (final Entity entity : itemEntities) {
+				renderItem(entity, delta);
 			}
 
 			for (final Entity entity : weaponEntities) {
@@ -127,8 +132,12 @@ public class GameRenderer implements Disposable, MapListener{
 				rederEffect(entity, delta);
 			}
 
-			for (final Entity entity : itemEntities) {
-				renderItem(entity, delta);
+			for (final Entity entity : gameObjectEntities) {
+				renderGameObject(entity, delta);
+			}
+
+			for (final Entity entity : hideEntities) {
+				renderHideLayer(entity, delta);
 			}
 
 			spriteBatch.end();
@@ -151,6 +160,18 @@ public class GameRenderer implements Disposable, MapListener{
 			frame.setBounds(box2DComponent.renderPosition.x - aniComponent.width / 2, box2DComponent.renderPosition.y - aniComponent.height / 2, aniComponent.width, aniComponent.height);
 			frame.setOriginCenter();
 			frame.setRotation(box2DComponent.body.getAngle() * MathUtils.degreesToRadians);
+			frame.draw(spriteBatch);
+		}
+	}
+
+	private void renderHideLayer(Entity entity, float delta) {
+		final HideLayerComponent hideLayerComponent = ECSEngine.hideLayerCmpMapper.get(entity);
+		final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(entity);
+		if (hideLayerComponent.animationIndex != -1) {
+			final Animation<Sprite> animation = mapAnimations.get(hideLayerComponent.animationIndex);
+			final Sprite frame = animation.getKeyFrame(aniComponent.aniTime);
+			frame.setBounds(hideLayerComponent.position.x - aniComponent.width / 2, hideLayerComponent.position.y - aniComponent.height / 2, aniComponent.width, aniComponent.height);
+			frame.setOriginCenter();
 			frame.draw(spriteBatch);
 		}
 	}

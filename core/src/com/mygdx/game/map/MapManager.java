@@ -64,6 +64,7 @@ public class  MapManager {
 		destroyGameObjects();
 		destroyEnemy();
 		destroyPlayer();
+		destroyHideLayer();
 	}
 	
 	public void setMap() {
@@ -88,7 +89,7 @@ public class  MapManager {
 		if (currentMap == null) {
 			Gdx.app.debug(TAG, "Creating new map of type" + nextMapType);
 			currentMap = new Map(tiledMap);
-			mapCache.put(nextMapType, currentMap);
+			mapCache.put(currentMapType, currentMap);
 		}
 		
 		// create map entities/bodies
@@ -96,6 +97,7 @@ public class  MapManager {
 		spawnCollisionAreas();
 		spawnGameObjects();
 		spawnEnemy();
+		spawnHideLayer();
 		
 		for (final MapListener listener: listeners) {
 			listener.mapChange(currentMap);
@@ -103,7 +105,7 @@ public class  MapManager {
 	}
 
 	private void spawnPlayer() {
-		Weapon weapon = new Weapon(WeaponType.BIG_SWORD,new Effect(EffectType.SLASHCURVED, this.getCurrentMap().getStartPosition(), DirectionType.DOWN), this.getCurrentMap().getStartPosition(), DirectionType.DOWN);
+		Weapon weapon = new Weapon(WeaponType.KATANA,new Effect(WeaponType.KATANA.getEffect(), this.getCurrentMap().getStartPosition(), DirectionType.DOWN), this.getCurrentMap().getStartPosition(), DirectionType.DOWN);
 
 		ecsEngine.createPlayer(this.getCurrentMap().getStartPosition(), PlayerType.BLACK_NINJA_MAGE, 0.75f, 0.75f, weapon);
 	}
@@ -123,6 +125,24 @@ public class  MapManager {
 	private void destroyGameObjects() {
 		for(final Entity entity: ecsEngine.getEntitiesFor(Family.all(GameObjectComponent.class, Box2DComponent.class, AnimationComponent.class).get())) {
 			if (ECSEngine.gameObjCmpMapper.get(entity) != null) {
+				entityToRemove.add(entity);
+			}
+		}
+		for (final Entity entity: entityToRemove) {
+			ecsEngine.removeEntity(entity);
+		}
+		entityToRemove.clear();
+	}
+
+	private void spawnHideLayer() {
+		for (final GameObject hide : currentMap.getHideObject()) {
+			ecsEngine.createHideLayer(hide);
+		}
+	}
+
+	private void destroyHideLayer() {
+		for(final Entity entity: ecsEngine.getEntitiesFor(Family.all(GameObjectComponent.class, AnimationComponent.class).get())) {
+			if (ECSEngine.gameObjCmpMapper.get(entity) != null && ECSEngine.gameObjCmpMapper.get(entity).type == GameObjectType.HIDE) {
 				entityToRemove.add(entity);
 			}
 		}

@@ -105,11 +105,11 @@ public class GameUI extends Table{
 		stack.add(image);
 		Table subtable = new Table();
 		for (int i = 0; i < 4; i++) {
-			TextureAtlas.AtlasRegion region = atlas.findRegion("Sprite");
+			TextureAtlas.AtlasRegion region = atlas.findRegion("Katana");
 			bagItems[i] = new Image(region);
 			// bagItems[i].setDrawable(new TextureRegionDrawable(backGround));
-			bagItems[i].setSize(200, 200);
-			subtable.add(bagItems[i]).size(50, 50).expand().pad(10).center().row();
+			bagItems[i].setSize(region.originalWidth, region.originalHeight);
+			subtable.add(bagItems[i]).size(region.originalWidth * 3, region.originalHeight * 3).expand().pad(10).center().row();
 			// bagTable.add(bagItems[i]).expand().right().top().padTop(20).left().padLeft(20).padRight(20);
 		}
 		stack.add(subtable);

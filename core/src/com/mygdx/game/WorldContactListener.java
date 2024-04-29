@@ -31,6 +31,7 @@ public class WorldContactListener implements ContactListener {
 		final Entity gameObj;
 		final Entity weapon;
 		final Entity enemy;
+		final Entity item;
 		final Body bodyA = contact.getFixtureA().getBody();
 		final Body bodyB = contact.getFixtureB().getBody();
 		final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
@@ -87,6 +88,19 @@ public class WorldContactListener implements ContactListener {
 			enemy = null;
 			hasEnemy = false;
 		}
+
+		if ((catFixA & BIT_ITEM) == BIT_ITEM) {
+			item = (Entity) bodyA.getUserData();
+			hasItem = true;
+		}
+		else if((catFixB & BIT_ITEM) == BIT_ITEM){
+			item = (Entity) bodyB.getUserData();
+			hasItem = true;
+		}
+		else {
+			item = null;
+			hasItem = false;
+		}
 		
 		if (hasPlayer && hasGameObj) {
 			for (final CollisionListener listener : listeners) {
@@ -98,6 +112,11 @@ public class WorldContactListener implements ContactListener {
 				listener.playerVSEnemy(player, enemy);
 			}
 		}
+		else if (hasWeapon && hasGameObj) {
+			for (final CollisionListener listener : listeners) {
+				listener.weaponCollision(weapon, gameObj);
+			}
+		}
 		else if (hasWeapon && hasEnemy) {
 			for (final CollisionListener listener : listeners) {
 				listener.weaponVSEnemy(weapon, enemy);
@@ -105,7 +124,7 @@ public class WorldContactListener implements ContactListener {
 		}
 		else if (hasPlayer && hasItem) {
 			for (final CollisionListener listener : listeners) {
-
+				listener.playerVSItem(player, item);
 			}
 		}
 	}
@@ -136,10 +155,6 @@ public class WorldContactListener implements ContactListener {
 		hasItem = false;
 		hasEnemy = false;
 		hasWeapon = false;
-	}
-
-	public int checkEntity (int fixture) {
-		return 0;
 	}
 	
 	public interface CollisionListener{

@@ -1,5 +1,8 @@
 package com.mygdx.game.map;
 
 public enum GameObjectType {
-    TRAP;
+    TRAP,
+    CHEST,
+    GRASS,
+    HIDE;
 }
