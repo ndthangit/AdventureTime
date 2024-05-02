@@ -34,6 +34,7 @@ public class ECSEngine extends PooledEngine{
 	public static final ComponentMapper<EffectComponent> effectCmpMapper = ComponentMapper.getFor(EffectComponent.class);
 	public static final ComponentMapper<ItemComponent> itemCmpMapper = ComponentMapper.getFor(ItemComponent.class);
 	public static final ComponentMapper<HideLayerComponent> hideLayerCmpMapper = ComponentMapper.getFor(HideLayerComponent.class);
+	public static final ComponentMapper<DoorLayerComponent> doorLayerCmpMapper = ComponentMapper.getFor(DoorLayerComponent.class);
 
 	private final World world;
 
@@ -42,6 +43,7 @@ public class ECSEngine extends PooledEngine{
 	private final Vector2 posAfterRotation;
 
 	private final Array<Item> itemArray;
+	private Entity playerEntity;
 
 	public ECSEngine(CoreGame game) {
 		super();
@@ -67,6 +69,10 @@ public class ECSEngine extends PooledEngine{
 
 	public Array<Item> getItemArray() {
 		return itemArray;
+	}
+
+	public Entity getPlayerEntity () {
+		return playerEntity;
 	}
 
 	public void createPlayer(final Vector2 playerSpawnLocation, PlayerType type, final float width, final float height, Weapon weapon) {
@@ -113,7 +119,7 @@ public class ECSEngine extends PooledEngine{
 		animationComponent.path = playerComponent.aniType.getAtlasPath();
 		player.add(animationComponent);
 		this.addEntity(player);
-
+		playerEntity = player;
 	}
 
 	public void createGameObject(final GameObject gameObject) {
@@ -173,6 +179,42 @@ public class ECSEngine extends PooledEngine{
 		animationComponent.width = gameObject.getWidth();
 		animationComponent.height = gameObject.getHeight();
 		gameObjEntity.add(animationComponent);
+		this.addEntity(gameObjEntity);
+	}
+
+	public void createDoorLayer(final GameObject gameObject) {
+		final Entity gameObjEntity = this.createEntity();
+
+		// door layer component
+		final DoorLayerComponent doorLayerComponent = this.createComponent(DoorLayerComponent.class);
+		doorLayerComponent.animationIndex = gameObject.getAnimationIndex();
+		doorLayerComponent.name = gameObject.getName();
+		gameObjEntity.add(doorLayerComponent);
+
+		// box 2D component
+		CoreGame.resetBodiesAndFixtureDefinition();
+		final float halfW = gameObject.getWidth() / 2;
+		final float halfH = gameObject.getHeight() / 2;
+		final float angleRad = -gameObject.getRotDegree() * MathUtils.degreesToRadians;
+		final Box2DComponent box2DComponent = this.createComponent(Box2DComponent.class);
+		CoreGame.BODY_DEF.type = BodyDef.BodyType.KinematicBody;
+		CoreGame.BODY_DEF.position.set(gameObject.getPosition().x + halfW, gameObject.getPosition().y + halfH);
+		box2DComponent.body = world.createBody(CoreGame.BODY_DEF);
+		box2DComponent.body.setUserData(gameObjEntity);
+		box2DComponent.width = gameObject.getWidth();
+		box2DComponent.height = gameObject.getHeight();
+		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
+
+		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_DOOR;
+		CoreGame.FIXTURE_DEF.filter.maskBits = CoreGame.BIT_PLAYER;
+		CoreGame.FIXTURE_DEF.isSensor = true;
+		PolygonShape pShape = new PolygonShape();
+		pShape.setAsBox(halfW, halfH);
+		CoreGame.FIXTURE_DEF.shape = pShape;
+		box2DComponent.body.createFixture(CoreGame.FIXTURE_DEF);
+		pShape.dispose();
+		gameObjEntity.add(box2DComponent);
+
 		this.addEntity(gameObjEntity);
 	}
 

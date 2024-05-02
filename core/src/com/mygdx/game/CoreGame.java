@@ -62,6 +62,8 @@ public class CoreGame extends Game {
 	public static final short BIT_WEAPON = 1 << 3;
 	public static final short BIT_ENEMY = 1 << 4;
 	public static final short BIT_ITEM = 1 << 5;
+	public static final short BIT_DOOR = 1 << 6;
+
 	public static final float FIXED_TIME_STEP = 1/ 60f;
 
 	public static final BodyDef BODY_DEF = new BodyDef();
@@ -135,7 +137,7 @@ public class CoreGame extends Game {
 		gameRenderer = new GameRenderer(this);
 		
 		screenCache = new EnumMap<ScreenType, Screen> (ScreenType.class);		
-		mapManager.setNextMapType(MapType.MAP_1);
+		mapManager.setNextMapType(MapType.DOJO);
 		setScreen(ScreenType.MENU);
 	}
 

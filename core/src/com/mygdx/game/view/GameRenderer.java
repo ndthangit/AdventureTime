@@ -43,6 +43,7 @@ public class GameRenderer implements Disposable, MapListener{
 	private final SpriteBatch spriteBatch;
 	private final AssetManager assetManager;
 
+	private Entity player;
 
 	private final ImmutableArray<Entity> gameObjectEntities;
 	private final ImmutableArray<Entity> animatedEntities;

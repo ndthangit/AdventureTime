@@ -21,6 +21,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.character.enemy.Enemy;
 import com.mygdx.game.character.enemy.EnemyType;
@@ -30,9 +31,10 @@ public class Map {
 	
 	private final TiledMap tiledMap;
 	private final Array<CollisionArea>collisionAreas;
-	private final Vector2 startPosition;
+	private final ObjectMap<String, Vector2> startPosition;
 	private final Array<GameObject> gameObject;
 	private final Array<GameObject> hideObject;
+	private final Array<GameObject> doorObject;
 	private final Array<Enemy> enemies;
 	private final IntMap<Animation<Sprite>> mapAnimations;
 
@@ -41,16 +43,20 @@ public class Map {
 		collisionAreas = new Array<CollisionArea>();
 		
 		parseCollisionLayer();
-		startPosition = new Vector2();
+		startPosition = new ObjectMap<String, Vector2>();
 		parsePlayerLayer();
 
 		gameObject = new Array<GameObject>();
 		hideObject = new Array<GameObject>();
+		doorObject = new Array<GameObject>();
 		enemies = new Array<Enemy>();
+
+
 		mapAnimations = new IntMap<Animation<Sprite>>();
 		parseGameObjectLayer();
 		parseEnemyLayer();
 		parseHideLayer();
+		parseDoorLayer();
 	}
 
 	private void parsePlayerLayer() {
@@ -60,11 +66,14 @@ public class Map {
 			return;
 		}
 		final MapObjects objects = playerLayer.getObjects();
+		Vector2 position;
 		for (MapObject obj: objects) {
+
 			if (obj instanceof RectangleMapObject) {
 				final RectangleMapObject rectangleMapObject = (RectangleMapObject) obj;
 				Rectangle rectangle = rectangleMapObject.getRectangle();
-				startPosition.set(rectangle.x * CoreGame.UNIT_SCALE, rectangle.y * CoreGame.UNIT_SCALE);
+				position = new Vector2(rectangle.x * CoreGame.UNIT_SCALE, rectangle.y * CoreGame.UNIT_SCALE);
+				startPosition.put(obj.getName(), position);
 			}
 		}
 	}
@@ -129,6 +138,33 @@ public class Map {
 			final float width = tiledMapObjProperties.get("width", Float.class) * CoreGame.UNIT_SCALE ;
 			final float height = tiledMapObjProperties.get("height", Float.class) * CoreGame.UNIT_SCALE;
 			hideObject.add(new GameObject(GameObjectType.HIDE, new Vector2(tiledMapObject.getX()*CoreGame.UNIT_SCALE, tiledMapObject.getY()*CoreGame.UNIT_SCALE), width, height, tiledMapObject.getRotation(), animationIndex));
+		}
+	}
+
+	private void parseDoorLayer() {
+		final MapLayer doorLayer = tiledMap.getLayers().get("door");
+		if (doorLayer == null) {
+			Gdx.app.debug(TAG, "There is no hide layer");
+			return;
+		}
+		for (final MapObject mapObj: doorLayer.getObjects()) {
+			if (!(mapObj instanceof TiledMapTileMapObject)) {
+				Gdx.app.debug(TAG, "GameObject of type " + mapObj + " is not supported");
+				continue;
+			}
+
+			final TiledMapTileMapObject tiledMapObject = (TiledMapTileMapObject) mapObj;
+			final MapProperties tiledMapObjProperties = tiledMapObject.getProperties();
+
+			final int  animationIndex = tiledMapObject.getTile().getId();
+			if (!createAnimation(animationIndex, tiledMapObject.getTile())) {
+				Gdx.app.log(TAG, "Could not create animation for tile " + tiledMapObjProperties.get("id",Integer.class));
+				continue;
+			}
+
+			final float width = tiledMapObjProperties.get("width", Float.class) * CoreGame.UNIT_SCALE ;
+			final float height = tiledMapObjProperties.get("height", Float.class) * CoreGame.UNIT_SCALE;
+			doorObject.add(new GameObject(GameObjectType.DOOR, new Vector2(tiledMapObject.getX()*CoreGame.UNIT_SCALE, tiledMapObject.getY()*CoreGame.UNIT_SCALE), mapObj.getName(), width, height, tiledMapObject.getRotation(), animationIndex));
 		}
 	}
 
@@ -207,7 +243,7 @@ public class Map {
 
 				collisionAreas.add(new CollisionArea(rectangle.getX(), rectangle.getY(), rectVertices));
 			}
-			else if (mapObj instanceof PolygonMapObject) { // can sua
+			else if (mapObj instanceof PolygonMapObject) {
 				final PolygonMapObject polygonMapObject = (PolygonMapObject) mapObj;
 				final Polygon polygon = polygonMapObject.getPolygon();
 				collisionAreas.add(new CollisionArea(polygon.getX(),polygon.getY(),polygon.getVertices()));
@@ -220,8 +256,8 @@ public class Map {
 		return collisionAreas;
 	}
 
-	public Vector2 getStartPosition() {
-		return startPosition;
+	public Vector2 getStartPosition(String key) {
+		return startPosition.get(key);
 	}
 
 	public TiledMap getTiledMap() {
@@ -242,5 +278,9 @@ public class Map {
 
 	public Array<GameObject> getHideObject() {
 		return hideObject;
+	}
+
+	public Array<GameObject> getDoorObject() {
+		return doorObject;
 	}
 }

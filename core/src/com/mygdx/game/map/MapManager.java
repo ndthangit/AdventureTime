@@ -35,7 +35,7 @@ public class  MapManager {
 	private final Array<Body> bodies;
 	private final AssetManager assetManager;
 	
-	private MapType currentMapType, nextMapType;
+	private MapType currentMapType, nextMapType, previousMapType;
 	private Map currentMap;
 	private final EnumMap<MapType, Map>mapCache;
 	private final Array<MapListener> listeners;
@@ -63,27 +63,20 @@ public class  MapManager {
 		destroyCollisionArea();
 		destroyGameObjects();
 		destroyEnemy();
-		destroyPlayer();
 		destroyHideLayer();
+		destroyDoorLayer();
+		destroyItemObject();
 	}
 	
 	public void setMap() {
 		if (currentMapType == nextMapType) {
 			return;
 		}
-		// chuyen sang destroymap
-//		if (currentMap != null) {
-//			// clean map entities and body
-//			world.getBodies(bodies);
-//			destroyCollisionArea();
-//			destroyGameObjects();
-//			destroyEnemy();
-//		}
-		
-		
+		destroyMap();
 		// set new map
 		Gdx.app.debug(TAG, "Changing to map " + nextMapType);
 		currentMap = mapCache.get(nextMapType);
+		previousMapType = currentMapType;
 		currentMapType = nextMapType;
 		final TiledMap tiledMap = assetManager.get(nextMapType.getFilePath(), TiledMap.class);
 		if (currentMap == null) {
@@ -93,26 +86,26 @@ public class  MapManager {
 		}
 		
 		// create map entities/bodies
+		spawnDoorLayer();
 		spawnPlayer();
 		spawnCollisionAreas();
 		spawnGameObjects();
 		spawnEnemy();
 		spawnHideLayer();
-		
+
 		for (final MapListener listener: listeners) {
 			listener.mapChange(currentMap);
 		}
 	}
 
 	private void spawnPlayer() {
-		Weapon weapon = new Weapon(WeaponType.KATANA,new Effect(WeaponType.KATANA.getEffect(), this.getCurrentMap().getStartPosition(), DirectionType.DOWN), this.getCurrentMap().getStartPosition(), DirectionType.DOWN);
-
-		ecsEngine.createPlayer(this.getCurrentMap().getStartPosition(), PlayerType.BLACK_NINJA_MAGE, 0.75f, 0.75f, weapon);
-	}
-
-	private void destroyPlayer() {
-		for (Entity player :  ecsEngine.getEntitiesFor(Family.all(PlayerComponent.class, Box2DComponent.class, AnimationComponent.class).get())){
-			ecsEngine.removeEntity(player);
+		if (ecsEngine.getPlayerEntity() == null) {
+			Weapon weapon = new Weapon(WeaponType.KATANA,new Effect(WeaponType.KATANA.getEffect(), this.getCurrentMap().getStartPosition("START"), DirectionType.DOWN), this.getCurrentMap().getStartPosition("START"), DirectionType.DOWN);
+			ecsEngine.createPlayer(this.getCurrentMap().getStartPosition("START"), PlayerType.BLACK_NINJA_MAGE, 0.75f, 0.75f, weapon);
+		}
+		else {
+//			ECSEngine.box2dCmpMapper.get(ecsEngine.getPlayerEntity()).renderPosition = this.currentMap.getStartPosition(previousMapType.toString());
+			ECSEngine.box2dCmpMapper.get(ecsEngine.getPlayerEntity()).body.setTransform(this.currentMap.getStartPosition(previousMapType.toString()), 0);
 		}
 	}
 
@@ -141,8 +134,26 @@ public class  MapManager {
 	}
 
 	private void destroyHideLayer() {
-		for(final Entity entity: ecsEngine.getEntitiesFor(Family.all(GameObjectComponent.class, AnimationComponent.class).get())) {
-			if (ECSEngine.gameObjCmpMapper.get(entity) != null && ECSEngine.gameObjCmpMapper.get(entity).type == GameObjectType.HIDE) {
+		for(final Entity entity: ecsEngine.getEntitiesFor(Family.all(HideLayerComponent.class, AnimationComponent.class).get())) {
+			if (ECSEngine.hideLayerCmpMapper.get(entity) != null) {
+				entityToRemove.add(entity);
+			}
+		}
+		for (final Entity entity: entityToRemove) {
+			ecsEngine.removeEntity(entity);
+		}
+		entityToRemove.clear();
+	}
+
+	private void spawnDoorLayer() {
+		for (final GameObject door : currentMap.getDoorObject()) {
+			ecsEngine.createDoorLayer(door);
+		}
+	}
+
+	private void destroyDoorLayer() {
+		for(final Entity entity: ecsEngine.getEntitiesFor(Family.all(DoorLayerComponent.class, Box2DComponent.class).get())) {
+			if (ECSEngine.doorLayerCmpMapper.get(entity) != null) {
 				entityToRemove.add(entity);
 			}
 		}
@@ -186,8 +197,6 @@ public class  MapManager {
 			cShape.dispose();
 		}
 	}
-	
-	
 
 	private void destroyCollisionArea() {
 		for (final Body body: bodies) {
@@ -195,7 +204,18 @@ public class  MapManager {
 				world.destroyBody(body);
 			}
 		}
-		
+	}
+
+	private void destroyItemObject() {
+		for(final Entity entity: ecsEngine.getEntitiesFor(Family.all(ItemComponent.class, Box2DComponent.class).get())) {
+			if (ECSEngine.itemCmpMapper.get(entity) != null) {
+				entityToRemove.add(entity);
+			}
+		}
+		for (final Entity entity: entityToRemove) {
+			ecsEngine.removeEntity(entity);
+		}
+		entityToRemove.clear();
 	}
 	
 	public Map getCurrentMap() {
@@ -213,5 +233,6 @@ public class  MapManager {
 	public void setNextMapType(MapType nextMapType) {
 		this.nextMapType = nextMapType;
 	}
+
 
 }

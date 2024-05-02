@@ -11,6 +11,8 @@ import com.mygdx.game.entity.component.*;
 import com.mygdx.game.items.food.Food;
 import com.mygdx.game.items.food.FoodType;
 import com.mygdx.game.map.GameObjectType;
+import com.mygdx.game.map.MapType;
+import com.mygdx.game.screens.ScreenType;
 
 import static com.mygdx.game.character.enemy.RandomItem.randomFood;
 
@@ -75,5 +77,13 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         final ItemComponent itemCmp = ECSEngine.itemCmpMapper.get(item);
 
         item.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+    }
+
+    @Override
+    public void playerVSDoor(Entity player, Entity door) {
+        final DoorLayerComponent doorLayerComponent = ECSEngine.doorLayerCmpMapper.get(door);
+        final PlayerComponent playerCmp = ECSEngine.playerCmpMapper.get(player);
+        game.getMapManager().setNextMapType(MapType.valueOf(doorLayerComponent.name));
+        game.setScreen(ScreenType.LOAD);
     }
 }

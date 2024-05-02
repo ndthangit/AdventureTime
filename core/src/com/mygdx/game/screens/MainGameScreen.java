@@ -9,6 +9,7 @@ import com.mygdx.game.map.Map;
 import com.mygdx.game.map.MapListener;
 import com.mygdx.game.map.MapType;
 import com.mygdx.game.ui.GameUI;
+import com.mygdx.game.view.GameRenderer;
 
 public class MainGameScreen extends AbstractScreen<GameUI> implements MapListener {
 	
@@ -46,16 +47,6 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 
 	@Override
 	public void keyPressed(InputManager manager, GameKey gameKey) {
-		if (gameKey == GameKey.CHANGE_MAP_1) {
-			mapManager.setNextMapType(MapType.MAP_1);
-			mapManager.destroyMap();
-			game.setScreen(ScreenType.LOAD);
-		}
-		else if (gameKey == GameKey.CHANGE_MAP_2) {
-			mapManager.setNextMapType(MapType.MAP_2);
-			mapManager.destroyMap();
-			game.setScreen(ScreenType.LOAD);
-		}
 	}
 
 	@Override

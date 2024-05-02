@@ -4,5 +4,8 @@ public enum GameObjectType {
     TRAP,
     CHEST,
     GRASS,
-    HIDE;
+
+    // these are not using for normal game object
+    HIDE, // using for hide layer
+    DOOR; // using for door layer
 }

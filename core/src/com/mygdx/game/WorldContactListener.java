@@ -10,13 +10,14 @@ import static com.mygdx.game.CoreGame.*;
 
 public class WorldContactListener implements ContactListener {
 	private final Array<CollisionListener> listeners;
+
 	private boolean hasPlayer;
 	private boolean hasGameObj;
 	private boolean hasWeapon;
 	private boolean hasEnemy;
 	private boolean hasItem;
+	private boolean hasDoor;
     public WorldContactListener() {
-
 		this.listeners = new Array<CollisionListener>();
     }
 
@@ -32,6 +33,7 @@ public class WorldContactListener implements ContactListener {
 		final Entity weapon;
 		final Entity enemy;
 		final Entity item;
+		final Entity door;
 		final Body bodyA = contact.getFixtureA().getBody();
 		final Body bodyB = contact.getFixtureB().getBody();
 		final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
@@ -47,7 +49,6 @@ public class WorldContactListener implements ContactListener {
 		}
 		else {
 			player = null;
-			hasPlayer = false;
 		}
 
 		if ((catFixA & BIT_GAME_OBJECT) == BIT_GAME_OBJECT) {
@@ -60,7 +61,6 @@ public class WorldContactListener implements ContactListener {
 		}
 		else {
 			gameObj = null;
-			hasGameObj = false;
 		}
 		
 		if ((catFixA & BIT_WEAPON) == BIT_WEAPON) {
@@ -73,7 +73,6 @@ public class WorldContactListener implements ContactListener {
 		}
 		else {
 			weapon = null;
-			hasWeapon = false;
 		}
 
 		if ((catFixA & BIT_ENEMY) == BIT_ENEMY) {
@@ -86,7 +85,6 @@ public class WorldContactListener implements ContactListener {
 		}
 		else {
 			enemy = null;
-			hasEnemy = false;
 		}
 
 		if ((catFixA & BIT_ITEM) == BIT_ITEM) {
@@ -99,9 +97,20 @@ public class WorldContactListener implements ContactListener {
 		}
 		else {
 			item = null;
-			hasItem = false;
 		}
-		
+
+		if ((catFixA & BIT_DOOR) == BIT_DOOR) {
+			door = (Entity) bodyA.getUserData();
+			hasDoor = true;
+		}
+		else if((catFixB & BIT_DOOR) == BIT_DOOR){
+			door = (Entity) bodyB.getUserData();
+			hasDoor = true;
+		}
+		else {
+			door = null;
+		}
+
 		if (hasPlayer && hasGameObj) {
 			for (final CollisionListener listener : listeners) {
 				listener.playerCollision(player, gameObj);
@@ -127,6 +136,11 @@ public class WorldContactListener implements ContactListener {
 				listener.playerVSItem(player, item);
 			}
 		}
+		else if (hasPlayer && hasDoor) {
+			for (final CollisionListener listener : listeners) {
+				listener.playerVSDoor(player, door);
+			}
+		}
 	}
 
 	@Override
@@ -146,7 +160,7 @@ public class WorldContactListener implements ContactListener {
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	void reset() {
@@ -155,6 +169,7 @@ public class WorldContactListener implements ContactListener {
 		hasItem = false;
 		hasEnemy = false;
 		hasWeapon = false;
+		hasDoor = false;
 	}
 	
 	public interface CollisionListener{
@@ -163,5 +178,6 @@ public class WorldContactListener implements ContactListener {
 		void playerVSEnemy(final Entity player, final Entity enemy);
 		void weaponVSEnemy(final Entity weapon, final Entity enemy);
 		void playerVSItem(final Entity player, final Entity item);
+		void playerVSDoor(final Entity player, final Entity door);
 	}
 }
