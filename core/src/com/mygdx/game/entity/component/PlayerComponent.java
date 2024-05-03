@@ -10,12 +10,15 @@ public class PlayerComponent extends EntityComponent {
 	public PlayerType aniType;
 	public boolean isAttack;
 	public boolean isSkill;
-
+	//get position
+	public Vector2 position;
 	@Override
 	public void reset() {
 		super.reset();
 		aniType = null;
 
 	}
+	public Vector2 getPosition() {return position;}
+	public void setPosition(Vector2 position) {this.position = position;}
 
 }

@@ -8,7 +8,8 @@ public enum PlayerType {
     private final String atlasPath;
     private final int health;
     private final Vector2 speed;
-
+    //get Position
+    private Vector2 position;
     
 
     PlayerType (String atlasPath, int health, float speed) {
@@ -29,4 +30,5 @@ public enum PlayerType {
         return atlasPath;
     }
 
+    public Vector2 getPosition() {return position;}
 }

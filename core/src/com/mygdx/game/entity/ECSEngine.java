@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.character.ai.SteeringComponent;
+import com.mygdx.game.character.ai.SteeringPresets;
 import com.mygdx.game.character.enemy.Enemy;
 import com.mygdx.game.character.player.PlayerType;
 import com.mygdx.game.effect.Effect;
@@ -28,6 +30,8 @@ public class ECSEngine extends PooledEngine{
 	public static final ComponentMapper<WeaponComponent> weaponCmpMapper = ComponentMapper.getFor(WeaponComponent.class);
 	public static final ComponentMapper<EnemyComponent> enemyCmpMapper = ComponentMapper.getFor(EnemyComponent.class);
 	public static final ComponentMapper<EffectComponent> effectCmpMapper = ComponentMapper.getFor(EffectComponent.class);
+	//
+	public static final ComponentMapper<SteeringComponent> sCom = ComponentMapper.getFor(SteeringComponent.class);
 
 	private final World world;
 
@@ -52,13 +56,12 @@ public class ECSEngine extends PooledEngine{
 		this.addSystem(new CollisionSystem(game));
 		this.addSystem(new PlayerAttackSystem(game));
 		this.addSystem(new EffectSystem(game));
-		this.addSystem(new EnemyMovementSystem(game));
+		this.addSystem(new EnemyMovementSystem(game, ECSEngine.this));
 	}
 
 
 	public void createPlayer(final Vector2 playerSpawnLocation,PlayerType type, final float width, final float height) {
 		final Entity player = this.createEntity();
-
 		// player component
 		final PlayerComponent playerComponent = this.createComponent(PlayerComponent.class);
 		playerComponent.maxLife = type.getHealth();
@@ -221,6 +224,9 @@ public class ECSEngine extends PooledEngine{
 		enemyComponent.speed.set(enemy.getType().getSpeed(), enemy.getType().getSpeed());
 		enemyComponent.attack = enemy.getType().getAttack();
 		enemyEnity.add(enemyComponent);
+		// Lưu vị trí ban đầu
+		enemyComponent.startPosition.x = enemy.getPosition().x + enemy.getWidth() * UNIT_SCALE / 2;
+		enemyComponent.startPosition.y = enemy.getPosition().y + enemy.getHeight() * UNIT_SCALE / 2;
 
 		// animation component
 		final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
@@ -242,6 +248,13 @@ public class ECSEngine extends PooledEngine{
 		box2DComponent.width = enemy.getWidth() * UNIT_SCALE;
 		box2DComponent.height = enemy.getHeight() * UNIT_SCALE;
 		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
+
+		//SteeringComponent
+		final SteeringComponent scom = this.createComponent(SteeringComponent.class);
+		scom.body = box2DComponent.body;
+		scom.steeringBehavior  = SteeringPresets.getWander(scom);
+		scom.currentMode = SteeringComponent.SteeringState.WANDER;
+		enemyEnity.add(scom);
 
 		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_ENEMY;
 		CoreGame.FIXTURE_DEF.filter.maskBits = -1;

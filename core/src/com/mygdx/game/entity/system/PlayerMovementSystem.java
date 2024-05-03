@@ -3,6 +3,7 @@ package com.mygdx.game.entity.system;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.Box2DComponent;
@@ -23,6 +24,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 		super(Family.all(PlayerComponent.class, Box2DComponent.class).get());
 		game.getInputManager().addInputListener(this);
 		time = 0;
+
 	}
 
 	@Override
@@ -57,6 +59,8 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 												 b2dComponent.body.getWorldCenter().x, 
 												 b2dComponent.body.getWorldCenter().y, true);
 		}
+		//set position of player
+		playerComponent.setPosition(b2dComponent.body.getPosition());
 	}
 
 	@Override

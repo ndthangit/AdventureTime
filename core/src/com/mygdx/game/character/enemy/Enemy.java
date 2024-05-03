@@ -8,13 +8,11 @@ public class Enemy {
     private final Vector2 position;
     private final float width;
     private final float height;
-
     public Enemy(EnemyType type, Vector2 position, float width, float height) {
         this.type = type;
         this.position = position;
         this.width = width;
         this.height = height;
-
     }
 
     public EnemyType getType() {
