@@ -57,6 +57,8 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 												 b2dComponent.body.getWorldCenter().x, 
 												 b2dComponent.body.getWorldCenter().y, true);
 		}
+		//set position of player
+		playerComponent.setPosition(b2dComponent.body.getPosition());
 	}
 
 	@Override

@@ -64,7 +64,7 @@ public class ECSEngine extends PooledEngine{
 		this.addSystem(new CollisionSystem(game));
 		this.addSystem(new PlayerAttackSystem(game));
 		this.addSystem(new EffectSystem(game));
-		this.addSystem(new EnemyMovementSystem(game));
+		this.addSystem(new EnemyMovementSystem(game, this));
 	}
 
 	public Array<Item> getItemArray() {
@@ -284,6 +284,9 @@ public class ECSEngine extends PooledEngine{
 		enemyComponent.speed.set(enemy.getType().getSpeed(), enemy.getType().getSpeed());
 		enemyComponent.attack = enemy.getType().getAttack();
 		enemyEnity.add(enemyComponent);
+		// Lưu vị trí ban đầu
+		enemyComponent.startPosition.x = enemy.getPosition().x + enemy.getWidth() * UNIT_SCALE / 2;
+		enemyComponent.startPosition.y = enemy.getPosition().y + enemy.getHeight() * UNIT_SCALE / 2;
 
 		// animation component
 		final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);

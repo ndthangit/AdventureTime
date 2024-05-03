@@ -18,7 +18,8 @@ public class PlayerComponent extends EntityComponent {
 
 	public float timeAttackUp;
 	public float timeSpeedUp;
-
+	//get position
+	public Vector2 position;
 	@Override
 	public void reset() {
 		super.reset();
@@ -29,5 +30,6 @@ public class PlayerComponent extends EntityComponent {
 		timeAttackUp = 0;
 		timeSpeedUp = 0;
 	}
-
+	public Vector2 getPosition() {return position;}
+	public void setPosition(Vector2 position) {this.position = position;}
 }
