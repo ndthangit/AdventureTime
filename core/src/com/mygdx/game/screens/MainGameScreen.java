@@ -57,7 +57,7 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 		if (playerCmp.life == 0) {
 			if (assetManager.isLoaded(AudioType.GAMEOVER2.getFilePath())) {
 				audioManager.playAudio(AudioType.GAMEOVER2);
-				playerCmp.life=3;
+				playerCmp.life=1;
 			}
 		}
 	}
