@@ -6,6 +6,8 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.WorldContactListener.CollisionListener;
+import com.mygdx.game.audio.AudioManager;
+import com.mygdx.game.audio.AudioType;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.*;
 import com.mygdx.game.items.food.Food;
@@ -18,10 +20,12 @@ import static com.mygdx.game.character.enemy.RandomItem.randomFood;
 
 public class CollisionSystem extends IteratingSystem implements CollisionListener {
     CoreGame game;
+
     public CollisionSystem(final CoreGame game) {
         super(Family.all(RemoveComponent.class).get());
         this.game = game;
         game.getWorldContactListener().addPlayerCollisionListener(this);
+
     }
 
     @Override

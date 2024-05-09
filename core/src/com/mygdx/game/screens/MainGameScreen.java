@@ -5,8 +5,11 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.WorldContactListener;
 import com.mygdx.game.audio.AudioType;
 import com.mygdx.game.character.player.PlayerType;
+import com.mygdx.game.entity.ECSEngine;
+import com.mygdx.game.entity.component.DoorLayerComponent;
 import com.mygdx.game.entity.component.PlayerComponent;
 import com.mygdx.game.input.GameKey;
 import com.mygdx.game.input.InputManager;
@@ -21,7 +24,8 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 	private boolean isMusicLoaded;
 	private final PlayerComponent playerCmp;
 	private final Entity player;
-	private MapType currentMapType, nextMapType, previousMapType;
+	private boolean hasDoor;
+	private boolean hasPlayer;
 	public MainGameScreen (CoreGame game) {
 		super(game);
 		player = game.getEcsEngine().getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
@@ -29,11 +33,11 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 		mapManager = game.getMapManager();
 		mapManager.addMapListener(this);
 		mapManager.setMap();
-		this.currentMapType=game.getMapManager().getCurrentMapType();
-		this.nextMapType=game.getMapManager().getNextMapType();
 		this.screenUI = (GameUI) getscreenUI(game.getLoadAsset().getGameSkin(), game);
 		game.setGameUI(screenUI);
 		this.playerCmp = player.getComponent(PlayerComponent.class);
+		hasDoor=game.getWorldContactListener().isHasDoor();
+		hasPlayer=game.getWorldContactListener().isHasPlayer();
 	}
 
 	@Override
@@ -44,14 +48,16 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 	
 	@Override
 	public void render(float delta) {
-		if(nextMapType==MapType.DOJO) {
-			if (!isMusicLoaded && assetManager.isLoaded(AudioType.LOL.getFilePath())) {
-				isMusicLoaded = true;
-				audioManager.playAudio(AudioType.LOL);
-			}
-		}else {
-			if (assetManager.isLoaded(AudioType.LOL1.getFilePath())) {
-				audioManager.playAudio(AudioType.LOL1);
+		if (!isMusicLoaded && assetManager.isFinished()) {
+			switch (game.getMapManager().getCurrentMapType()) {
+				case DOJO:
+					isMusicLoaded = true;
+					audioManager.playAudio(AudioType.LOL);
+					break;
+				case BEGIN_FOREST:
+					isMusicLoaded = true;
+					audioManager.playAudio(AudioType.PEACEFUL);
+					break;
 			}
 		}
 		if (playerCmp.life == 0) {

@@ -25,7 +25,16 @@ public class WorldContactListener implements ContactListener {
 
 		listeners.add(listener);
 	}
-    @Override
+
+	public boolean isHasDoor() {
+		return hasDoor;
+	}
+
+	public boolean isHasPlayer() {
+		return hasPlayer;
+	}
+
+	@Override
 	public void beginContact(Contact contact) {
 		reset();
 		final Entity player;
