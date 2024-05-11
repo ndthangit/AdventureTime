@@ -68,6 +68,7 @@ public class MapManager {
 		destroyHideLayer();
 		destroyDoorLayer();
 		destroyItemObject();
+		destroyBoss();
 	}
 	
 	public void setMap() {
@@ -195,6 +196,18 @@ public class MapManager {
 		for (final Boss boss: currentMap.getBosses()) {
 			ecsEngine.createBoss(boss);
 		}
+	}
+
+	private void destroyBoss() {
+		for(final Entity entity: ecsEngine.getEntitiesFor(Family.all(BossComponent.class, Box2DComponent.class, AnimationComponent.class).get())) {
+			if (ECSEngine.bossCmpMapper.get(entity) != null) {
+				entityToRemove.add(entity);
+			}
+		}
+		for (final Entity entity: entityToRemove) {
+			ecsEngine.removeEntity(entity);
+		}
+		entityToRemove.clear();
 	}
 
 	private void spawnCollisionAreas() {

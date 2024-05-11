@@ -61,9 +61,10 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
     public void weaponVSEnemy(Entity weapon, Entity enemy) {
         final WeaponComponent weaponCmp = ECSEngine.weaponCmpMapper.get(weapon);
         final EnemyComponent enemyCmp = ECSEngine.enemyCmpMapper.get(enemy);
-        final Box2DComponent box2dEnCmp = ECSEngine.box2dCmpMapper.get(weapon);
+        final Box2DComponent box2dEnCmp = ECSEngine.box2dCmpMapper.get(enemy);
+        box2dEnCmp.body.applyLinearImpulse(-box2dEnCmp.body.getLinearVelocity().x*box2dEnCmp.body.getMass(), -box2dEnCmp.body.getLinearVelocity().y*box2dEnCmp.body.getMass(), box2dEnCmp.body.getPosition().x, box2dEnCmp.body.getPosition().y, true);
+        enemyCmp.stop = true;
         enemyCmp.life -= weaponCmp.attack;
-
         if (enemyCmp.life <= 0) {
             // thêm tạo cửa sổ để them do
             FoodType foodType = randomFood();

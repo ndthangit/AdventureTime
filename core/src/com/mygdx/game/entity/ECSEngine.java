@@ -67,6 +67,7 @@ public class ECSEngine extends PooledEngine{
 		this.addSystem(new PlayerAttackSystem(game));
 		this.addSystem(new EffectSystem(game));
 		this.addSystem(new EnemyMovementSystem(game));
+		this.addSystem(new EnemyAnimationSystem(game));
 	}
 
 	public Array<Item> getItemArray() {
@@ -241,7 +242,7 @@ public class ECSEngine extends PooledEngine{
 		final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
 		animationComponent.width = boss.getWidth() * UNIT_SCALE;
 		animationComponent.height = boss.getHeight()* UNIT_SCALE;
-		animationComponent.aniType = AnimationType.DOWN;
+		animationComponent.aniType = AnimationType.IDLE_DOWN;
 		animationComponent.isSquare = false;
 		animationComponent.path = boss.getBossType().getAtlasPath();
 		bossEnity.add(animationComponent);

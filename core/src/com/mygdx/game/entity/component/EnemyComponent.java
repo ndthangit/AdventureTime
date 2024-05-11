@@ -16,6 +16,7 @@ public class EnemyComponent extends EntityComponent {
     public float timeSinceLastDirectionChange = 0;
     public float directionChangeInterval = 5; // giây
     public float wanderingRadius = 10;
+    public boolean stop;
 
     @Override
     public void reset() {

@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.entity.ECSEngine;
+import com.mygdx.game.entity.component.EnemyComponent;
 import com.mygdx.game.items.food.Food;
 
 import static com.mygdx.game.CoreGame.*;
@@ -17,8 +19,10 @@ public class WorldContactListener implements ContactListener {
 	private boolean hasEnemy;
 	private boolean hasItem;
 	private boolean hasDoor;
+	private final Array<EnemyComponent> stoEnemy;
     public WorldContactListener() {
 		this.listeners = new Array<CollisionListener>();
+		stoEnemy = new Array<EnemyComponent>();
     }
 
 	public void addPlayerCollisionListener(CollisionListener listener) {
@@ -38,6 +42,7 @@ public class WorldContactListener implements ContactListener {
 		final Body bodyB = contact.getFixtureB().getBody();
 		final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
 		final int catFixB = contact.getFixtureB().getFilterData().categoryBits;
+
 
 		if ((catFixA & BIT_PLAYER) == BIT_PLAYER) {
 			player = (Entity) bodyA.getUserData();
@@ -129,6 +134,7 @@ public class WorldContactListener implements ContactListener {
 		else if (hasWeapon && hasEnemy) {
 			for (final CollisionListener listener : listeners) {
 				listener.weaponVSEnemy(weapon, enemy);
+				stoEnemy.add(ECSEngine.enemyCmpMapper.get(enemy));
 			}
 		}
 		else if (hasPlayer && hasItem) {
@@ -149,6 +155,9 @@ public class WorldContactListener implements ContactListener {
 		final Body bodyB = contact.getFixtureB().getBody();
 		bodyA.applyLinearImpulse(-bodyA.getLinearVelocity().x*bodyA.getMass(), -bodyA.getLinearVelocity().y*bodyA.getMass(), bodyA.getPosition().x, bodyA.getPosition().y, true);
 		bodyB.applyLinearImpulse(-bodyB.getLinearVelocity().x*bodyB.getMass(), -bodyB.getLinearVelocity().y*bodyB.getMass(), bodyB.getPosition().x, bodyB.getPosition().y, true);
+		for (final EnemyComponent enemyCmp : stoEnemy) {
+			enemyCmp.stop = false;
+		}
 	}
 
 	@Override

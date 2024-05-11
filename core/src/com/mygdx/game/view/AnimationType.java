@@ -11,13 +11,21 @@ public enum AnimationType {
 	UP("Walk", 0.1f, 1),
 	LEFT("Walk", 0.1f, 2),
 	RIGHT("Walk", 0.1f, 3),
-	
+
+	// for player
 	ATTACK_DOWN("Attack", 0.1f, 0),
 	ATTACK_UP("Attack", 0.1f, 1),
 	ATTACK_LEFT("Attack", 0.1f, 2),
 	ATTACK_RIGHT("Attack", 0.1f, 3),
 
-	SKILL("Special1", 0.1f, 0);
+	SKILL("Special1", 0.1f, 0),
+
+	// for boss
+	CHARGE_LEFT("ChargeLeft", 0.1f, 0),
+	CHARGE_RIGHT("ChargeRight", 0.1f, 0),
+	B_ATTACK_LEFT("AttackLeft", 0.1f, 0),
+	B_ATTACL_RIGHT("AttackRight", 0.1f, 0);
+
 	public String getAtlasKey() {
 		return atlasKey;
 	}
