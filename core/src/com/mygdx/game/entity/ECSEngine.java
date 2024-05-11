@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.character.boss.Boss;
 import com.mygdx.game.character.enemy.Enemy;
 import com.mygdx.game.character.player.PlayerType;
 import com.mygdx.game.effect.Effect;
@@ -35,6 +36,7 @@ public class ECSEngine extends PooledEngine{
 	public static final ComponentMapper<ItemComponent> itemCmpMapper = ComponentMapper.getFor(ItemComponent.class);
 	public static final ComponentMapper<HideLayerComponent> hideLayerCmpMapper = ComponentMapper.getFor(HideLayerComponent.class);
 	public static final ComponentMapper<DoorLayerComponent> doorLayerCmpMapper = ComponentMapper.getFor(DoorLayerComponent.class);
+	public static final ComponentMapper<BossComponent> bossCmpMapper = ComponentMapper.getFor(BossComponent.class);
 
 	private final World world;
 
@@ -73,6 +75,10 @@ public class ECSEngine extends PooledEngine{
 
 	public Entity getPlayerEntity () {
 		return playerEntity;
+	}
+	
+	public void setPlayerEntity(Entity playerEntity) {
+		this.playerEntity = playerEntity;
 	}
 
 	public void createPlayer(final Vector2 playerSpawnLocation, PlayerType type, final float width, final float height, Weapon weapon) {
@@ -116,6 +122,7 @@ public class ECSEngine extends PooledEngine{
 		animationComponent.width = 16 * UNIT_SCALE;
 		animationComponent.height = 16 * UNIT_SCALE;
 		animationComponent.aniType = AnimationType.DOWN;
+		animationComponent.isSquare = true;
 		animationComponent.path = playerComponent.aniType.getAtlasPath();
 		player.add(animationComponent);
 		this.addEntity(player);
@@ -218,6 +225,51 @@ public class ECSEngine extends PooledEngine{
 		this.addEntity(gameObjEntity);
 	}
 
+	public void createBoss(final Boss boss) {
+		final Entity bossEnity = this.createEntity();
+
+		// boss component
+		final BossComponent bossComponent = this.createComponent(BossComponent.class);
+		bossComponent.maxLife = boss.getBossType().getHealth();
+		bossComponent.life = bossComponent.maxLife;
+		bossComponent.type = boss.getBossType();
+		bossComponent.speed.set(boss.getBossType().getSpeed(), boss.getBossType().getSpeed());
+		bossComponent.attack = boss.getBossType().getDamage();
+		bossEnity.add(bossComponent);
+
+		// animation component
+		final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
+		animationComponent.width = boss.getWidth() * UNIT_SCALE;
+		animationComponent.height = boss.getHeight()* UNIT_SCALE;
+		animationComponent.aniType = AnimationType.DOWN;
+		animationComponent.isSquare = false;
+		animationComponent.path = boss.getBossType().getAtlasPath();
+		bossEnity.add(animationComponent);
+
+		// box 2D component
+		CoreGame.resetBodiesAndFixtureDefinition();
+		final float halfW = 40 * UNIT_SCALE / 2;
+		final float halfH = 40 * UNIT_SCALE / 2;
+		final Box2DComponent box2DComponent = this.createComponent(Box2DComponent.class);
+		CoreGame.BODY_DEF.type = BodyDef.BodyType.DynamicBody;
+		CoreGame.BODY_DEF.position.set(boss.getPosition().x + halfW, boss.getPosition().y + halfH);
+		box2DComponent.body = world.createBody(CoreGame.BODY_DEF);
+		box2DComponent.body.setUserData(bossEnity);
+		box2DComponent.width = boss.getWidth() * UNIT_SCALE;
+		box2DComponent.height = boss.getHeight() * UNIT_SCALE;
+		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
+
+		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_BOSS;
+		CoreGame.FIXTURE_DEF.filter.maskBits = -1;
+		PolygonShape pShape = new PolygonShape();
+		pShape.setAsBox(halfW, halfH);
+		CoreGame.FIXTURE_DEF.shape = pShape;
+		box2DComponent.body.createFixture(CoreGame.FIXTURE_DEF);
+		pShape.dispose();
+		bossEnity.add(box2DComponent);
+		this.addEntity(bossEnity);
+	}
+
 	public void createPlayerWeapon(final Weapon weapon) {
 		final Entity weaponEntity = this.createEntity();
 		// weapon component
@@ -283,14 +335,17 @@ public class ECSEngine extends PooledEngine{
 		enemyComponent.type = enemy.getType();
 		enemyComponent.speed.set(enemy.getType().getSpeed(), enemy.getType().getSpeed());
 		enemyComponent.attack = enemy.getType().getAttack();
+		// Lưu vị trí ban đầu
+		enemyComponent.startPosition.x = enemy.getPosition().x + enemy.getWidth() * UNIT_SCALE / 2;
+		enemyComponent.startPosition.y = enemy.getPosition().y + enemy.getHeight() * UNIT_SCALE / 2;
 		enemyEnity.add(enemyComponent);
-
 		// animation component
 		final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
 		animationComponent.width = enemy.getWidth() * UNIT_SCALE;
 		animationComponent.height = enemy.getHeight()* UNIT_SCALE;
 		animationComponent.aniType = AnimationType.DOWN;
 		animationComponent.path = enemyComponent.type.getAtlasPath();
+		animationComponent.isSquare = true;
 		enemyEnity.add(animationComponent);
 
 		// box 2D component
@@ -344,8 +399,8 @@ public class ECSEngine extends PooledEngine{
 
 		//box2d component
 		CoreGame.resetBodiesAndFixtureDefinition();
-		final float halfW = item.width * UNIT_SCALE / 2;
-		final float halfH = item.height * UNIT_SCALE / 2;
+		final float halfW = item.width / 2;
+		final float halfH = item.height / 2;
 		final Box2DComponent box2DComponent = this.createComponent(Box2DComponent.class);
 		CoreGame.BODY_DEF.type = BodyDef.BodyType.DynamicBody;
 		CoreGame.BODY_DEF.position.set(item.position.x + halfW, item.position.y + halfH);

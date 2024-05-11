@@ -32,6 +32,10 @@ import com.mygdx.game.items.food.Food;
 import com.mygdx.game.map.GameObjectType;
 import com.mygdx.game.map.Map;
 import com.mygdx.game.map.MapListener;
+import com.mygdx.game.screens.MainGameScreen;
+import com.mygdx.game.screens.ScreenType;
+
+import static com.mygdx.game.CoreGame.UNIT_SCALE;
 
 public class GameRenderer implements Disposable, MapListener{
 	
@@ -75,12 +79,12 @@ public class GameRenderer implements Disposable, MapListener{
 		effectCache = new ObjectMap<String, EnumMap<EffectType, Animation<Sprite>>>();
 
 		gameObjectEntities = game.getEcsEngine().getEntitiesFor(Family.all(GameObjectComponent.class, Box2DComponent.class, AnimationComponent.class).get());
+		itemEntities = game.getEcsEngine().getEntitiesFor(Family.all(ItemComponent.class, Box2DComponent.class).get());
 		animatedEntities = game.getEcsEngine().getEntitiesFor(Family.all(AnimationComponent.class, Box2DComponent.class).get());
 		weaponEntities = game.getEcsEngine().getEntitiesFor(Family.all(WeaponComponent.class, AnimationComponent.class, Box2DComponent.class).get());
 		effectEntities = game.getEcsEngine().getEntitiesFor(Family.all(EffectComponent.class).get());
-		itemEntities = game.getEcsEngine().getEntitiesFor(Family.all(ItemComponent.class, Box2DComponent.class).get());
 		hideEntities = game.getEcsEngine().getEntitiesFor(Family.all(HideLayerComponent.class, AnimationComponent.class).get());
-		this.mapRenderer = new OrthogonalTiledMapRenderer(null, CoreGame.UNIT_SCALE, game.getSpriteBatch());
+		this.mapRenderer = new OrthogonalTiledMapRenderer(null, UNIT_SCALE, game.getSpriteBatch());
 		game.getMapManager().addMapListener(this);
 		tiledMapLayers = new Array<TiledMapTileLayer>();
 		
@@ -99,7 +103,9 @@ public class GameRenderer implements Disposable, MapListener{
 	public void render(float delta) {
 		ScreenUtils.clear(0, 0, 0, 1);
 		viewport.apply(false);
-		if(game.getMapManager().getCurrentMapType() == game.getMapManager().getNextMapType()) {
+
+//		if (game.getMapManager().getCurrentMapType() == game.getMapManager().getNextMapType() )
+		if( game.getScreenType() == ScreenType.GAME) {
 			spriteBatch.begin();
 			mapRenderer.setView(gameCamera);
 			if (mapRenderer.getMap() != null) {
@@ -109,6 +115,8 @@ public class GameRenderer implements Disposable, MapListener{
 				}
 			}
 
+
+
 			if (game.getEcsEngine().getItemArray().size > 0) {
 				for(final Item item : game.getEcsEngine().getItemArray()) {
 					game.getEcsEngine().createItem(item);
@@ -116,14 +124,17 @@ public class GameRenderer implements Disposable, MapListener{
 				game.getEcsEngine().getItemArray().clear();
 			}
 
-
-
-			for (final Entity entity : animatedEntities) {
-				renderAnimated(entity, delta);
+			//render entities
+			for (final Entity entity : gameObjectEntities) {
+				renderGameObject(entity, delta);
 			}
 
 			for (final Entity entity : itemEntities) {
 				renderItem(entity, delta);
+			}
+
+			for (final Entity entity : animatedEntities) {
+				renderAnimated(entity, delta);
 			}
 
 			for (final Entity entity : weaponEntities) {
@@ -134,10 +145,6 @@ public class GameRenderer implements Disposable, MapListener{
 				rederEffect(entity, delta);
 			}
 
-			for (final Entity entity : gameObjectEntities) {
-				renderGameObject(entity, delta);
-			}
-
 			for (final Entity entity : hideEntities) {
 				renderHideLayer(entity, delta);
 			}
@@ -145,7 +152,6 @@ public class GameRenderer implements Disposable, MapListener{
 			spriteBatch.end();
 			b2dDebugRenderer.render(world, viewport.getCamera().combined);
 		}
-//		world.step(FIXED_TIME_STEP, 6, 2);
 		profiler.reset();
 
 	}
@@ -184,7 +190,7 @@ public class GameRenderer implements Disposable, MapListener{
 		final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(entity);
 		
 		if (aniComponent.aniType != null) {
-			final Animation<Sprite> animation = getAnimation(aniComponent.path, aniComponent.aniType);
+			final Animation<Sprite> animation = getAnimation(aniComponent.path, aniComponent.aniType,(int) (aniComponent.width / UNIT_SCALE), (int) (aniComponent.height / UNIT_SCALE), aniComponent.isSquare);
 			final Sprite frame = animation.getKeyFrame(aniComponent.aniTime);
 			box2DComponent.renderPosition.lerp(box2DComponent.body.getPosition(), delta);
 			frame.setBounds(box2DComponent.renderPosition.x - aniComponent.width * 0.5f, box2DComponent.renderPosition.y - aniComponent.height * 0.5f, aniComponent.width, aniComponent.height);
@@ -250,7 +256,7 @@ public class GameRenderer implements Disposable, MapListener{
 		frame.draw(spriteBatch);
 	}
 
-	private Animation<Sprite> getAnimation(String path, AnimationType aniType) {
+	private Animation<Sprite> getAnimation(String path, AnimationType aniType, int width, int height, boolean isSquare) {
 		EnumMap<AnimationType, Animation<Sprite>> subCache = animationCache.get(path);
 
 		if (subCache == null) {
@@ -261,19 +267,29 @@ public class GameRenderer implements Disposable, MapListener{
 		if (animation == null) {
 				Gdx.app.debug(TAG, "Creating new animation of type " + aniType);
 				final AtlasRegion atlasRegion = assetManager.get(path, TextureAtlas.class).findRegion(aniType.getAtlasKey());
-				final TextureRegion[][] textureRegions = atlasRegion.split(48, 48);
-				animation = new Animation<Sprite>(aniType.getFrameTime(), getKeyFrame(textureRegions, aniType.getColIndex()), Animation.PlayMode.LOOP);
+				final TextureRegion[][] textureRegions = atlasRegion.split(3 * width, 3 * height);
+					animation = new Animation<Sprite>(aniType.getFrameTime(), getKeyFrame(textureRegions, aniType.getColIndex(), isSquare), Animation.PlayMode.LOOP);
 				subCache.put(aniType, animation);
 		}
 		return animation;
 	}
 
-	private Array<? extends Sprite> getKeyFrame(TextureRegion[][] textureRegions, int colIndex) {
+	private Array<? extends Sprite> getKeyFrame(TextureRegion[][] textureRegions, int index, boolean isSquare) {
 		final Array<Sprite> keyFrame = new Array<Sprite>();
-		for (TextureRegion[] subRegions : textureRegions) {
-			final Sprite sprite = new Sprite(subRegions[colIndex]);
-			sprite.setOriginCenter();
-			keyFrame.add(sprite);
+		if (isSquare == true) {
+			for (TextureRegion[] subRegions : textureRegions) {
+				final Sprite sprite = new Sprite(subRegions[index]);
+				sprite.setOriginCenter();
+				keyFrame.add(sprite);
+			}
+		}
+		else {
+			TextureRegion[] subRegions = textureRegions[index];
+			for (int i=0; i<subRegions.length; i++) {
+				final Sprite sprite = new Sprite(subRegions[i]);
+				sprite.setOriginCenter();
+				keyFrame.add(sprite);
+			}
 		}
 		return keyFrame;
 	}

@@ -1,0 +1,61 @@
+giantredsamurai.png
+size: 1152, 384
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+AttackLeft
+  rotate: false
+  xy: 0, 0
+  size: 384, 96
+  orig: 384, 96
+  offset: 0, 0
+  index: -1
+AttackRight
+  rotate: false
+  xy: 576, 0
+  size: 384, 96
+  orig: 384, 96
+  offset: 0, 0
+  index: -1
+ChargeLeft
+  rotate: false
+  xy: 0, 96
+  size: 288, 96
+  orig: 288, 96
+  offset: 0, 0
+  index: -1
+ChargeRight
+  rotate: false
+  xy: 576, 96
+  size: 288, 96
+  orig: 288, 96
+  offset: 0, 0
+  index: -1
+Faceset
+  rotate: false
+  xy: 0, 192
+  size: 38, 38
+  orig: 38, 38
+  offset: 0, 0
+  index: -1
+Hit
+  rotate: false
+  xy: 576, 192
+  size: 384, 48
+  orig: 384, 48
+  offset: 0, 0
+  index: -1
+Idle
+  rotate: false
+  xy: 0, 288
+  size: 576, 48
+  orig: 576, 48
+  offset: 0, 0
+  index: -1
+Walk
+  rotate: false
+  xy: 576, 288
+  size: 576, 48
+  orig: 576, 48
+  offset: 0, 0
+  index: -1

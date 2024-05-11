@@ -63,6 +63,7 @@ public class CoreGame extends Game {
 	public static final short BIT_ENEMY = 1 << 4;
 	public static final short BIT_ITEM = 1 << 5;
 	public static final short BIT_DOOR = 1 << 6;
+	public static final short BIT_BOSS = 1 << 7;
 
 	public static final float FIXED_TIME_STEP = 1/ 60f;
 
@@ -89,6 +90,8 @@ public class CoreGame extends Game {
 	private GameRenderer gameRenderer;
 
 	private float accumulator = 0;
+
+	private ScreenType screenType;
 
 
 
@@ -138,6 +141,7 @@ public class CoreGame extends Game {
 		
 		screenCache = new EnumMap<ScreenType, Screen> (ScreenType.class);		
 		mapManager.setNextMapType(MapType.DOJO);
+		screenType = ScreenType.MENU;
 		setScreen(ScreenType.MENU);
 	}
 
@@ -211,7 +215,12 @@ public class CoreGame extends Game {
 		this.gameUI = gameUI;
 	}
 
+	public ScreenType getScreenType() {
+		return screenType;
+	}
+
 	public void setScreen(final ScreenType screenType) {
+		this.screenType = screenType;
 		final Screen screen = screenCache.get(screenType);
 		if (screen == null) {
 			try {
@@ -279,6 +288,13 @@ public class CoreGame extends Game {
 
 	public void optionGame() {
 		setScreen(ScreenType.OPTION);
+	}
+
+	public void replayGame() {
+		// Logic to start the game
+		mapManager.destroyPlayer();
+		mapManager.setMap();
+		setScreen(ScreenType.LOAD);
 	}
 
 	public void quitGame() {

@@ -1,0 +1,12 @@
+AttackLeft3.png
+size: 1152, 288
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+AttackLeft
+  rotate: false
+  xy: 0, 0
+  size: 1152, 288
+  orig: 1152, 288
+  offset: 0, 0
+  index: -1

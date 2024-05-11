@@ -1,9 +1,8 @@
 package com.mygdx.game.character.boss;
 
 public enum BossType {
-    ;
+    GIANTBLUESAMURAI("Actor/Boss/GiantBlueSamurai/giantbluesamurai.atlas", 96, 96, 60, 5, 4, BossSkillType.LEFT_SLASH, BossSkillType.RIGHT_SLASH);
     private final String atlasPath;
-    private final String key;
     private final int width;
     private final int height;
     private final int health;
@@ -12,9 +11,8 @@ public enum BossType {
     private final BossSkillType skill1;
     private final BossSkillType skill2;
 
-    BossType(String atlasPath, String key, int width, int height, int health, int damage, float speed, BossSkillType skill1, BossSkillType skill2) {
+    BossType(String atlasPath, int width, int height, int health, int damage, float speed, BossSkillType skill1, BossSkillType skill2) {
         this.atlasPath = atlasPath;
-        this.key = key;
         this.width = width;
         this.height = height;
         this.health = health;
@@ -22,5 +20,37 @@ public enum BossType {
         this.speed = speed;
         this.skill1 = skill1;
         this.skill2 = skill2;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public String getAtlasPath() {
+        return atlasPath;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public BossSkillType getSkill1() {
+        return skill1;
+    }
+
+    public BossSkillType getSkill2() {
+        return skill2;
     }
 }

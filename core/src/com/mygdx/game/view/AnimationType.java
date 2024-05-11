@@ -12,10 +12,10 @@ public enum AnimationType {
 	LEFT("Walk", 0.1f, 2),
 	RIGHT("Walk", 0.1f, 3),
 	
-	ATTACK_DOWN("Attack", 0.05f, 0),
-	ATTACK_UP("Attack", 0.05f, 1),
-	ATTACK_LEFT("Attack", 0.05f, 2),
-	ATTACK_RIGHT("Attack", 0.05f, 3),
+	ATTACK_DOWN("Attack", 0.1f, 0),
+	ATTACK_UP("Attack", 0.1f, 1),
+	ATTACK_LEFT("Attack", 0.1f, 2),
+	ATTACK_RIGHT("Attack", 0.1f, 3),
 
 	SKILL("Special1", 0.1f, 0);
 	public String getAtlasKey() {

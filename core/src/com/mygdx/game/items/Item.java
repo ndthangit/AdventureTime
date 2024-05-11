@@ -8,6 +8,7 @@ public class Item {
     public String key;
     public float width;
     public float height;
+    public int quatity;
     public Item(Vector2 position, String atlasPath, String key, float width, float height) {
         this.position = position;
         this.atlasPath = atlasPath;

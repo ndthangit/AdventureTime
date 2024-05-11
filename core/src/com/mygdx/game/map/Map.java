@@ -23,6 +23,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.character.boss.Boss;
+import com.mygdx.game.character.boss.BossType;
 import com.mygdx.game.character.enemy.Enemy;
 import com.mygdx.game.character.enemy.EnemyType;
 
@@ -36,6 +38,7 @@ public class Map {
 	private final Array<GameObject> hideObject;
 	private final Array<GameObject> doorObject;
 	private final Array<Enemy> enemies;
+	private final Array<Boss> bosses;
 	private final IntMap<Animation<Sprite>> mapAnimations;
 
 	public Map(final TiledMap tiledMap) {
@@ -49,12 +52,14 @@ public class Map {
 		gameObject = new Array<GameObject>();
 		hideObject = new Array<GameObject>();
 		doorObject = new Array<GameObject>();
+		bosses = new Array<Boss>();
 		enemies = new Array<Enemy>();
 
 
 		mapAnimations = new IntMap<Animation<Sprite>>();
 		parseGameObjectLayer();
 		parseEnemyLayer();
+		parseBossLayer();
 		parseHideLayer();
 		parseDoorLayer();
 	}
@@ -113,6 +118,8 @@ public class Map {
 			gameObject.add(new GameObject(gameObjType, new Vector2(tiledMapObject.getX()*CoreGame.UNIT_SCALE, tiledMapObject.getY()*CoreGame.UNIT_SCALE), width, height, tiledMapObject.getRotation(), animationIndex));
 		}
 	}
+
+
 
 	private void parseHideLayer() {
 		final MapLayer hideLayer = tiledMap.getLayers().get("hide");
@@ -181,7 +188,25 @@ public class Map {
 				Rectangle rectangle = rectangleMapObject.getRectangle();
 				enemyType = EnemyType.valueOf(rectangleMapObject.getName());
 
-				enemies.add(new Enemy(enemyType, new Vector2(rectangle.x*CoreGame.UNIT_SCALE, rectangle.y*CoreGame.UNIT_SCALE), 12, 12));
+				enemies.add(new Enemy(enemyType, new Vector2(rectangle.x*CoreGame.UNIT_SCALE, rectangle.y*CoreGame.UNIT_SCALE), 16, 16));
+			}
+		}
+	}
+
+	private void parseBossLayer() {
+		final MapLayer bossLayer = tiledMap.getLayers().get("boss");
+		if (bossLayer == null) {
+			Gdx.app.debug(TAG, "There is no boss layer");
+			return;
+		}
+		BossType bossType;
+		for (final MapObject obj: bossLayer.getObjects()) {
+			if (obj instanceof RectangleMapObject) {
+				final RectangleMapObject rectangleMapObject = (RectangleMapObject) obj;
+				Rectangle rectangle = rectangleMapObject.getRectangle();
+				bossType = BossType.valueOf(rectangleMapObject.getName());
+
+				bosses.add(new Boss(bossType, new Vector2(rectangle.x*CoreGame.UNIT_SCALE, rectangle.y*CoreGame.UNIT_SCALE)));
 			}
 		}
 	}
@@ -282,5 +307,9 @@ public class Map {
 
 	public Array<GameObject> getDoorObject() {
 		return doorObject;
+	}
+
+	public Array<Boss> getBosses() {
+		return bosses;
 	}
 }

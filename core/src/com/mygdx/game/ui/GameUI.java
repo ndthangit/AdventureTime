@@ -4,13 +4,15 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
@@ -19,26 +21,34 @@ import com.mygdx.game.entity.component.AnimationComponent;
 import com.mygdx.game.entity.component.Box2DComponent;
 import com.mygdx.game.entity.component.GameObjectComponent;
 import com.mygdx.game.entity.component.PlayerComponent;
+import com.mygdx.game.input.GameKey;
+import com.mygdx.game.items.Item;
+import com.mygdx.game.items.food.Food;
+import com.mygdx.game.items.food.FoodType;
+import com.mygdx.game.screens.ScreenType;
 
-public class GameUI extends Table{
+public class GameUI extends Table {
 	private final CoreGame game;
 	private final Image heartImage[];
 	private final Table heartTable;
 	private final Entity player;
 	private final PlayerComponent playerCmp;
 	private final Table bagTable;
-	private final Image bagItems[];
+	private final ImageButton[] bagItems;
+	private final Stack[] stacks;
 	
 	public GameUI(Skin skin, CoreGame game) {
 		super(skin);
 		this.game = game;
 		player = game.getEcsEngine().getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
         this.bagTable = new Table(skin);
-        this.bagItems = new Image[4];
+        this.bagItems = new ImageButton[4];
+		this.stacks = new Stack[4];
         playerCmp = player.getComponent(PlayerComponent.class);
 		heartTable = new Table();
 		setFillParent(true);
 		heartImage = new Image[ (int) playerCmp.maxLife/4];
+		bagTable.setFillParent(true);
 		createHeart();
 		createBag();
 	}
@@ -88,6 +98,10 @@ public class GameUI extends Table{
 		for (i=0; i<playerCmp.maxLife/4; i++) {
 			heartTable.add(heartImage[i]).expand(false, true).top().padTop(50).left().padLeft(20).padRight(20);
 		}
+
+		if(playerCmp.life<=0){
+			game.setScreen(ScreenType.DEAD);
+		}
 	}
 	
 	private Texture setHeartImage(int i) {
@@ -97,28 +111,39 @@ public class GameUI extends Table{
 	}
 
 	public void createBag() {
-		TextureAtlas backGroundBag = new TextureAtlas(Gdx.files.internal("Items/Weapons/weapon.atlas"));
-		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("Items/Weapons/weapon.atlas"));
-		Stack stack = new Stack();
-		Texture texture = new Texture(Gdx.files.internal("Treasure Hunters/Treasure Hunters/Wood and Paper UI/Sprites/Big Banner/32.png"));
-		Image image = new Image(texture);
-		stack.add(image);
-		Table subtable = new Table();
+		bagTable.clearChildren();
+
 		for (int i = 0; i < 4; i++) {
-			TextureAtlas.AtlasRegion region = atlas.findRegion("Katana");
-			bagItems[i] = new Image(region);
-			// bagItems[i].setDrawable(new TextureRegionDrawable(backGround));
-			bagItems[i].setSize(region.originalWidth, region.originalHeight);
-			subtable.add(bagItems[i]).size(region.originalWidth * 3, region.originalHeight * 3).expand().pad(10).center().row();
-			// bagTable.add(bagItems[i]).expand().right().top().padTop(20).left().padLeft(20).padRight(20);
+			stacks[i] = new Stack();
+			Image BG = new Image(new Texture(Gdx.files.internal("Backgrounds/BackGround1.png")));
+			stacks[i].add(BG);
+			bagTable.add(stacks[i]).center().pad(0).padLeft(10).row();
+			bagTable.row();
 		}
-		stack.add(subtable);
-		bagTable.setPosition(50, Gdx.graphics.getHeight() / 2);
-		bagTable.add(stack).size(50, 50).expand().center().row();
-		bagTable.debug();
-		// bagTable.setBackground(back);
-		addActor(bagTable);
+
+		this.addActor(bagTable);
+
+		// Set table position
+		bagTable.setPosition(0, (Gdx.graphics.getHeight() / 2) - 200);
+		bagTable.bottom().left();
+//        bagTable.debug();
 	}
-	
+
+	public void updateBag() {
+		createBag();
+		TextureAtlas atlas = null;
+		for (int i = 0; i < 4; i++) {
+			if (playerCmp.inventory[i] == null) {continue;}
+			if (atlas == null) {
+				atlas = new TextureAtlas(playerCmp.inventory[i].atlasPath);
+			}
+			TextureAtlas.AtlasRegion region = atlas.findRegion(playerCmp.inventory[i].key);
+			Drawable drawable = new TextureRegionDrawable(region);
+			drawable.setMinHeight(80);
+			drawable.setMinWidth(80);
+			bagItems[i]= new ImageButton(drawable);
+			stacks[i].add(bagItems[i]);
+		}
+	}
 }
 ;

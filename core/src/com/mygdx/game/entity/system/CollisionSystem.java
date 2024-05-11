@@ -8,8 +8,10 @@ import com.mygdx.game.CoreGame;
 import com.mygdx.game.WorldContactListener.CollisionListener;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.*;
+import com.mygdx.game.items.Item;
 import com.mygdx.game.items.food.Food;
 import com.mygdx.game.items.food.FoodType;
+import com.mygdx.game.items.weapon.Weapon;
 import com.mygdx.game.map.GameObjectType;
 import com.mygdx.game.map.MapType;
 import com.mygdx.game.screens.ScreenType;
@@ -75,8 +77,15 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
     public void playerVSItem(Entity player, Entity item) {
         final PlayerComponent playerCmp = ECSEngine.playerCmpMapper.get(player);
         final ItemComponent itemCmp = ECSEngine.itemCmpMapper.get(item);
+        if (itemCmp.item instanceof Food) {
+            if (playerCmp.addItem(itemCmp.item)) {
+                item.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+                game.getGameUI().updateBag();
+            }
+        }
+        else if (itemCmp.item instanceof Weapon) {
 
-        item.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+        }
     }
 
     @Override

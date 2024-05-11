@@ -1,26 +1,49 @@
 food.png
-size: 96, 32
-format: RGBA8888
-filter: Linear,Linear
-repeat: none
+size:64,128
+repeat:none
 Beaf
-  rotate: false
-  xy: 0, 0
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
+bounds:38,108,16,16
 Calamari
-  rotate: false
-  xy: 32, 0
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
+bounds:20,72,16,16
 Fish
-  rotate: false
-  xy: 64, 0
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
+bounds:20,54,16,16
+FortuneCookie
+bounds:2,18,16,16
+Honey
+bounds:2,90,16,16
+Noodle
+bounds:20,90,16,16
+Nut
+bounds:38,55,15,15
+Nut2
+bounds:20,37,15,15
+Octopus
+bounds:2,54,16,16
+Onigiri
+bounds:38,72,16,16
+Seed1
+bounds:42,2,8,8
+Seed2
+bounds:42,12,8,8
+Seed3
+bounds:37,44,8,8
+SeedBig1
+bounds:36,22,10,13
+SeedBig2
+bounds:30,7,10,13
+SeedBig3
+bounds:18,3,10,13
+SeedLarge
+bounds:2,3,14,13
+SeedLargeWhite
+bounds:20,22,14,13
+Shrimp
+bounds:2,108,16,16
+Sushi
+bounds:2,72,16,16
+Sushi2
+bounds:2,36,16,16
+TeaLeaf
+bounds:38,90,16,16
+Yakitori
+bounds:20,108,16,16

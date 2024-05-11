@@ -1,0 +1,12 @@
+Walk.png
+size: 576, 96
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Walk
+  rotate: false
+  xy: 0, 0
+  size: 576, 96
+  orig: 576, 48
+  offset: 0, -48
+  index: -1

@@ -13,6 +13,7 @@ public enum FoodType {
     private final int strength;
     private final int speed;
     private final float time;
+
     FoodType(String atlasPath, String key, int width, int height, int heal, int strength, int speed, float time) {
         this.atlasPath = atlasPath;
         this.key = key;

@@ -13,7 +13,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.character.boss.Boss;
 import com.mygdx.game.character.enemy.Enemy;
 import com.mygdx.game.character.player.PlayerType;
 import com.mygdx.game.effect.Effect;
@@ -26,7 +28,7 @@ import com.mygdx.game.items.weapon.Weapon;
 import com.mygdx.game.items.weapon.WeaponType;
 import com.mygdx.game.view.DirectionType;
 
-public class  MapManager {
+public class MapManager {
 	public static final String TAG = MapManager.class.getSimpleName();
 
 	private final ECSEngine ecsEngine;
@@ -91,6 +93,7 @@ public class  MapManager {
 		spawnCollisionAreas();
 		spawnGameObjects();
 		spawnEnemy();
+		spawnBoss();
 		spawnHideLayer();
 
 		for (final MapListener listener: listeners) {
@@ -109,10 +112,17 @@ public class  MapManager {
 		}
 	}
 
+	public void destroyPlayer() {
+		ecsEngine.removeEntity(ecsEngine.getPlayerEntity());
+		ecsEngine.setPlayerEntity(null);
+		setNextMapType(MapType.DOJO);
+	}
+
 	private void spawnGameObjects() {
 		for (final GameObject gameObject: currentMap.getGameObjects()) {
 			ecsEngine.createGameObject(gameObject);
 		}
+
 	}
 
 	private void destroyGameObjects() {
@@ -181,6 +191,12 @@ public class  MapManager {
 		entityToRemove.clear();
 	}
 
+	private void spawnBoss() {
+		for (final Boss boss: currentMap.getBosses()) {
+			ecsEngine.createBoss(boss);
+		}
+	}
+
 	private void spawnCollisionAreas() {
 		for (final CollisionArea collisionArea: currentMap.getCollisionAreas()) {
 			CoreGame.resetBodiesAndFixtureDefinition();
@@ -210,6 +226,7 @@ public class  MapManager {
 		for(final Entity entity: ecsEngine.getEntitiesFor(Family.all(ItemComponent.class, Box2DComponent.class).get())) {
 			if (ECSEngine.itemCmpMapper.get(entity) != null) {
 				entityToRemove.add(entity);
+
 			}
 		}
 		for (final Entity entity: entityToRemove) {
@@ -233,6 +250,4 @@ public class  MapManager {
 	public void setNextMapType(MapType nextMapType) {
 		this.nextMapType = nextMapType;
 	}
-
-
 }

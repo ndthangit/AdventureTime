@@ -1,7 +1,8 @@
 package com.mygdx.game.character.boss;
 
 public enum BossSkillType {
-    ;
+    LEFT_SLASH("", "", 0,0,0,0),
+    RIGHT_SLASH("", "", 0,0,0,0);
     private final String atlasPath;
     private final String key;
     private final int width;

@@ -10,6 +10,7 @@ public class AnimationComponent implements Component, Poolable{
 	public float aniTime;
 	public float width;
 	public float height;
+	public boolean isSquare;
 	
 	@Override
 	public void reset() {
@@ -17,6 +18,7 @@ public class AnimationComponent implements Component, Poolable{
 		aniType = null;
 		aniTime = 0;
 		width = height = 0;
+		isSquare = false;
 	}
 
 }

@@ -27,6 +27,7 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 	@Override
 	public void show() {
 		super.show();
+		screenUI.updateHeart();
 //		mapRender.setMap(assetManager.get(mapManager.getCurrentMapType().getFilePath(), TiledMap.class));
 	}
 	
