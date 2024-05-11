@@ -1,6 +1,12 @@
 package com.mygdx.game.view;
 
 public enum AnimationType {
+	IDLE_DOWN("Idle", 0.1f, 0),
+	IDLE_UP("Idle", 0.1f, 1),
+	IDLE_LEFT("Idle", 0.1f, 2),
+	IDLE_RIGHT("Idle", 0.1f, 3),
+
+
 	DOWN("Walk", 0.1f,0),
 	UP("Walk", 0.1f, 1),
 	LEFT("Walk", 0.1f, 2),

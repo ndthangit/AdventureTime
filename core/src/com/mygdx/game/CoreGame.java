@@ -8,30 +8,41 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.maps.tiled.BaseTmxMapLoader;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.audio.AudioManager;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.input.InputManager;
+import com.mygdx.game.items.food.FoodType;
 import com.mygdx.game.map.MapManager;
 import com.mygdx.game.map.MapType;
 import com.mygdx.game.screens.ScreenType;
 import com.mygdx.game.ui.GameUI;
-import com.mygdx.game.ui.MenuUI;
 import com.mygdx.game.view.GameRenderer;
 
 public class CoreGame extends Game {
@@ -50,6 +61,9 @@ public class CoreGame extends Game {
 	public static final short BIT_GAME_OBJECT = 1 << 2;
 	public static final short BIT_WEAPON = 1 << 3;
 	public static final short BIT_ENEMY = 1 << 4;
+	public static final short BIT_ITEM = 1 << 5;
+	public static final short BIT_DOOR = 1 << 6;
+
 	public static final float FIXED_TIME_STEP = 1/ 60f;
 
 	public static final BodyDef BODY_DEF = new BodyDef();
@@ -75,6 +89,8 @@ public class CoreGame extends Game {
 	private GameRenderer gameRenderer;
 
 	private float accumulator = 0;
+
+
 
 	@Override
 	public void create () {
@@ -121,8 +137,8 @@ public class CoreGame extends Game {
 		gameRenderer = new GameRenderer(this);
 		
 		screenCache = new EnumMap<ScreenType, Screen> (ScreenType.class);		
-		mapManager.setNextMapType(MapType.MAP_1);
-		setScreen(ScreenType.MAIN_MENU);
+		mapManager.setNextMapType(MapType.DOJO);
+		setScreen(ScreenType.MENU);
 	}
 
 	public Stage getStage() {
@@ -135,6 +151,7 @@ public class CoreGame extends Game {
 	}
 	
 	public void setSkin(Skin skin) {
+
 		this.skin = skin;
 	}
 
@@ -191,17 +208,7 @@ public class CoreGame extends Game {
 	}
 
 	public void setGameUI(GameUI gameUI) {
-
 		this.gameUI = gameUI;
-	}
-
-	public void startGame() {
-		// Logic to start the game
-		setScreen(ScreenType.LOAD);
-	}
-	public void quitGame() {
-		// Logic to quit the game
-		Gdx.app.exit(); // Exit the application
 	}
 
 	public void setScreen(final ScreenType screenType) {
@@ -264,18 +271,27 @@ public class CoreGame extends Game {
 		stage.dispose();
 	}
 
+	// function of menu
+	public void startGame() {
+		// Logic to start the game
+		setScreen(ScreenType.LOAD);
+	}
+
 	public void optionGame() {
-        setScreen(ScreenType.OPTION);
+		setScreen(ScreenType.OPTION);
+	}
+
+	public void quitGame() {
+		// Logic to quit the game
+		Gdx.app.exit(); // Exit the application
 	}
 
 	public boolean isSoundEnabled() {
-		//if (){
-		return true;//}
-		//else(){
-		//return false;
-	//}
+		return audioManager.musicEnabled;
 	}
 
-	public void setSoundEnabled(boolean soundEnabled) {
+	public void switchSound() {
+		audioManager.musicEnabled = audioManager.musicEnabled ? false : true;
 	}
+
 }

@@ -33,6 +33,15 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 		assetManager.load("Actor/Monsters/Beast2/beast2.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Monsters/Beast/beast.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Monsters/Cyclope/cyclope.atlas", TextureAtlas.class);
+		assetManager.load("Actor/Monsters/SkullBlue/skullblue.atlas", TextureAtlas.class);
+		assetManager.load("Actor/Monsters/Slime2/slime2.atlas", TextureAtlas.class);
+		assetManager.load("Actor/Monsters/Slime4/slime4.atlas", TextureAtlas.class);
+		assetManager.load("Actor/Monsters/Reptile2/reptile2.atlas", TextureAtlas.class);
+		assetManager.load("Actor/Monsters/Larva/larva.atlas", TextureAtlas.class);
+		assetManager.load("Actor/Characters/RedFighter/redfighter.atlas", TextureAtlas.class);
+		assetManager.load("Actor/Characters/RedNinja/redninja.atlas", TextureAtlas.class);
+		assetManager.load("FX/Effect.atlas", TextureAtlas.class);
+		assetManager.load("Items/Food/food.atlas", TextureAtlas.class);
 
 		//audio
 		isMusicLoaded = false;
@@ -50,11 +59,13 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 	public void show() {
 		assetManager.load(mapManager.getNextMapType().getFilePath(), TiledMap.class);
 		super.show();
+		isMusicLoaded = false;
+		audioManager.stopCurrentMusic();
 	}
 	
 	public void hide() {
 		super.hide();
-//		audioManager.stopCurrentMusic();
+		audioManager.stopCurrentMusic();
 	}
 
 	@Override
@@ -62,16 +73,14 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 		
 		ScreenUtils.clear(0, 0, 0, 1);
 		
-//		if (!isMusicLoaded && assetManager.isLoaded(AudioType.PEACEFUL.getFilePath())) {
-//			isMusicLoaded = true;
-//			audioManager.playAudio(AudioType.PEACEFUL);
-//		}
+		if (!isMusicLoaded && assetManager.isLoaded(AudioType.PEACEFUL.getFilePath())) {
+			isMusicLoaded = true;
+			audioManager.playAudio(AudioType.PEACEFUL);
+		}
 		
 		if (assetManager.update()) {
 			((LoadingUI) screenUI).setPressButton();
 		}
-		
-//		((LoadingUI) screenUI).setProgress(assetManager.getProgress());
 		
 	}
 
@@ -82,7 +91,7 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
 	@Override
 	public void keyPressed(InputManager manager, GameKey gameKey) {
-		if (gameKey != GameKey.CHANGE_MAP_1 && gameKey != GameKey.CHANGE_MAP_2) {
+		if (gameKey != GameKey.CHANGE_MAP_1 && gameKey != GameKey.CHANGE_MAP_2 && assetManager.isFinished()) {
 			mapManager.setMap();
 			game.setScreen(ScreenType.GAME);
 		}

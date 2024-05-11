@@ -15,6 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.entity.component.AnimationComponent;
+import com.mygdx.game.entity.component.Box2DComponent;
+import com.mygdx.game.entity.component.GameObjectComponent;
 import com.mygdx.game.entity.component.PlayerComponent;
 
 public class GameUI extends Table{
