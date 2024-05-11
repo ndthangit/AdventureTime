@@ -71,6 +71,8 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 		case ATTACK:
 			isAttack = true;
 			break;
+		case SKILL:
+			break;
 		default:
 			break;
 		}
