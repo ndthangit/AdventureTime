@@ -67,6 +67,7 @@ public class ECSEngine extends PooledEngine{
 		this.addSystem(new PlayerAttackSystem(game));
 		this.addSystem(new EffectSystem(game));
 		this.addSystem(new EnemyMovementSystem(game));
+		this.addSystem(new BossMovementSystem(game));
 	}
 
 	public Array<Item> getItemArray() {
@@ -258,6 +259,9 @@ public class ECSEngine extends PooledEngine{
 		box2DComponent.width = boss.getWidth() * UNIT_SCALE;
 		box2DComponent.height = boss.getHeight() * UNIT_SCALE;
 		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
+		//get startPosition
+		bossComponent.startPosition.x = boss.getPosition().x + halfW;
+		bossComponent.startPosition.y = boss.getPosition().y + halfH;
 
 		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_BOSS;
 		CoreGame.FIXTURE_DEF.filter.maskBits = -1;

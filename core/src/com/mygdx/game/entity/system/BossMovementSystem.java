@@ -1,4 +1,3 @@
-//Ene movement
 package com.mygdx.game.entity.system;
 
 import com.badlogic.ashley.core.ComponentMapper;
@@ -15,21 +14,22 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.character.ai.SteerableAgent;
 import com.mygdx.game.entity.ECSEngine;
+import com.mygdx.game.entity.component.BossComponent;
 import com.mygdx.game.entity.component.Box2DComponent;
 import com.mygdx.game.entity.component.EnemyComponent;
 import com.mygdx.game.entity.component.PlayerComponent;
 
-public class EnemyMovementSystem extends IteratingSystem {
-    private ComponentMapper<EnemyComponent> em;
+public class BossMovementSystem extends IteratingSystem {
+    private ComponentMapper<BossComponent> bm;
     private ComponentMapper<Box2DComponent> bodm;
     private CoreGame game;
     private Vector2 originalPosition; // Thêm biến này để lưu vị trí ban đầu của Enemy
     private SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<>(new Vector2());
 
     @SuppressWarnings("unchecked")
-    public EnemyMovementSystem(CoreGame game) {
-        super(Family.all(EnemyComponent.class, Box2DComponent.class).get());
-        em = ComponentMapper.getFor(EnemyComponent.class);
+    public BossMovementSystem(CoreGame game) {
+        super(Family.all(BossComponent.class, Box2DComponent.class).get());
+        bm = ComponentMapper.getFor(BossComponent.class);
         bodm = ComponentMapper.getFor(Box2DComponent.class);
         this.game = game;
         originalPosition = new Vector2(); // Khởi tạo vị trí ban đầu
@@ -38,13 +38,13 @@ public class EnemyMovementSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         Box2DComponent playerCom = ECSEngine.box2dCmpMapper.get(getPlayerEntity());
-        EnemyComponent enemyCom = em.get(entity);
+        BossComponent bossCom = bm.get(entity);
         Box2DComponent b2dComponent = bodm.get(entity);
 
         Vector2 playerPos = playerCom.renderPosition;
-        Vector2 enemyPos = b2dComponent.body.getPosition();
-        float distance = playerPos.dst(enemyPos);
-        final Vector2 speed = new Vector2(enemyCom.speed.x * 0.3f, enemyCom.speed.y * 0.3f);
+        Vector2 bossPos = b2dComponent.body.getPosition();
+        float distance = playerPos.dst(bossPos);
+        final Vector2 speed = new Vector2(bossCom.speed.x * 0.3f, bossCom.speed.y * 0.3f);
 
         if (distance < 3) {
             // Đuổi theo Player
@@ -74,8 +74,8 @@ public class EnemyMovementSystem extends IteratingSystem {
             }
         } else {
             // Quay về vị trí ban đầu nếu không đúng tại startPosition
-            if (!enemyPos.epsilonEquals(enemyCom.startPosition, 0.1f)) {
-                Vector2 dir = new Vector2(enemyCom.startPosition.x - enemyPos.x, enemyCom.startPosition.y - enemyPos.y);
+            if (!bossPos.epsilonEquals(bossCom.startPosition, 0.1f)) {
+                Vector2 dir = new Vector2(bossCom.startPosition.x - bossPos.x, bossCom.startPosition.y - bossPos.y);
                 dir.nor();
                 b2dComponent.body.setTransform(b2dComponent.body.getPosition().x + dir.x * deltaTime*0.5f ,
                         b2dComponent.body.getPosition().y + dir.y * deltaTime*0.5f ,
