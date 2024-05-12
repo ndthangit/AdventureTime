@@ -19,6 +19,7 @@ public class PlayerComponent extends EntityComponent {
 	//tam tao vu khi tai day
 	public Array<Weapon> weaponList;
 	public Weapon weapon;
+	public int indWeapon;
 	public boolean isAttack;
 	public boolean isSkill;
 
@@ -51,15 +52,23 @@ public class PlayerComponent extends EntityComponent {
 	}
 
 	public boolean addItem(Item newItem) {
-		for (Item item : inventory) {
-			if (item != null && item.key.equals(newItem.key)) {
-				item.quatity += 1;
+		if (newItem instanceof Food) {
+			for (Item item : inventory) {
+				if (item != null && item.key.equals(newItem.key)) {
+					item.quatity += 1;
+					return true;
+				}
+			}
+			if (index < 4) {
+				inventory[index++] = newItem;
+				newItem.quatity = 1;
 				return true;
 			}
+			return false;
 		}
-		if (index < 4) {
-			inventory[index++] = newItem;
-			newItem.quatity = 1;
+		else if (newItem instanceof Weapon){
+			weaponList.add((Weapon) newItem);
+			weaponList.get(indWeapon);
 			return true;
 		}
 		return false;
