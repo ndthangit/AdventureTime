@@ -62,6 +62,8 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 	public void show() {
 		assetManager.load(mapManager.getNextMapType().getFilePath(), TiledMap.class);
 		super.show();
+		isMusicLoaded = false;
+		audioManager.stopCurrentMusic();
 	}
 	
 	public void hide() {
