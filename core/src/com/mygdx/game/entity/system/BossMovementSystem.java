@@ -67,7 +67,7 @@ public class BossMovementSystem extends IteratingSystem {
             if (bossCmp.time < bossCmp.reload) {
                 dir = -1;
             }
-            if (bossCmp.time >= bossCmp.reload && playerPos.y > bossPos.y - b2dComponent.height/2 && playerPos.y < bossPos.y + b2dComponent.height/2) {
+            if (bossCmp.time >= bossCmp.reload && distance < 3) {
                 bossCmp.isCharge = true;
                 bossCmp.time -= bossCmp.reload;
                 b2dComponent.body.applyLinearImpulse(-b2dComponent.body.getLinearVelocity().x*b2dComponent.body.getMass(),
@@ -76,7 +76,7 @@ public class BossMovementSystem extends IteratingSystem {
                         b2dComponent.body.getPosition().y, true);
                 b2dComponent.body.applyForceToCenter(Vector2.Zero, true);
             }
-            else if (bossCmp.time >= bossCmp.reload && distance < 3) {
+            else if (bossCmp.time >= bossCmp.reload && playerPos.y - b2dPlayer.height/2 > bossPos.y - b2dComponent.height/2 && playerPos.y + b2dPlayer.height/2 < bossPos.y + b2dComponent.height/2) {
                 bossCmp.isCharge = true;
                 bossCmp.time -= bossCmp.reload;
                 b2dComponent.body.applyLinearImpulse(-b2dComponent.body.getLinearVelocity().x*b2dComponent.body.getMass(),
