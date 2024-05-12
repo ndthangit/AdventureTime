@@ -8,7 +8,9 @@ public enum AudioType {
 	SWORD("Sounds/Game/Sword.wav", false, 0.5f),
 	LOL("Musics/Legends Never Die.mp3", true, 0.3f),
 	LOL1("Musics/31 - POPSTARS.mp3", true, 0.2f),
-	CHILL("Musics/27 - Chill.ogg", true, 0.3f);
+	CHILL("Musics/27 - Chill.ogg", false, 0.3f),
+	GOLD1("Sounds/Game/Gold1.wav",false,0.3f);
+
 	private final String filePath;
 	private final boolean isMusic;
 	private final float volume;
