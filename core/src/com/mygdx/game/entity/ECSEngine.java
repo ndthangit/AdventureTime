@@ -20,6 +20,7 @@ import com.mygdx.game.items.food.FoodType;
 import com.mygdx.game.items.weapon.Weapon;
 import com.mygdx.game.map.GameObject;
 import com.mygdx.game.view.AnimationType;
+import com.mygdx.game.view.DirectionType;
 
 import static com.mygdx.game.CoreGame.UNIT_SCALE;
 import static com.mygdx.game.view.DirectionType.DOWN;
@@ -68,6 +69,8 @@ public class ECSEngine extends PooledEngine{
 		this.addSystem(new EffectSystem(game));
 		this.addSystem(new EnemyMovementSystem(game));
 		this.addSystem(new EnemyAnimationSystem(game));
+		this.addSystem(new BossMovementSystem(game));
+		this.addSystem(new BossAnimationSystem(game));
 	}
 
 	public Array<Item> getItemArray() {
@@ -236,6 +239,7 @@ public class ECSEngine extends PooledEngine{
 		bossComponent.type = boss.getBossType();
 		bossComponent.speed.set(boss.getBossType().getSpeed(), boss.getBossType().getSpeed());
 		bossComponent.attack = boss.getBossType().getDamage();
+		bossComponent.reload = boss.getBossType().getReload();
 		bossEnity.add(bossComponent);
 
 		// animation component
@@ -262,6 +266,44 @@ public class ECSEngine extends PooledEngine{
 
 		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_BOSS;
 		CoreGame.FIXTURE_DEF.filter.maskBits = -1;
+		PolygonShape pShape = new PolygonShape();
+		pShape.setAsBox(halfW, halfH);
+		CoreGame.FIXTURE_DEF.shape = pShape;
+		box2DComponent.body.createFixture(CoreGame.FIXTURE_DEF);
+		pShape.dispose();
+		bossEnity.add(box2DComponent);
+		this.addEntity(bossEnity);
+	}
+
+	public void createBossAttack(final Boss boss, DirectionType direction) {
+		final Entity bossEnity = this.createEntity();
+
+		// boss component
+		final BossComponent bossComponent = this.createComponent(BossComponent.class);
+		bossComponent.type = boss.getBossType();
+		bossComponent.speed.set(boss.getBossType().getSpeed(), boss.getBossType().getSpeed());
+		bossComponent.attack = boss.getBossType().getDamage();
+		bossEnity.add(bossComponent);
+
+		// box 2D component
+		CoreGame.resetBodiesAndFixtureDefinition();
+		final float halfW = 40 * UNIT_SCALE / 2;
+		final float halfH = 80 * UNIT_SCALE / 2;
+		final Box2DComponent box2DComponent = this.createComponent(Box2DComponent.class);
+		CoreGame.BODY_DEF.type = BodyDef.BodyType.DynamicBody;
+		// hướng đánh
+		int sign = direction.getCode() - 2;
+		// dat hitbox cho don danh
+		CoreGame.BODY_DEF.position.set(boss.getPosition().x + sign*halfW, boss.getPosition().y + halfH);
+		box2DComponent.body = world.createBody(CoreGame.BODY_DEF);
+		box2DComponent.body.setUserData(bossEnity);
+		box2DComponent.width = boss.getWidth() * UNIT_SCALE;
+		box2DComponent.height = boss.getHeight() * UNIT_SCALE;
+		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
+
+		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_BOSS;
+		CoreGame.FIXTURE_DEF.filter.maskBits = -1;
+		CoreGame.FIXTURE_DEF.isSensor = true;
 		PolygonShape pShape = new PolygonShape();
 		pShape.setAsBox(halfW, halfH);
 		CoreGame.FIXTURE_DEF.shape = pShape;

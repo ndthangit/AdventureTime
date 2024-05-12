@@ -21,10 +21,10 @@ public enum AnimationType {
 	SKILL("Special1", 0.1f, 0),
 
 	// for boss
-	CHARGE_LEFT("ChargeLeft", 0.1f, 0),
-	CHARGE_RIGHT("ChargeRight", 0.1f, 0),
-	B_ATTACK_LEFT("AttackLeft", 0.1f, 0),
-	B_ATTACL_RIGHT("AttackRight", 0.1f, 0);
+	CHARGE_RIGHT("ChargeLeft", 0.1f, 0),
+	CHARGE_LEFT("ChargeRight", 0.1f, 0),
+	B_ATTACK_RIGHT("AttackLeft", 0.1f, 0),
+	B_ATTACK_LEFT("AttackRight", 0.1f, 0);
 
 	public String getAtlasKey() {
 		return atlasKey;
@@ -41,7 +41,7 @@ public enum AnimationType {
 	private final String atlasKey;
 	private final float frameTime;
 	private final int colIndex;
-	
+
 	AnimationType(String atlasKey, float frameTime, int colIndex) {
 		this.atlasKey = atlasKey;
 		this.frameTime = frameTime;

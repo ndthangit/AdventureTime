@@ -22,8 +22,6 @@ import com.mygdx.game.entity.component.PlayerComponent;
 import java.util.Random;
 
 public class EnemyMovementSystem extends IteratingSystem {
-    private ComponentMapper<EnemyComponent> em;
-    private ComponentMapper<Box2DComponent> bodm;
     private CoreGame game;
     private Vector2 originalPosition; // Thêm biến này để lưu vị trí ban đầu của Enemy
     private SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<>(new Vector2());
@@ -31,8 +29,6 @@ public class EnemyMovementSystem extends IteratingSystem {
     @SuppressWarnings("unchecked")
     public EnemyMovementSystem(CoreGame game) {
         super(Family.all(EnemyComponent.class, Box2DComponent.class).get());
-        em = ComponentMapper.getFor(EnemyComponent.class);
-        bodm = ComponentMapper.getFor(Box2DComponent.class);
         this.game = game;
         originalPosition = new Vector2(); // Khởi tạo vị trí ban đầu
         random = new Random();
@@ -41,8 +37,8 @@ public class EnemyMovementSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         Box2DComponent playerCom = ECSEngine.box2dCmpMapper.get(getPlayerEntity());
-        EnemyComponent enemyCom = em.get(entity);
-        Box2DComponent b2dComponent = bodm.get(entity);
+        EnemyComponent enemyCom = ECSEngine.enemyCmpMapper.get(entity);
+        Box2DComponent b2dComponent = ECSEngine.box2dCmpMapper.get(entity);
 
         Vector2 playerPos = playerCom.renderPosition;
         Vector2 enemyPos = b2dComponent.body.getPosition();
@@ -51,7 +47,7 @@ public class EnemyMovementSystem extends IteratingSystem {
         if (enemyCom.stop == false) {
             if (distance < 3) {
                 // Đuổi theo Player
-                Box2DComponent b2dPlayer = bodm.get(getPlayerEntity());
+                Box2DComponent b2dPlayer = ECSEngine.box2dCmpMapper.get(getPlayerEntity());
                 SteerableAgent enemySteerable = new SteerableAgent(b2dComponent.body, 1.5f);
                 SteerableAgent playerSteerable = new SteerableAgent(b2dPlayer.body, 1.5f);
 
