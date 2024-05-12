@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.WorldContactListener.CollisionListener;
+import com.mygdx.game.audio.AudioType;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.*;
 import com.mygdx.game.items.Item;
@@ -82,6 +83,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             if (playerCmp.addItem(itemCmp.item)) {
                 item.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
                 game.getGameUI().updateBag();
+                game.getAudioManager().playAudio(AudioType.GOLD1);
             }
         }
         else if (itemCmp.item instanceof Weapon) {

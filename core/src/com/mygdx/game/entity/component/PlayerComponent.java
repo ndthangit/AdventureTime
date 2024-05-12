@@ -2,6 +2,7 @@ package com.mygdx.game.entity.component;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.mygdx.game.character.player.PlayerType;
 import com.mygdx.game.items.Item;
@@ -16,6 +17,7 @@ public class PlayerComponent extends EntityComponent {
 	public Item[] inventory = new Item[5];
 	private int index = 0;
 	//tam tao vu khi tai day
+	public Array<Weapon> weaponList;
 	public Weapon weapon;
 	public boolean isAttack;
 	public boolean isSkill;
