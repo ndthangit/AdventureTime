@@ -68,17 +68,16 @@ public class EnemyMovementSystem extends IteratingSystem {
                 }
             } else {
                 // Quay về vị trí ban đầu nếu không đúng tại startPosition
-                if (!enemyPos.epsilonEquals(enemyCom.startPosition, 0.1f)) {
+                if (!enemyPos.epsilonEquals(enemyCom.startPosition, 1f)) {
                     Vector2 dir = new Vector2(enemyCom.startPosition.x - enemyPos.x, enemyCom.startPosition.y - enemyPos.y);
                     dir.nor();
-                    b2dComponent.body.setTransform(b2dComponent.body.getPosition().x + dir.x * deltaTime * 0.5f,
-                            b2dComponent.body.getPosition().y + dir.y * deltaTime * 0.5f,
-                            b2dComponent.body.getAngle());
+                    Vector2 velocity = new Vector2(dir.x * 0.5f, dir.y * 0.5f);
+                    b2dComponent.body.setLinearVelocity(velocity);
                 } else {
                     // Di chuyển ngẫu nhiên xung quanh startPosition
                     SteerableAgent enemySteerable = new SteerableAgent(b2dComponent.body, 1.5f);
-                    enemySteerable.setMaxLinearSpeed(5000); // Tăng tốc độ tối đa
-                    enemySteerable.setMaxLinearAcceleration(3000); // Tăng gia tốc tối đa
+                    enemySteerable.setMaxLinearSpeed(45); // Tăng tốc độ tối đa
+                    enemySteerable.setMaxLinearAcceleration(85); // Tăng gia tốc tối đa
 
                     Wander<Vector2> wanderSB = new Wander<>(enemySteerable) //
                             .setFaceEnabled(false) // We want to use Face internally (independent facing is on)
@@ -88,11 +87,11 @@ public class EnemyMovementSystem extends IteratingSystem {
                             .setWanderOffset(0) //
                             .setWanderOrientation(random.nextFloat() * 360) //
                             .setWanderRadius(2) //
-                            .setWanderRate(MathUtils.PI2 * 4);
+                            .setWanderRate(MathUtils.PI2 * 0.01f);
 
                     wanderSB.calculateSteering(steeringOutput);
                     Vector2 force = steeringOutput.linear.scl(deltaTime);
-                    b2dComponent.body.applyForceToCenter(force.scl(1), true); // Tăng lực được áp dụng
+                    b2dComponent.body.applyForceToCenter(force.scl(0.5f), true); // Tăng lực được áp dụng
 
                     // Limit the velocity to prevent the entity from moving too fast
                     Vector2 velocity = b2dComponent.body.getLinearVelocity();
