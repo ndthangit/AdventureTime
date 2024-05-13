@@ -76,18 +76,18 @@ public class EnemyMovementSystem extends IteratingSystem {
                 } else {
                     // Di chuyển ngẫu nhiên xung quanh startPosition
                     SteerableAgent enemySteerable = new SteerableAgent(b2dComponent.body, 1.5f);
-                    enemySteerable.setMaxLinearSpeed(45); // Tăng tốc độ tối đa
-                    enemySteerable.setMaxLinearAcceleration(85); // Tăng gia tốc tối đa
+                    enemySteerable.setMaxLinearSpeed(60); // Tăng tốc độ tối đa
+                    enemySteerable.setMaxLinearAcceleration(100); // Tăng gia tốc tối đa
 
                     Wander<Vector2> wanderSB = new Wander<>(enemySteerable) //
                             .setFaceEnabled(false) // We want to use Face internally (independent facing is on)
                             .setAlignTolerance(0.01f) // Used by Face
                             .setDecelerationRadius(5) // Used by Face
                             .setTimeToTarget(0.1f) // Used by Face and Arrive
-                            .setWanderOffset(0) //
+                            .setWanderOffset(0.3f) //
                             .setWanderOrientation(random.nextFloat() * 360) //
-                            .setWanderRadius(2) //
-                            .setWanderRate(MathUtils.PI2 * 0.01f);
+                            .setWanderRadius(5) //
+                            .setWanderRate(MathUtils.PI2 * 0.1f);
 
                     wanderSB.calculateSteering(steeringOutput);
                     Vector2 force = steeringOutput.linear.scl(deltaTime);
