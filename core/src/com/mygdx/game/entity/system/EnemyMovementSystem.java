@@ -114,6 +114,44 @@ public class EnemyMovementSystem extends IteratingSystem {
                     velocity = velocity.nor().scl(maxSpeed);
                     b2dComponent.body.setLinearVelocity(velocity);
                 }
+<<<<<<< Updated upstream
+=======
+            } else {
+                // Quay về vị trí ban đầu nếu không đúng tại startPosition
+                if (!enemyPos.epsilonEquals(enemyCom.startPosition, 1f)) {
+                    Vector2 dir = new Vector2(enemyCom.startPosition.x - enemyPos.x, enemyCom.startPosition.y - enemyPos.y);
+                    dir.nor();
+                    Vector2 velocity = new Vector2(dir.x * 0.5f, dir.y * 0.5f);
+                    b2dComponent.body.setLinearVelocity(velocity);
+                } else {
+                    // Di chuyển ngẫu nhiên xung quanh startPosition
+                    SteerableAgent enemySteerable = new SteerableAgent(b2dComponent.body, 1.5f);
+                    enemySteerable.setMaxLinearSpeed(45); // Tăng tốc độ tối đa
+                    enemySteerable.setMaxLinearAcceleration(85); // Tăng gia tốc tối đa
+
+                    Wander<Vector2> wanderSB = new Wander<>(enemySteerable) //
+                            .setFaceEnabled(false) // We want to use Face internally (independent facing is on)
+                            .setAlignTolerance(0.01f) // Used by Face
+                            .setDecelerationRadius(5) // Used by Face
+                            .setTimeToTarget(0.1f) // Used by Face and Arrive
+                            .setWanderOffset(0) //
+                            .setWanderOrientation(random.nextFloat() * 360) //
+                            .setWanderRadius(2) //
+                            .setWanderRate(MathUtils.PI2 * 0.01f);
+
+                    wanderSB.calculateSteering(steeringOutput);
+                    Vector2 force = steeringOutput.linear.scl(deltaTime);
+                    b2dComponent.body.applyForceToCenter(force.scl(0.5f), true); // Tăng lực được áp dụng
+
+                    // Limit the velocity to prevent the entity from moving too fast
+                    Vector2 velocity = b2dComponent.body.getLinearVelocity();
+                    float maxSpeed = 1.5f; // Tăng tốc độ tối đa
+                    if (velocity.len() > maxSpeed) {
+                        velocity = velocity.nor().scl(maxSpeed);
+                        b2dComponent.body.setLinearVelocity(velocity);
+                    }
+                }
+>>>>>>> Stashed changes
             }
         }
     }

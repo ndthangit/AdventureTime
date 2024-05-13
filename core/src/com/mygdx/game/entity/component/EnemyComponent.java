@@ -16,7 +16,13 @@ public class EnemyComponent extends EntityComponent{
     public Vector2 wanderingDirection = new Vector2();
     public float timeSinceLastDirectionChange = 0;
     public float directionChangeInterval = 5; // giây
+<<<<<<< Updated upstream
     public float wanderingRadius = 10; // giới hạn bán kính lang thang
+=======
+    public float wanderingRadius = 10;
+    public boolean stop = false;
+
+>>>>>>> Stashed changes
     @Override
     public void reset() {
         super.reset();
