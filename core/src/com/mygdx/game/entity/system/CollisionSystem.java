@@ -56,6 +56,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         final Box2DComponent box2dEnCmp = ECSEngine.box2dCmpMapper.get(enemy);
         playerCmp.life =  Math.max(playerCmp.life - enemyCmp.attack, 0);
         game.getGameUI().updateHeart();
+        audioManager.playAudio(AudioType.HIT);
         if (playerCmp.life <= 0) {
             Gdx.app.debug("Player", "dead");
         }
@@ -75,6 +76,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             Food food = new Food(foodType, box2dEnCmp.body.getPosition());
             game.getEcsEngine().getItemArray().add(food);
             enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+            audioManager.playAudio(AudioType.KILL);
         }
     }
 
