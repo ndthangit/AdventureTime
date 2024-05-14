@@ -7,7 +7,8 @@ public enum ScreenType {
 	LOAD (LoadingScreen.class),
 	MENU (MainMenuScreen.class),
 	OPTION (OptionScreen.class),
-	DEAD (DeadScreen.class);
+	DEAD (DeadScreen.class),
+	INSTRUCT(InstructionScreen.class);
 	
 	private final Class<? extends AbstractScreen> screenClass;
 	
