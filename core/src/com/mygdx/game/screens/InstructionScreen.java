@@ -1,43 +1,48 @@
-package com.mygdx.game.screens;
+package com.mygdx.game.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.CoreGame;
-import com.mygdx.game.input.GameKey;
-import com.mygdx.game.input.InputManager;
-import com.mygdx.game.ui.InstructionUI;
-import com.mygdx.game.ui.OptionUI;
+import com.mygdx.game.screens.ScreenType;
 
-public class InstructionScreen extends AbstractScreen<InstructionUI>{
-    private final Stage stage;
-    Skin skin;
-    public InstructionScreen(CoreGame game) {
-        super(game);
-        stage = game.getStage();
-        this.screenUI = (InstructionUI) getscreenUI(game.getLoadAsset().getGameSkin(), game);
-        this.mapManager = game.getMapManager();
+public class InstructionUI extends Table {
+    private final Table instruct;
+    private final CoreGame game;
+    private final Skin skin;
+    public InstructionUI(Skin skin, CoreGame game) {
+        super(skin);
+        this.game = game;
+        this.skin = skin;
+        setFillParent(true);
+        instruct = new Table();
+        add(instruct).expand().fill();
+        createMenu();
+        setDebug(false, false);
     }
-
-    public void dispose() {
-        stage.dispose();
-    }
-    @Override
-    protected Table getscreenUI(Skin skin, CoreGame game) {
-        return new InstructionUI(skin, this.game);
-    }
-
-    @Override
-    public void keyPressed(InputManager manager, GameKey gameKey) {
-
-    }
-
-    @Override
-    public void keyUp(InputManager manager, GameKey gameKey) {
-
+    private void createMenu() {
+        instruct.clearChildren();
+        TextButton Title = new TextButton("GETTING STARTED", skin, "huge");
+        instruct.add(Title).expandX().fillX().padBottom(200).top().row();
+        TextButton returnButton = new TextButton("RETURN", skin, "huge");
+        // Thêm hình ảnh vào instruct table
+        Texture texture = new Texture(Gdx.files.internal("maps/InstructionUI_add.png"));
+        Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
+        Image image = new Image(drawable);
+        instruct.add(image).row();
+        returnButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                game.setScreen(ScreenType.OPTION);
+                return true;
+            }
+        });
+        instruct.add(returnButton).padTop(50).row();
     }
 }
