@@ -50,28 +50,37 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
     public void playerVSEnemy(Entity player, Entity enemy) {
         final PlayerComponent playerCmp = ECSEngine.playerCmpMapper.get(player);
         final EnemyComponent enemyCmp = ECSEngine.enemyCmpMapper.get(enemy);
-        final Box2DComponent box2dEnCmp = ECSEngine.box2dCmpMapper.get(enemy);
-        playerCmp.life =  Math.max(playerCmp.life - enemyCmp.attack, 0);
+        final BossComponent bossCmp = ECSEngine.bossCmpMapper.get(enemy);
+        int damage = enemyCmp != null ? enemyCmp.attack : bossCmp.attack;
+        playerCmp.life =  Math.max(playerCmp.life - damage, 0);
         game.getGameUI().updateHeart();
-        if (playerCmp.life <= 0) {
-            Gdx.app.debug("Player", "dead");
-        }
     }
 
     @Override
     public void weaponVSEnemy(Entity weapon, Entity enemy) {
         final WeaponComponent weaponCmp = ECSEngine.weaponCmpMapper.get(weapon);
         final EnemyComponent enemyCmp = ECSEngine.enemyCmpMapper.get(enemy);
+        final BossComponent bossCmp = ECSEngine.bossCmpMapper.get(enemy);
         final Box2DComponent box2dEnCmp = ECSEngine.box2dCmpMapper.get(enemy);
-        box2dEnCmp.body.applyLinearImpulse(-box2dEnCmp.body.getLinearVelocity().x*box2dEnCmp.body.getMass(), -box2dEnCmp.body.getLinearVelocity().y*box2dEnCmp.body.getMass(), box2dEnCmp.body.getPosition().x, box2dEnCmp.body.getPosition().y, true);
-        enemyCmp.stop = true;
-        enemyCmp.life -= weaponCmp.attack;
-        if (enemyCmp.life <= 0) {
-            // thêm tạo cửa sổ để them do
-            FoodType foodType = randomFood();
-            Food food = new Food(foodType, box2dEnCmp.body.getPosition());
-            game.getEcsEngine().getItemArray().add(food);
-            enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+        Gdx.app.debug("Boss" , "ok");
+        if (enemyCmp != null) {
+            box2dEnCmp.body.applyLinearImpulse(-box2dEnCmp.body.getLinearVelocity().x*box2dEnCmp.body.getMass(), -box2dEnCmp.body.getLinearVelocity().y*box2dEnCmp.body.getMass(), box2dEnCmp.body.getPosition().x, box2dEnCmp.body.getPosition().y, true);
+            enemyCmp.stop = true;
+            enemyCmp.life -= weaponCmp.attack;
+            if (enemyCmp.life <= 0) {
+                // thêm tạo cửa sổ để them do
+                FoodType foodType = randomFood();
+                Food food = new Food(foodType, box2dEnCmp.body.getPosition());
+                game.getEcsEngine().getItemArray().add(food);
+                enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+            }
+        }
+        else {
+            bossCmp.life -= weaponCmp.attack;
+            bossCmp.isHit = true;
+            if (bossCmp.life <= 0) {
+                enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+            }
         }
     }
 
@@ -94,8 +103,47 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
     @Override
     public void playerVSDoor(Entity player, Entity door) {
         final DoorLayerComponent doorLayerComponent = ECSEngine.doorLayerCmpMapper.get(door);
-        final PlayerComponent playerCmp = ECSEngine.playerCmpMapper.get(player);
         game.getMapManager().setNextMapType(MapType.valueOf(doorLayerComponent.name));
         game.setScreen(ScreenType.LOAD);
+    }
+
+    @Override
+    public void playerVSDamageArea(Entity player, Entity damageArea) {
+        DamageAreaComponent damageAreaCmp = ECSEngine.damageAreaCmpMapper.get(damageArea);
+        PlayerComponent playerCmp = ECSEngine.playerCmpMapper.get(player);
+        if ((damageAreaCmp.owner & CoreGame.BIT_BOSS) == CoreGame.BIT_BOSS||
+            (damageAreaCmp.owner & CoreGame.BIT_ENEMY) == CoreGame.BIT_ENEMY) {
+            playerCmp.life =  Math.max(playerCmp.life - damageAreaCmp.damage, 0);
+            game.getGameUI().updateHeart();
+        }
+    }
+
+    @Override
+    public void damageAreaVSEnemy(Entity damageArea, Entity enemy) {
+        DamageAreaComponent damageAreaCmp = ECSEngine.damageAreaCmpMapper.get(damageArea);
+        EnemyComponent enemyCmp = ECSEngine.enemyCmpMapper.get(enemy);
+        BossComponent bossCmp = ECSEngine.bossCmpMapper.get(enemy);
+        Box2DComponent b2dCmp = ECSEngine.box2dCmpMapper.get(enemy);
+        if ((damageAreaCmp.owner & CoreGame.BIT_PLAYER) == CoreGame.BIT_PLAYER) {
+            if (enemyCmp != null) {
+                b2dCmp.body.applyLinearImpulse(-b2dCmp.body.getLinearVelocity().x*b2dCmp.body.getMass(), -b2dCmp.body.getLinearVelocity().y*b2dCmp.body.getMass(), b2dCmp.body.getPosition().x, b2dCmp.body.getPosition().y, true);
+                enemyCmp.stop = true;
+                enemyCmp.life -= damageAreaCmp.damage;
+                if (enemyCmp.life <= 0) {
+                    // thêm tạo cửa sổ để them do
+                    FoodType foodType = randomFood();
+                    Food food = new Food(foodType, b2dCmp.body.getPosition());
+                    game.getEcsEngine().getItemArray().add(food);
+                    enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+                }
+            }
+            else {
+                bossCmp.life -= damageAreaCmp.damage;
+                bossCmp.isHit = true;
+                if (bossCmp.life <= 0) {
+                    enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+                }
+            }
+        }
     }
 }

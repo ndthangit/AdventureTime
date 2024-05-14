@@ -22,7 +22,9 @@ public class BossAnimationSystem extends IteratingSystem {
         BossComponent bossCmp = ECSEngine.bossCmpMapper.get(entity);
         Box2DComponent box2DCmp = ECSEngine.box2dCmpMapper.get(entity);
         AnimationComponent animationCmp = ECSEngine.aniCmpMapper.get(entity);
-        if (bossCmp.isCharge) {
+        if (bossCmp.isHit) {
+            animationCmp.aniType = AnimationType.B_HIT;
+        } else if (bossCmp.isCharge) {
             if (bossCmp.direction == DirectionType.LEFT) {
                 animationCmp.aniType = AnimationType.CHARGE_LEFT;
             }

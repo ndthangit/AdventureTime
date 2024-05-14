@@ -64,6 +64,7 @@ public class CoreGame extends Game {
 	public static final short BIT_ITEM = 1 << 5;
 	public static final short BIT_DOOR = 1 << 6;
 	public static final short BIT_BOSS = 1 << 7;
+	public static final short BIT_DAMAGE_AREA = 1 << 8;
 
 	public static final float FIXED_TIME_STEP = 1/ 60f;
 
@@ -92,8 +93,6 @@ public class CoreGame extends Game {
 	private float accumulator = 0;
 
 	private ScreenType screenType;
-
-
 
 	@Override
 	public void create () {

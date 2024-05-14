@@ -2,28 +2,22 @@ package com.mygdx.game.map;
 
 import java.util.EnumMap;
 
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.character.boss.Boss;
 import com.mygdx.game.character.enemy.Enemy;
 import com.mygdx.game.character.player.PlayerType;
 import com.mygdx.game.effect.Effect;
-import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
 
 import com.badlogic.ashley.core.Entity;
-import com.mygdx.game.entity.component.*;
 import com.mygdx.game.items.weapon.Weapon;
 import com.mygdx.game.items.weapon.WeaponType;
 import com.mygdx.game.view.DirectionType;
@@ -63,12 +57,7 @@ public class MapManager {
 		// clean map entities and body
 		world.getBodies(bodies);
 		destroyCollisionArea();
-		destroyGameObjects();
-		destroyEnemy();
-		destroyHideLayer();
-		destroyDoorLayer();
-		destroyItemObject();
-		destroyBoss();
+		destroyObjects();
 	}
 	
 	public void setMap() {
@@ -102,9 +91,9 @@ public class MapManager {
 		}
 	}
 
-	private void spawnPlayer() {
+	public void spawnPlayer() {
 		if (ecsEngine.getPlayerEntity() == null) {
-			Weapon weapon = new Weapon(WeaponType.KATANA,new Effect(WeaponType.KATANA.getEffect(), this.getCurrentMap().getStartPosition("START"), DirectionType.DOWN), this.getCurrentMap().getStartPosition("START"), DirectionType.DOWN);
+			Weapon weapon = new Weapon(WeaponType.KATANA,new Effect(WeaponType.KATANA.getEffect(), Vector2.Zero, DirectionType.DOWN), Vector2.Zero, DirectionType.DOWN);
 			ecsEngine.createPlayer(this.getCurrentMap().getStartPosition("START"), PlayerType.BLACK_NINJA_MAGE, 0.75f, 0.75f, weapon);
 		}
 		else {
@@ -116,6 +105,7 @@ public class MapManager {
 	public void destroyPlayer() {
 		ecsEngine.removeEntity(ecsEngine.getPlayerEntity());
 		ecsEngine.setPlayerEntity(null);
+		currentMapType = null;
 		setNextMapType(MapType.DOJO);
 	}
 
@@ -126,34 +116,10 @@ public class MapManager {
 
 	}
 
-	private void destroyGameObjects() {
-		for(final Entity entity: ecsEngine.getEntitiesFor(Family.all(GameObjectComponent.class, Box2DComponent.class, AnimationComponent.class).get())) {
-			if (ECSEngine.gameObjCmpMapper.get(entity) != null) {
-				entityToRemove.add(entity);
-			}
-		}
-		for (final Entity entity: entityToRemove) {
-			ecsEngine.removeEntity(entity);
-		}
-		entityToRemove.clear();
-	}
-
 	private void spawnHideLayer() {
 		for (final GameObject hide : currentMap.getHideObject()) {
 			ecsEngine.createHideLayer(hide);
 		}
-	}
-
-	private void destroyHideLayer() {
-		for(final Entity entity: ecsEngine.getEntitiesFor(Family.all(HideLayerComponent.class, AnimationComponent.class).get())) {
-			if (ECSEngine.hideLayerCmpMapper.get(entity) != null) {
-				entityToRemove.add(entity);
-			}
-		}
-		for (final Entity entity: entityToRemove) {
-			ecsEngine.removeEntity(entity);
-		}
-		entityToRemove.clear();
 	}
 
 	private void spawnDoorLayer() {
@@ -162,52 +128,16 @@ public class MapManager {
 		}
 	}
 
-	private void destroyDoorLayer() {
-		for(final Entity entity: ecsEngine.getEntitiesFor(Family.all(DoorLayerComponent.class, Box2DComponent.class).get())) {
-			if (ECSEngine.doorLayerCmpMapper.get(entity) != null) {
-				entityToRemove.add(entity);
-			}
-		}
-		for (final Entity entity: entityToRemove) {
-			ecsEngine.removeEntity(entity);
-		}
-		entityToRemove.clear();
-	}
-
 	private void spawnEnemy() {
 		for (final Enemy enemy: currentMap.getEnemies()) {
 			ecsEngine.createEnemy(enemy);
 		}
 	}
 
-	private void destroyEnemy() {
-		for(final Entity entity: ecsEngine.getEntitiesFor(Family.all(EnemyComponent.class, Box2DComponent.class, AnimationComponent.class).get())) {
-			if (ECSEngine.enemyCmpMapper.get(entity) != null) {
-				entityToRemove.add(entity);
-			}
-		}
-		for (final Entity entity: entityToRemove) {
-			ecsEngine.removeEntity(entity);
-		}
-		entityToRemove.clear();
-	}
-
 	private void spawnBoss() {
 		for (final Boss boss: currentMap.getBosses()) {
 			ecsEngine.createBoss(boss);
 		}
-	}
-
-	private void destroyBoss() {
-		for(final Entity entity: ecsEngine.getEntitiesFor(Family.all(BossComponent.class, Box2DComponent.class, AnimationComponent.class).get())) {
-			if (ECSEngine.bossCmpMapper.get(entity) != null) {
-				entityToRemove.add(entity);
-			}
-		}
-		for (final Entity entity: entityToRemove) {
-			ecsEngine.removeEntity(entity);
-		}
-		entityToRemove.clear();
 	}
 
 	private void spawnCollisionAreas() {
@@ -235,11 +165,10 @@ public class MapManager {
 		}
 	}
 
-	private void destroyItemObject() {
-		for(final Entity entity: ecsEngine.getEntitiesFor(Family.all(ItemComponent.class, Box2DComponent.class).get())) {
-			if (ECSEngine.itemCmpMapper.get(entity) != null) {
+	private void destroyObjects() {
+		for(final Entity entity: ecsEngine.getEntities()) {
+			if (ECSEngine.playerCmpMapper.get(entity) == null) {
 				entityToRemove.add(entity);
-
 			}
 		}
 		for (final Entity entity: entityToRemove) {

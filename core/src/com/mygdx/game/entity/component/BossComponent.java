@@ -15,6 +15,8 @@ public class BossComponent extends EntityComponent {
     public boolean isAttack;
     public boolean isSkill1;
     public boolean isSkill2;
+    public boolean isHit;
+    public float timeHit;
     public DirectionType direction;
     @Override
     public void reset() {

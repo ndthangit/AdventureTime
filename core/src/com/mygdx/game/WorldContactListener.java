@@ -19,6 +19,8 @@ public class WorldContactListener implements ContactListener {
 	private boolean hasEnemy;
 	private boolean hasItem;
 	private boolean hasDoor;
+	private boolean hasBoss;
+	private boolean hasDamageArea;
 	private final Array<EnemyComponent> stoEnemy;
     public WorldContactListener() {
 		this.listeners = new Array<CollisionListener>();
@@ -38,6 +40,8 @@ public class WorldContactListener implements ContactListener {
 		final Entity enemy;
 		final Entity item;
 		final Entity door;
+		final Entity boss;
+		final Entity damageArea;
 		final Body bodyA = contact.getFixtureA().getBody();
 		final Body bodyB = contact.getFixtureB().getBody();
 		final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
@@ -116,6 +120,29 @@ public class WorldContactListener implements ContactListener {
 			door = null;
 		}
 
+		if ((catFixA & BIT_BOSS) == BIT_BOSS) {
+			boss = (Entity) bodyA.getUserData();
+			hasBoss = true;
+		}
+		else if ((catFixB & BIT_BOSS) == BIT_BOSS) {
+			boss = (Entity) bodyB.getUserData();
+			hasBoss = true;
+		}
+		else {
+			boss = null;
+		}
+
+		if ((catFixA & BIT_DAMAGE_AREA) == BIT_DAMAGE_AREA) {
+			damageArea = (Entity) bodyA.getUserData();
+			hasDamageArea = true;
+		}
+		else if ((catFixB & BIT_DAMAGE_AREA) == BIT_DAMAGE_AREA) {
+			damageArea = (Entity) bodyB.getUserData();
+			hasDamageArea = true;
+		}
+		else {
+			damageArea = null;
+		}
 		if (hasPlayer && hasGameObj) {
 			for (final CollisionListener listener : listeners) {
 				listener.playerCollision(player, gameObj);
@@ -137,6 +164,11 @@ public class WorldContactListener implements ContactListener {
 				stoEnemy.add(ECSEngine.enemyCmpMapper.get(enemy));
 			}
 		}
+		else if (hasWeapon && hasBoss) {
+			for (final CollisionListener listener : listeners) {
+				listener.weaponVSEnemy(weapon, boss);
+			}
+		}
 		else if (hasPlayer && hasItem) {
 			for (final CollisionListener listener : listeners) {
 				listener.playerVSItem(player, item);
@@ -145,6 +177,26 @@ public class WorldContactListener implements ContactListener {
 		else if (hasPlayer && hasDoor) {
 			for (final CollisionListener listener : listeners) {
 				listener.playerVSDoor(player, door);
+			}
+		}
+		else if (hasPlayer && hasDamageArea) {
+			for (final CollisionListener listener : listeners) {
+				listener.playerVSDamageArea(player, damageArea);
+			}
+		}
+		else if (hasPlayer && hasBoss) {
+			for (final CollisionListener listener : listeners) {
+				listener.playerVSEnemy(player, boss);
+			}
+		}
+		else if (hasDamageArea && hasEnemy) {
+			for (final CollisionListener listener : listeners) {
+				listener.damageAreaVSEnemy(damageArea, enemy);
+			}
+		}
+		else if (hasDamageArea && hasBoss) {
+			for (final CollisionListener listener : listeners) {
+				listener.damageAreaVSEnemy(damageArea, boss);
 			}
 		}
 	}
@@ -179,6 +231,8 @@ public class WorldContactListener implements ContactListener {
 		hasEnemy = false;
 		hasWeapon = false;
 		hasDoor = false;
+		hasBoss = false;
+		hasDamageArea = false;
 	}
 	
 	public interface CollisionListener{
@@ -188,5 +242,7 @@ public class WorldContactListener implements ContactListener {
 		void weaponVSEnemy(final Entity weapon, final Entity enemy);
 		void playerVSItem(final Entity player, final Entity item);
 		void playerVSDoor(final Entity player, final Entity door);
+		void playerVSDamageArea(final Entity player, final Entity damageArea);
+		void damageAreaVSEnemy(final Entity damageArea, final Entity enemy);
 	}
 }

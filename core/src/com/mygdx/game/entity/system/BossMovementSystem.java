@@ -30,6 +30,7 @@ public class BossMovementSystem extends IteratingSystem {
         BossComponent bossCmp = ECSEngine.bossCmpMapper.get(entity);
         Box2DComponent b2dComponent = ECSEngine.box2dCmpMapper.get(entity);
         // Đuổi theo Player
+        if (getPlayerEntity() == null) return;
         Box2DComponent b2dPlayer = ECSEngine.box2dCmpMapper.get(getPlayerEntity());
         SteerableAgent enemySteerable = new SteerableAgent(b2dComponent.body, 1.5f);
         SteerableAgent playerSteerable = new SteerableAgent(b2dPlayer.body, 1.5f);
@@ -48,26 +49,34 @@ public class BossMovementSystem extends IteratingSystem {
 //            bossCmp.time -= bossCmp.reload;
 //
 //        }
-
-        if (bossCmp.isCharge) {
+        if (bossCmp.isHit) { // bi danh trung
+            bossCmp.resetState();
+            bossCmp.timeHit += deltaTime;
+            if (bossCmp.timeHit >= 0.4f) {
+                bossCmp.isHit = false;
+                bossCmp.timeHit = 0;
+            }
+        }
+        else if (bossCmp.isCharge) { // nap don danh
             bossCmp.timeCharge += deltaTime;
-            if (bossCmp.timeCharge >= 0.15f) {
+            if (bossCmp.timeCharge >= 0.4f) {
                 bossCmp.isCharge = false;
                 bossCmp.timeCharge = 0;
                 bossCmp.isAttack = true;
             }
-        } else if (bossCmp.isAttack) {
+        } else if (bossCmp.isAttack) { // danh thuong
             bossCmp.timeAttack += deltaTime;
-            if (bossCmp.timeAttack >= 0.2f) {
+            if (bossCmp.timeAttack >= 0.4f) {
                 bossCmp.timeAttack = 0;
                 bossCmp.isAttack = false;
+
             }
         }else {
             int dir = 1;
-            if (bossCmp.time < bossCmp.reload) {
+            if (bossCmp.time < 0.5f) { // lui lai khi danh xong
                 dir = -1;
             }
-            if (bossCmp.time >= bossCmp.reload && distance < 3) {
+            if (bossCmp.time >= 2 && distance < 3) { // dieu kien danh thuong
                 bossCmp.isCharge = true;
                 bossCmp.time -= bossCmp.reload;
                 b2dComponent.body.applyLinearImpulse(-b2dComponent.body.getLinearVelocity().x*b2dComponent.body.getMass(),
@@ -76,8 +85,10 @@ public class BossMovementSystem extends IteratingSystem {
                         b2dComponent.body.getPosition().y, true);
                 b2dComponent.body.applyForceToCenter(Vector2.Zero, true);
             }
+            // dieu kien danh skill 1
             else if (bossCmp.time >= bossCmp.reload && playerPos.y - b2dPlayer.height/2 > bossPos.y - b2dComponent.height/2 && playerPos.y + b2dPlayer.height/2 < bossPos.y + b2dComponent.height/2) {
                 bossCmp.isCharge = true;
+                bossCmp.isSkill1 = true;
                 bossCmp.time -= bossCmp.reload;
                 b2dComponent.body.applyLinearImpulse(-b2dComponent.body.getLinearVelocity().x*b2dComponent.body.getMass(),
                         -b2dComponent.body.getLinearVelocity().y*b2dComponent.body.getMass(),
@@ -85,7 +96,7 @@ public class BossMovementSystem extends IteratingSystem {
                         b2dComponent.body.getPosition().y, true);
                 b2dComponent.body.applyForceToCenter(Vector2.Zero, true);
             }
-            else {
+            else { // di chuyen
                 bossCmp.resetState();
                 Arrive<Vector2> arriveBehavior = new Arrive<>(enemySteerable, playerSteerable)
                         .setArrivalTolerance(0.1f)

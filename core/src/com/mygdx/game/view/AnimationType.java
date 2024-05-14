@@ -7,10 +7,10 @@ public enum AnimationType {
 	IDLE_RIGHT("Idle", 0.1f, 3),
 
 
-	DOWN("Walk", 0.1f,0),
-	UP("Walk", 0.1f, 1),
-	LEFT("Walk", 0.1f, 2),
-	RIGHT("Walk", 0.1f, 3),
+	DOWN("Walk", 0.2f,0),
+	UP("Walk", 0.2f, 1),
+	LEFT("Walk", 0.2f, 2),
+	RIGHT("Walk", 0.2f, 3),
 
 	// for player
 	ATTACK_DOWN("Attack", 0.1f, 0),
@@ -21,10 +21,12 @@ public enum AnimationType {
 	SKILL("Special1", 0.1f, 0),
 
 	// for boss
-	CHARGE_RIGHT("ChargeLeft", 0.1f, 0),
-	CHARGE_LEFT("ChargeRight", 0.1f, 0),
-	B_ATTACK_RIGHT("AttackLeft", 0.1f, 0),
-	B_ATTACK_LEFT("AttackRight", 0.1f, 0);
+	CHARGE_RIGHT("ChargeLeft", 0.3f, 0),
+	CHARGE_LEFT("ChargeRight", 0.3f, 0),
+	B_ATTACK_RIGHT("AttackLeft", 0.3f, 0),
+	B_ATTACK_LEFT("AttackRight", 0.3f, 0),
+
+	B_HIT("Hit", 0.2f, 0);
 
 	public String getAtlasKey() {
 		return atlasKey;

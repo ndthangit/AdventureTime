@@ -1,8 +1,11 @@
 package com.mygdx.game.effect;
 
 public enum EffectType {
+    NONE(null, null, 0, 0,0),
     SLASHCURVED("FX/Effect.atlas", "SlashCurved", 0.125f, 16, 16),
-    SMOKE("FX/Effect.atlas", "Smoke", 0.1f, 16, 16);
+    SMOKE("FX/Effect.atlas", "Smoke", 0.1f, 16, 16),
+    BIG_ENERGY_BALL("FX/Effect.atlas", "BigEnergyBall", 0.1f, 12, 12);
+
 
     private final String atlasPath;
     private final String atlasKey;
