@@ -20,6 +20,7 @@ public class WorldContactListener implements ContactListener {
 	private boolean hasItem;
 	private boolean hasDoor;
 	private boolean hasBoss;
+	private boolean hasGround;
 	private boolean hasDamageArea;
 	private final Array<EnemyComponent> stoEnemy;
     public WorldContactListener() {
@@ -143,6 +144,14 @@ public class WorldContactListener implements ContactListener {
 		else {
 			damageArea = null;
 		}
+
+		if ((catFixA & BIT_GROUND) == BIT_GROUND) {
+			hasGround = true;
+		}
+		else if ((catFixB & BIT_DAMAGE_AREA) == BIT_DAMAGE_AREA) {
+			hasGround = true;
+		}
+
 		if (hasPlayer && hasGameObj) {
 			for (final CollisionListener listener : listeners) {
 				listener.playerCollision(player, gameObj);
@@ -199,6 +208,11 @@ public class WorldContactListener implements ContactListener {
 				listener.damageAreaVSEnemy(damageArea, boss);
 			}
 		}
+		else if (hasDamageArea && hasGround) {
+			for (final CollisionListener listener : listeners) {
+				listener.damageAreaVSGround(damageArea);
+			}
+		}
 	}
 
 	@Override
@@ -233,6 +247,7 @@ public class WorldContactListener implements ContactListener {
 		hasDoor = false;
 		hasBoss = false;
 		hasDamageArea = false;
+		hasGround = false;
 	}
 	
 	public interface CollisionListener{
@@ -244,5 +259,6 @@ public class WorldContactListener implements ContactListener {
 		void playerVSDoor(final Entity player, final Entity door);
 		void playerVSDamageArea(final Entity player, final Entity damageArea);
 		void damageAreaVSEnemy(final Entity damageArea, final Entity enemy);
+		void damageAreaVSGround(final Entity damageArea);
 	}
 }

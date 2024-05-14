@@ -68,12 +68,11 @@ public class EnemyMovementSystem extends IteratingSystem {
                 }
             } else {
                 // Quay về vị trí ban đầu nếu không đúng tại startPosition
-                if (!enemyPos.epsilonEquals(enemyCom.startPosition, 0.1f)) {
+                if (!enemyPos.epsilonEquals(enemyCom.startPosition, 1f)) {
                     Vector2 dir = new Vector2(enemyCom.startPosition.x - enemyPos.x, enemyCom.startPosition.y - enemyPos.y);
                     dir.nor();
-                    b2dComponent.body.setTransform(b2dComponent.body.getPosition().x + dir.x * deltaTime * 0.5f,
-                            b2dComponent.body.getPosition().y + dir.y * deltaTime * 0.5f,
-                            b2dComponent.body.getAngle());
+                    Vector2 velocity = new Vector2(dir.x * 0.5f, dir.y * 0.5f);
+                    b2dComponent.body.setLinearVelocity(velocity);
                 } else {
                     // Di chuyển ngẫu nhiên xung quanh startPosition
                     SteerableAgent enemySteerable = new SteerableAgent(b2dComponent.body, 1.5f);

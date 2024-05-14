@@ -268,6 +268,7 @@ public class GameRenderer implements Disposable, MapListener{
 
 	private void rederEffect(Entity entity, float delta) {
 		final EffectComponent effectComponent = ECSEngine.effectCmpMapper.get(entity);
+		final Box2DComponent box2DComponent = ECSEngine.box2dCmpMapper.get(entity);
 		if (effectComponent.type == EffectType.NONE) return;
         String path = effectComponent.path;
         EffectType type = effectComponent.type;
@@ -288,14 +289,17 @@ public class GameRenderer implements Disposable, MapListener{
                 sprite.setOriginCenter();
                 keyFrame.add(sprite);
             }
-            animation = new Animation<Sprite>(type.getFrameTime(), keyFrame, Animation.PlayMode.NORMAL);
+            animation = new Animation<Sprite>(type.getFrameTime(), keyFrame, type.getMode());
             subCache.put(type, animation);
 			Gdx.app.debug("effect", effectComponent.toString());
         }
+		if (box2DComponent != null) {
+			effectComponent.position.set(box2DComponent.body.getPosition());
+		}
         final Sprite frame = animation.getKeyFrame(effectComponent.aniTime);
         frame.setBounds(effectComponent.position.x - effectComponent.width * 0.5f, effectComponent.position.y - effectComponent.height * 0.5f, effectComponent.width, effectComponent.height);
 		frame.setOriginCenter();
-		frame.setRotation(-(effectComponent.direction.getCode()+1) * 90);
+		frame.setRotation(-(effectComponent.direction.getCode()+type.getFixDir()) * 90);
 		frame.draw(spriteBatch);
 	}
 

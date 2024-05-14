@@ -185,6 +185,21 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">Particle/Grass.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>18,3,36,7</rect>
+                <key>scale9Paddings</key>
+                <rect>18,3,36,7</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">Projectile/BigEnergyBall.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -197,6 +212,21 @@
                 <rect>24,6,48,12</rect>
                 <key>scale9Paddings</key>
                 <rect>24,6,48,12</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">Projectile/Shuriken.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,4,16,8</rect>
+                <key>scale9Paddings</key>
+                <rect>8,4,16,8</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -233,7 +263,9 @@
         </map>
         <key>fileList</key>
         <array>
+            <filename>Particle/Grass.png</filename>
             <filename>Projectile/BigEnergyBall.png</filename>
+            <filename>Projectile/Shuriken.png</filename>
             <filename>SlashFx/SlashCurved/SlashCurved.png</filename>
             <filename>Smoke/Smoke/Smoke.png</filename>
         </array>

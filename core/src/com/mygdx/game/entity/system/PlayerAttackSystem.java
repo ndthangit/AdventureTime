@@ -60,7 +60,11 @@ public class PlayerAttackSystem extends IteratingSystem{
 		for (Entity weaponEntity: weaponEnities)
 			weaponEntity.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
 		ImmutableArray<Entity> effectEtities = game.getEcsEngine().getEntitiesFor(Family.all(EffectComponent.class).get());
-		for (Entity effectEntity: effectEtities)
-			effectEntity.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+		for (Entity effectEntity: effectEtities) {
+			EffectComponent effectCmp = ECSEngine.effectCmpMapper.get(effectEntity);
+			if (effectCmp.owner == CoreGame.BIT_PLAYER) {
+				effectEntity.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+			}
+		}
 	}
 }

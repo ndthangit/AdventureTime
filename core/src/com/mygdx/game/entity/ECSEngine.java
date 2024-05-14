@@ -296,10 +296,11 @@ public class ECSEngine extends PooledEngine{
 		effectComponent.height = area.height * UNIT_SCALE;
 		effectComponent.aniTime = area.type.getFrameTime();
 		effectComponent.type = area.type;
+		effectComponent.owner = area.owner;
 		effectComponent.position = area.position;
 		effectComponent.direction = area.direction;
 		effectComponent.path = area.type.getAtlasPath();
-//		damAreaEnity.add(effectComponent);
+		damAreaEnity.add(effectComponent);
 
 		// box 2D component
 		CoreGame.resetBodiesAndFixtureDefinition();
@@ -436,6 +437,7 @@ public class ECSEngine extends PooledEngine{
 		EffectComponent effectComponent = this.createComponent(EffectComponent.class);
 		effectComponent.type = effect.getType();
 		effectComponent.aniTime = 0;
+		effectComponent.owner = effect.getOwner();
 		effectComponent.height = effect.getType().getHeight() * UNIT_SCALE;
 		effectComponent.width = effect.getType().getWidth() * UNIT_SCALE;
 		effectComponent.path = effect.getType().getAtlasPath();

@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.WorldContactListener.CollisionListener;
 import com.mygdx.game.audio.AudioType;
+import com.mygdx.game.effect.Effect;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.*;
 import com.mygdx.game.items.Item;
@@ -41,7 +42,11 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
     @Override
     public void weaponCollision(Entity weapon, Entity gameObj) {
         final GameObjectComponent gameObjCmp = ECSEngine.gameObjCmpMapper.get(gameObj);
+        final Box2DComponent box2DCmp = ECSEngine.box2dCmpMapper.get(gameObj);
         if (gameObjCmp.type == GameObjectType.GRASS) {
+            box2DCmp.body.getPosition();
+//            Effect effect = new Effect();
+//            game.getEcsEngine().createEffect(effect);
             gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
         }
     }
@@ -144,6 +149,14 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
                     enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
                 }
             }
+        }
+    }
+
+    @Override
+    public void damageAreaVSGround(Entity damageArea) {
+        DamageAreaComponent damageAreaComponent = ECSEngine.damageAreaCmpMapper.get(damageArea);
+        if (damageAreaComponent.isbullet) {
+            damageArea.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
         }
     }
 }
