@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.screens.ScreenType;
 
@@ -35,6 +36,12 @@ public class InstructionUI extends Table {
         Texture texture = new Texture(Gdx.files.internal("maps/InstructionUI_add.png"));
         Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
         Image image = new Image(drawable);
+
+        float desiredWidth = 200;
+        float desiredHeight = 150;
+        image.setWidth(desiredWidth);
+        image.setHeight(desiredHeight);
+        image.setScaling(Scaling.fit);
         instruct.add(image).row();
         returnButton.addListener(new InputListener() {
             @Override
