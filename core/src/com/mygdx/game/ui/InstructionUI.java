@@ -29,5 +29,14 @@ public class InstructionUI extends Table {
         instruct.clearChildren();
         TextButton Title = new TextButton("GETTING STARTED", skin, "huge");
         instruct.add(Title).expandX().fillX().padBottom(200).top().row();
+        TextButton returnButton = new TextButton("RETURN", skin, "huge");
+        returnButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                game.setScreen(ScreenType.OPTION);
+                return true;
+            }
+        });
+        instruct.add(returnButton).padTop(50).row();
     }
 }
