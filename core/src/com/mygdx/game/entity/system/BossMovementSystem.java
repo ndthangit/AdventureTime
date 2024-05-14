@@ -18,8 +18,7 @@ public class BossMovementSystem extends IteratingSystem {
 
     private final CoreGame game;
     private SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<>(new Vector2());
-
-
+    private float timeBullet =1;
     public BossMovementSystem(CoreGame game) {
         super(Family.all(AnimationComponent.class, BossComponent.class, Box2DComponent.class).get());
         this.game = game;
@@ -106,6 +105,15 @@ public class BossMovementSystem extends IteratingSystem {
             }
         }
 
+         //Kiểm tra xem Boss và Player có cùng hàng ngang hay không
+        if (Math.abs(playerPos.y - bossPos.y) < 0.5f) {
+            // Nếu có, Boss sẽ bắn đạn theo phương ngang đó
+            if(timeBullet >= 1) {
+                Vector2 bulletStart = new Vector2(bossPos.x, bossPos.y); // Mục tiêu là vị trí ngang của Player và dọc của Boss
+                game.getEcsEngine().createBullet(bulletStart, playerPos.x<bossPos.x); // Tạo đạn với tốc độ 1.0f
+                timeBullet = 0;
+            } else timeBullet += deltaTime;
+        } else timeBullet = 1;
 
     }
     public Entity getPlayerEntity() {

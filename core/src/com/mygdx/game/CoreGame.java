@@ -48,7 +48,7 @@ import com.mygdx.game.view.GameRenderer;
 public class CoreGame extends Game {
 
 
-	private static final String TAG = CoreGame.class.getSimpleName();
+    private static final String TAG = CoreGame.class.getSimpleName();
 	
 	private SpriteBatch spriteBatch;
 	private EnumMap<ScreenType, Screen> screenCache;
@@ -64,6 +64,8 @@ public class CoreGame extends Game {
 	public static final short BIT_ITEM = 1 << 5;
 	public static final short BIT_DOOR = 1 << 6;
 	public static final short BIT_BOSS = 1 << 7;
+	public static final short BIT_BULLET = 1 << 8;
+
 
 	public static final float FIXED_TIME_STEP = 1/ 60f;
 

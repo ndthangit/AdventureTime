@@ -224,6 +224,7 @@ public class GameRenderer implements Disposable, MapListener{
 		frame.draw(spriteBatch);
 	}
 
+
 	private void rederEffect(Entity entity, float delta) {
 		final EffectComponent effectComponent = ECSEngine.effectCmpMapper.get(entity);
         String path = effectComponent.path;

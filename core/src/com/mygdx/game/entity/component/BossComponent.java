@@ -16,6 +16,10 @@ public class BossComponent extends EntityComponent {
     public boolean isSkill1;
     public boolean isSkill2;
     public DirectionType direction;
+
+    public float shootDelay = 0.5f;
+    public float timeSinceLastShot = 0f;
+
     @Override
     public void reset() {
         super.reset();
