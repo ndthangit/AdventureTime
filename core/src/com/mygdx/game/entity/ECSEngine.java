@@ -37,7 +37,7 @@ public class ECSEngine extends PooledEngine{
 	public static final ComponentMapper<DoorLayerComponent> doorLayerCmpMapper = ComponentMapper.getFor(DoorLayerComponent.class);
 	public static final ComponentMapper<BossComponent> bossCmpMapper = ComponentMapper.getFor(BossComponent.class);
 	public static final ComponentMapper<DamageAreaComponent> damageAreaCmpMapper = ComponentMapper.getFor(DamageAreaComponent.class);
-
+	public static final ComponentMapper<BulletComponent> bulletCmpMapper = ComponentMapper.getFor(BulletComponent.class);
 	private final World world;
 
 	private final Vector2 localPosition;
@@ -72,6 +72,7 @@ public class ECSEngine extends PooledEngine{
 		this.addSystem(new BossAnimationSystem(game));
 		this.addSystem(new BossAttackSystem(game));
 		this.addSystem(new DamageAreaSystem(game));
+		this.addSystem(new BulletMovementSystem());
 	}
 
 	public Array<Item> getItemArray() {
@@ -481,5 +482,40 @@ public class ECSEngine extends PooledEngine{
 		itemEntity.add(box2DComponent);
 
 		this.addEntity(itemEntity);
+	}
+	public void createBullet(Vector2 start, boolean isLeft) {
+		final Entity bulletEntity = this.createEntity();
+
+		// Tạo và thêm BulletComponent
+		BulletComponent bulletComponent = this.createComponent(BulletComponent.class);
+		bulletComponent.start = start;
+		bulletComponent.isLeft = isLeft;
+		bulletEntity.add(bulletComponent);
+
+
+		// Tạo và thêm Box2DComponent
+		CoreGame.resetBodiesAndFixtureDefinition();
+		Box2DComponent box2DBullet = this.createComponent(Box2DComponent.class);
+		final float halfW = 6*UNIT_SCALE/ 2;
+		final float halfH = 6*UNIT_SCALE/ 2;
+		CoreGame.BODY_DEF.type = BodyDef.BodyType.DynamicBody;
+		CoreGame.BODY_DEF.position.set(start.x + halfW, start.y + halfH);
+		box2DBullet.body = world.createBody(CoreGame.BODY_DEF);
+		box2DBullet.body.setUserData(bulletEntity);
+		box2DBullet.width = UNIT_SCALE;
+		box2DBullet.height = UNIT_SCALE;
+		box2DBullet.renderPosition.set(box2DBullet.body.getPosition().x, box2DBullet.body.getPosition().y);
+
+		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_BULLET;
+		CoreGame.FIXTURE_DEF.filter.maskBits = CoreGame.BIT_PLAYER;
+		CoreGame.FIXTURE_DEF.isSensor = true;
+		CircleShape pShape = new CircleShape();
+		pShape.setRadius(halfW);
+		CoreGame.FIXTURE_DEF.shape = pShape;
+		box2DBullet.body.createFixture(CoreGame.FIXTURE_DEF);
+		pShape.dispose();
+		bulletEntity.add(box2DBullet);
+
+		this.addEntity(bulletEntity);
 	}
 }

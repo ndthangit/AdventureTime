@@ -9,15 +9,15 @@ import com.mygdx.game.items.food.FoodType;
 public class EnemyComponent extends EntityComponent {
     public int attack;
     public EnemyType type;
-    //
     public Vector2 startPosition = new Vector2();
-    //
     public Vector2 wanderingDirection = new Vector2();
     public float timeSinceLastDirectionChange = 0;
     public float directionChangeInterval = 5; // giây
     public float wanderingRadius = 10;
     public boolean stop;
-
+    //Bullet
+    public float shootDelay = 0.5f;
+    public float timeSinceLastShot = 0f;
     @Override
     public void reset() {
         super.reset();

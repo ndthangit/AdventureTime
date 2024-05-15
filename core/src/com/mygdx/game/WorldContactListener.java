@@ -23,6 +23,7 @@ public class WorldContactListener implements ContactListener {
 	private boolean hasGround;
 	private boolean hasDamageArea;
 	private final Array<EnemyComponent> stoEnemy;
+	private boolean hasBullet;
     public WorldContactListener() {
 		this.listeners = new Array<CollisionListener>();
 		stoEnemy = new Array<EnemyComponent>();
@@ -43,6 +44,7 @@ public class WorldContactListener implements ContactListener {
 		final Entity door;
 		final Entity boss;
 		final Entity damageArea;
+		final Entity bullet;
 		final Body bodyA = contact.getFixtureA().getBody();
 		final Body bodyB = contact.getFixtureB().getBody();
 		final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
@@ -151,6 +153,18 @@ public class WorldContactListener implements ContactListener {
 		else if ((catFixB & BIT_DAMAGE_AREA) == BIT_DAMAGE_AREA) {
 			hasGround = true;
 		}
+		//Bullet
+		if ((catFixA & BIT_BULLET) == BIT_BULLET) {
+			bullet = (Entity) bodyA.getUserData();
+			hasBullet = true;
+		}
+		else if((catFixB & BIT_BULLET) == BIT_BULLET){
+			bullet = (Entity) bodyB.getUserData();
+			hasBullet = true;
+		}
+		else {
+			bullet = null;
+		}
 
 		if (hasPlayer && hasGameObj) {
 			for (final CollisionListener listener : listeners) {
@@ -213,6 +227,11 @@ public class WorldContactListener implements ContactListener {
 				listener.damageAreaVSGround(damageArea);
 			}
 		}
+		else if (hasBullet && hasPlayer) {
+			for (final CollisionListener listener : listeners) {
+				listener.bulletVSPlayer(bullet, player);
+			}
+		}
 	}
 
 	@Override
@@ -260,5 +279,6 @@ public class WorldContactListener implements ContactListener {
 		void playerVSDamageArea(final Entity player, final Entity damageArea);
 		void damageAreaVSEnemy(final Entity damageArea, final Entity enemy);
 		void damageAreaVSGround(final Entity damageArea);
+		void bulletVSPlayer(final Entity bullet, final Entity player);
 	}
 }

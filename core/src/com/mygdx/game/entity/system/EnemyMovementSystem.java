@@ -26,6 +26,7 @@ public class EnemyMovementSystem extends IteratingSystem {
     private Vector2 originalPosition; // Thêm biến này để lưu vị trí ban đầu của Enemy
     private SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<>(new Vector2());
     private Random random;
+    private float timeBullet = 1;
     @SuppressWarnings("unchecked")
     public EnemyMovementSystem(CoreGame game) {
         super(Family.all(EnemyComponent.class, Box2DComponent.class).get());
@@ -76,8 +77,8 @@ public class EnemyMovementSystem extends IteratingSystem {
                 } else {
                     // Di chuyển ngẫu nhiên xung quanh startPosition
                     SteerableAgent enemySteerable = new SteerableAgent(b2dComponent.body, 1.5f);
-                    enemySteerable.setMaxLinearSpeed(5000); // Tăng tốc độ tối đa
-                    enemySteerable.setMaxLinearAcceleration(3000); // Tăng gia tốc tối đa
+                    enemySteerable.setMaxLinearSpeed(55); // Tăng tốc độ tối đa
+                    enemySteerable.setMaxLinearAcceleration(80); // Tăng gia tốc tối đa
 
                     Wander<Vector2> wanderSB = new Wander<>(enemySteerable) //
                             .setFaceEnabled(false) // We want to use Face internally (independent facing is on)
@@ -101,6 +102,15 @@ public class EnemyMovementSystem extends IteratingSystem {
                         b2dComponent.body.setLinearVelocity(velocity);
                     }
                 }
+            }
+            //Kiểm tra xem Boss và Player có cùng hàng hoặc cột
+            if (Math.abs(playerPos.y - enemyPos.y) < 0.5f) {
+                // Nếu có, Boss sẽ bắn đạn theo phương ngang đó
+                if(timeBullet >= 1) {
+                    Vector2 bulletStart = new Vector2(enemyPos.x, enemyPos.y); // Mục tiêu là vị trí ngang của Player và dọc của Boss
+                    game.getEcsEngine().createBullet(bulletStart, playerPos.x<enemyPos.x); // Tạo đạn với tốc độ 1.0f
+                    timeBullet = 0;
+                } else timeBullet += deltaTime;
             }
         }
     }
