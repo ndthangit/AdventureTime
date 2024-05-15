@@ -26,7 +26,6 @@ public class EnemyMovementSystem extends IteratingSystem {
     private Vector2 originalPosition; // Thêm biến này để lưu vị trí ban đầu của Enemy
     private SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<>(new Vector2());
     private Random random;
-    private float timeBullet = 1;
     @SuppressWarnings("unchecked")
     public EnemyMovementSystem(CoreGame game) {
         super(Family.all(EnemyComponent.class, Box2DComponent.class).get());
@@ -46,7 +45,7 @@ public class EnemyMovementSystem extends IteratingSystem {
         float distance = playerPos.dst(enemyPos);
         final Vector2 speed = new Vector2(enemyCom.speed.x * 0.3f, enemyCom.speed.y * 0.3f);
         if (enemyCom.stop == false) {
-            if (distance < 3) {
+            if (distance < 3.5f) {
                 // Đuổi theo Player
                 Box2DComponent b2dPlayer = ECSEngine.box2dCmpMapper.get(getPlayerEntity());
                 SteerableAgent enemySteerable = new SteerableAgent(b2dComponent.body, 1.5f);
@@ -62,7 +61,7 @@ public class EnemyMovementSystem extends IteratingSystem {
 
                 // Limit the velocity to prevent the entity from moving too fast
                 Vector2 velocity = b2dComponent.body.getLinearVelocity();
-                float maxSpeed = 0.8f;
+                float maxSpeed = enemyCom.timeSinceLastShot >=1f ? 0.8f : 0.008f;
                 if (velocity.len() > maxSpeed) {
                     velocity = velocity.nor().scl(maxSpeed);
                     b2dComponent.body.setLinearVelocity(velocity);
@@ -78,7 +77,7 @@ public class EnemyMovementSystem extends IteratingSystem {
                     // Di chuyển ngẫu nhiên xung quanh startPosition
                     SteerableAgent enemySteerable = new SteerableAgent(b2dComponent.body, 1.5f);
                     enemySteerable.setMaxLinearSpeed(55); // Tăng tốc độ tối đa
-                    enemySteerable.setMaxLinearAcceleration(100); // Tăng gia tốc tối đa
+                    enemySteerable.setMaxLinearAcceleration(120); // Tăng gia tốc tối đa
 
                     Wander<Vector2> wanderSB = new Wander<>(enemySteerable) //
                             .setFaceEnabled(false) // We want to use Face internally (independent facing is on)
@@ -103,15 +102,26 @@ public class EnemyMovementSystem extends IteratingSystem {
                     }
                 }
             }
+            enemyCom.timeSinceLastShot += deltaTime;
             //Nếu quái và Player cùng hàng
-            if (Math.abs(playerPos.y - enemyPos.y) < 0.5f) {
+            if (Math.abs(playerPos.y - enemyPos.y) < 0.5f && Math.abs(playerPos.x - enemyPos.x) < 3.5f) {
                 // Nếu có, Boss sẽ bắn đạn theo phương ngang đó
                 Vector2 dir = new Vector2(playerPos.x > enemyPos.x ? 1 : -1, 0);
-                if(timeBullet >= 1) {
+                if (enemyCom.timeSinceLastShot >= 2) {
                     Vector2 bulletStart = new Vector2(enemyPos.x, enemyPos.y); // Mục tiêu là vị trí ngang của Player và dọc của Boss
                     game.getEcsEngine().createBullet(bulletStart, dir); // Tạo đạn với tốc độ 1.0f
-                    timeBullet = 0;
-                } else timeBullet += deltaTime;
+                    enemyCom.timeSinceLastShot = 0;
+                    enemyCom.timeDelayForBullet = 1f;
+                }
+            } else if (Math.abs(playerPos.x - enemyPos.x) < 0.5f && Math.abs(playerPos.y - enemyPos.y) < 3.5f) {
+                // Nếu có, Boss sẽ bắn đạn theo phương ngang đó
+                Vector2 dir = new Vector2(0, playerPos.y > enemyPos.y ? 1 : -1);
+                if (enemyCom.timeSinceLastShot >= 2) {
+                    Vector2 bulletStart = new Vector2(enemyPos.x, enemyPos.y); // Mục tiêu là vị trí ngang của Player và dọc của Boss
+                    game.getEcsEngine().createBullet(bulletStart, dir); // Tạo đạn với tốc độ 1.0f
+                    enemyCom.timeSinceLastShot = 0;
+                    enemyCom.timeDelayForBullet = 1f;
+                }
             }
         }
     }

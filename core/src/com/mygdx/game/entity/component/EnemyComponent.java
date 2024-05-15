@@ -16,8 +16,9 @@ public class EnemyComponent extends EntityComponent {
     public float wanderingRadius = 10;
     public boolean stop;
     //Bullet
-    public float shootDelay = 0.5f;
+    public float shootDelay = 1f;
     public float timeSinceLastShot = 0f;
+    public float timeDelayForBullet = 0f;
     @Override
     public void reset() {
         super.reset();

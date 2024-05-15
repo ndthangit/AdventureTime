@@ -9,8 +9,10 @@ import com.mygdx.game.entity.component.BulletComponent;
 import com.mygdx.game.entity.component.Box2DComponent;
 import com.mygdx.game.entity.component.RemoveComponent;
 
+import static javax.swing.Spring.scale;
+
 public class BulletMovementSystem extends IteratingSystem {
-    private static final float BULLET_SPEED = 2.0f; // Tốc độ di chuyển của đạn
+    private static final float BULLET_SPEED = 1.25f; // Tốc độ di chuyển của đạn
 
     public BulletMovementSystem() {
         super(Family.all(BulletComponent.class, Box2DComponent.class).get());
@@ -22,12 +24,12 @@ public class BulletMovementSystem extends IteratingSystem {
         Box2DComponent box2DComponent = ECSEngine.box2dCmpMapper.get(entity);
 
         // Kiểm tra xem đạn đã di chuyển quãng đường 5 đơn vị từ vị trí bắt đầu hay chưa
-        if (box2DComponent.body.getPosition().dst(bulletComponent.start) >= 5) {
+        if (box2DComponent.body.getPosition().dst(bulletComponent.start) >= 4) {
             // Nếu có, loại bỏ đạn khỏi hệ thống
             entity.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
         } else {
             // Nếu không, di chuyển đạn
-            box2DComponent.body.setLinearVelocity(bulletComponent.dir);
+            box2DComponent.body.setLinearVelocity(bulletComponent.dir.nor().scl(2f));
         }
     }
 }
