@@ -33,7 +33,7 @@ public class InstructionUI extends Table {
         instruct.add(Title).expandX().fillX().padBottom(200).top().row();
         TextButton returnButton = new TextButton("RETURN", skin, "huge");
         // Thêm hình ảnh vào instruct table
-        Texture texture = new Texture(Gdx.files.internal("maps/InstructionUI_add.png"));
+        Texture texture = new Texture(Gdx.files.internal("instruction game IT3070.jpg"));
         Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
         Image image = new Image(drawable);
 
