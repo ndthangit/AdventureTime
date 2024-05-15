@@ -4,7 +4,7 @@ import com.mygdx.game.effect.EffectType;
 
 public enum FoodType {
     BEAF("Items/Food/food.atlas", "Beaf", 12,12, 0, 2, 0, 60),
-    CALAMARI("Items/Food/food.atlas", "Calamari", 12, 12, 0, 0, 2, 15);
+    CALAMARI("Items/Food/food.atlas", "Calamari", 12, 12, 3, 0, 2, 15);
     private final String atlasPath;
     private final String key;
     private final int width;

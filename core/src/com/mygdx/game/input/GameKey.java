@@ -7,13 +7,16 @@ public enum GameKey {
 	DOWN(Input.Keys.S, Input.Keys.DOWN), 
 	LEFT(Input.Keys.A, Input.Keys.LEFT), 
 	RIGHT(Input.Keys.D, Input.Keys.RIGHT), 
-	SELECT(Input.Keys.U, Input.Keys.NUM_4), 
-	ATTACK(Input.Keys.J, Input.Keys.NUM_1), 
-	BACK(Input.Keys.O, Input.Keys.NUM_7),
-	SKILL(Input.Keys.I, Input.Keys.NUM_5),
-	INVENTORY(Input.Keys.P, Input.Keys.NUM_6),
-	CHANGE_MAP_1 (Input.Keys.NUM_1),
-	CHANGE_MAP_2 (Input.Keys.NUM_2);
+	SELECT(Input.Keys.U, Input.Keys.NUMPAD_4),
+	ATTACK(Input.Keys.J, Input.Keys.NUMPAD_1),
+	BACK(Input.Keys.O, Input.Keys.NUMPAD_7),
+	SKILL(Input.Keys.I, Input.Keys.NUMPAD_5),
+	INVENTORY(Input.Keys.P, Input.Keys.NUMPAD_6),
+	USE_ITEM_1 (Input.Keys.NUM_1),
+	USE_ITEM_2 (Input.Keys.NUM_2),
+	USE_ITEM_3 (Input.Keys.NUM_3),
+	USE_ITEM_4 (Input.Keys.NUM_4),
+	SWAP_WEAPON (Input.Keys.R),;
 	final int[] keyCode;
 	
 	GameKey(final int... keyCode) {

@@ -9,7 +9,9 @@ public enum AudioType {
 	LOL("Musics/4 - Village.ogg", true, 0.3f),
 	LOL1("Musics/1 - Adventure Begin.ogg", true, 0.2f),
 	CHILL("Musics/27 - Chill.ogg", false, 0.3f),
-	GOLD1("Sounds/Game/Gold1.wav",false,0.3f);
+	GOLD1("Sounds/Game/Gold1.wav",false,0.3f),
+	HIT("Sounds/Game/Hit1.wav",false, 0.3f),
+	KILL("Sounds/Game/Kill.wav", false, 0.5f);
 	
 	private final String filePath;
 	private final boolean isMusic;

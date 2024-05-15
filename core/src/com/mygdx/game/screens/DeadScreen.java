@@ -15,9 +15,11 @@ import com.mygdx.game.ui.OptionUI;
 public class DeadScreen extends AbstractScreen<DeadUI> {
     private final Stage stage;
     Skin skin;
+    CoreGame game;
     private final AssetManager assetManager;
     public DeadScreen(CoreGame game) {
         super(game);
+        this.game = game;
         stage = game.getStage();
         assetManager = game.getAssetManager();
         this.screenUI = (DeadUI)getscreenUI(game.getLoadAsset().getGameSkin(), game);
@@ -27,6 +29,7 @@ public class DeadScreen extends AbstractScreen<DeadUI> {
     @Override
     public void show() {
         super.show();
+        audioManager.stopCurrentMusic();
         audioManager.playAudio(AudioType.GAMEOVER2);
     }
 

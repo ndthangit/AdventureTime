@@ -7,7 +7,7 @@ public enum PlayerType {
 
     private final String atlasPath;
     private final int health;
-    private final Vector2 speed;
+    private final float speed;
     private final int baseDamage;
     private final float width;
     private final float height;
@@ -17,7 +17,7 @@ public enum PlayerType {
     PlayerType (String atlasPath, int health,float width, float height, float speed, int baseDamage) {
         this.atlasPath = atlasPath;
         this.health = health;
-        this.speed = new Vector2(speed, speed);
+        this.speed = speed;
         this.baseDamage = baseDamage;
         this.width = width;
         this.height = height;
@@ -27,7 +27,7 @@ public enum PlayerType {
 		return health;
 	}
 
-	public Vector2 getSpeed() {
+	public float getSpeed() {
 		return speed;
 	}
 	

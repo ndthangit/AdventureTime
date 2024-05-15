@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.WorldContactListener.CollisionListener;
+import com.mygdx.game.audio.AudioManager;
 import com.mygdx.game.audio.AudioType;
 import com.mygdx.game.effect.Effect;
 import com.mygdx.game.entity.ECSEngine;
@@ -22,6 +23,7 @@ import static com.mygdx.game.character.enemy.RandomItem.randomFood;
 
 public class CollisionSystem extends IteratingSystem implements CollisionListener {
     CoreGame game;
+
     public CollisionSystem(final CoreGame game) {
         super(Family.all(RemoveComponent.class).get());
         this.game = game;
@@ -58,6 +60,10 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         final BossComponent bossCmp = ECSEngine.bossCmpMapper.get(enemy);
         int damage = enemyCmp != null ? enemyCmp.attack : bossCmp.attack;
         playerCmp.life =  Math.max(playerCmp.life - damage, 0);
+        game.getAudioManager().playAudio(AudioType.HIT);
+        if (playerCmp.life <= 0) {
+            player.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+        }
         game.getGameUI().updateHeart();
     }
 
@@ -84,6 +90,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             bossCmp.life -= weaponCmp.attack;
             bossCmp.isHit = true;
             if (bossCmp.life <= 0) {
+                game.getAudioManager().playAudio(AudioType.KILL);
                 enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
             }
         }
@@ -97,6 +104,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             if (playerCmp.addItem(itemCmp.item)) {
                 item.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
                 game.getGameUI().updateBag();
+                game.getGameUI().updateNumTable();
                 game.getAudioManager().playAudio(AudioType.GOLD1);
             }
         }
@@ -119,6 +127,10 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         if ((damageAreaCmp.owner & CoreGame.BIT_BOSS) == CoreGame.BIT_BOSS||
             (damageAreaCmp.owner & CoreGame.BIT_ENEMY) == CoreGame.BIT_ENEMY) {
             playerCmp.life =  Math.max(playerCmp.life - damageAreaCmp.damage, 0);
+            game.getAudioManager().playAudio(AudioType.HIT);
+            if (playerCmp.life <= 0) {
+                player.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+            }
             game.getGameUI().updateHeart();
         }
     }
@@ -139,6 +151,8 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
                     FoodType foodType = randomFood();
                     Food food = new Food(foodType, b2dCmp.body.getPosition());
                     game.getEcsEngine().getItemArray().add(food);
+                    game.getAudioManager().playAudio(AudioType.KILL);
+
                     enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
                 }
             }

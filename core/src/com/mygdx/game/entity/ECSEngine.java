@@ -93,10 +93,12 @@ public class ECSEngine extends PooledEngine{
 		final PlayerComponent playerComponent = this.createComponent(PlayerComponent.class);
 		playerComponent.maxLife = type.getHealth();
 		playerComponent.life = playerComponent.maxLife;
-		playerComponent.speed.set(type.getSpeed());
+		playerComponent.speed = type.getSpeed();
 		playerComponent.aniType = PlayerType.BLACK_NINJA_MAGE;
 		playerComponent.direction = DOWN;
 		playerComponent.weapon = weapon;
+		playerComponent.weaponList = new Array<Weapon>();
+		playerComponent.weaponList.add(weapon);
 		player.add(playerComponent);
 
 		// box2d component
@@ -165,7 +167,7 @@ public class ECSEngine extends PooledEngine{
 		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
 
 		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_GAME_OBJECT;
-		CoreGame.FIXTURE_DEF.filter.maskBits = CoreGame.BIT_PLAYER|CoreGame.BIT_WEAPON;
+		CoreGame.FIXTURE_DEF.filter.maskBits = -1;
 		PolygonShape pShape = new PolygonShape();
 		pShape.setAsBox(halfW, halfH);
 		CoreGame.FIXTURE_DEF.shape = pShape;
@@ -238,7 +240,7 @@ public class ECSEngine extends PooledEngine{
 		bossComponent.maxLife = boss.getBossType().getHealth();
 		bossComponent.life = bossComponent.maxLife;
 		bossComponent.type = boss.getBossType();
-		bossComponent.speed.set(boss.getBossType().getSpeed(), boss.getBossType().getSpeed());
+		bossComponent.speed = boss.getBossType().getSpeed();
 		bossComponent.attack = boss.getBossType().getDamage();
 		bossComponent.reload = boss.getBossType().getReload();
 		bossComponent.resetState();
@@ -329,13 +331,13 @@ public class ECSEngine extends PooledEngine{
 		this.addEntity(damAreaEnity);
 	}
 
-	public void createPlayerWeapon(final Weapon weapon) {
+	public void createPlayerWeapon(final Weapon weapon, int damageBuff) {
 		final Entity weaponEntity = this.createEntity();
 		// weapon component
 		final WeaponComponent weaponComponent = this.createComponent(WeaponComponent.class);
 		weaponComponent.type = weapon.type;
 		weaponComponent.direction = weapon.direction;
-		weaponComponent.attack = weapon.type.getAttack();
+		weaponComponent.attack = weapon.type.getAttack() + damageBuff;
 		weaponEntity.add(weaponComponent);
 
 		// animation component
@@ -392,7 +394,7 @@ public class ECSEngine extends PooledEngine{
 		enemyComponent.maxLife = enemy.getType().getMaxLife();
 		enemyComponent.life = enemyComponent.maxLife;
 		enemyComponent.type = enemy.getType();
-		enemyComponent.speed.set(enemy.getType().getSpeed(), enemy.getType().getSpeed());
+		enemyComponent.speed = enemy.getType().getSpeed();
 		enemyComponent.attack = enemy.getType().getAttack();
 		// Lưu vị trí ban đầu
 		enemyComponent.startPosition.x = enemy.getPosition().x + enemy.getWidth() * UNIT_SCALE / 2;

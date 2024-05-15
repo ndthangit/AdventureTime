@@ -1,11 +1,14 @@
 package com.mygdx.game.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.audio.AudioType;
 import com.mygdx.game.character.player.PlayerType;
+import com.mygdx.game.entity.component.PlayerComponent;
 import com.mygdx.game.input.GameKey;
 import com.mygdx.game.input.InputManager;
+import com.mygdx.game.items.weapon.Weapon;
 import com.mygdx.game.map.Map;
 import com.mygdx.game.map.MapListener;
 import com.mygdx.game.map.MapType;
@@ -62,11 +65,30 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 
 	@Override
 	public void keyPressed(InputManager manager, GameKey gameKey) {
-		if (gameKey==GameKey.ATTACK) {
-			if (game.getAssetManager().isLoaded(AudioType.SWORD.getFilePath())) {
-				audioManager.playAudio(AudioType.SWORD);
-			}
+		PlayerComponent playerCmp = game.getGameUI().playerCmp;
+
+		switch (gameKey) {
+			case USE_ITEM_1:
+				playerCmp.useItem(1);
+				break;
+			case USE_ITEM_2:
+				playerCmp.useItem(2);
+				break;
+			case USE_ITEM_3:
+				playerCmp.useItem(3);
+				break;
+			case USE_ITEM_4:
+				playerCmp.useItem(4);
+				break;
+			// error
+            case SWAP_WEAPON:
+					playerCmp.indWeapon = (playerCmp.indWeapon + 1) % playerCmp.weaponList.size;
+					playerCmp.weapon = playerCmp.weaponList.get(playerCmp.indWeapon);
+                break;
 		}
+		game.getGameUI().updateHeart();
+		game.getGameUI().updateNumTable();
+		game.getGameUI().updateBag();
 	}
 
 	@Override

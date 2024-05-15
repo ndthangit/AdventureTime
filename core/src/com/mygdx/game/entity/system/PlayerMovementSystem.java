@@ -1,8 +1,10 @@
 package com.mygdx.game.entity.system;
 
+import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.Box2DComponent;
@@ -13,6 +15,7 @@ import com.mygdx.game.input.KeyInputListener;
 
 public class PlayerMovementSystem extends IteratingSystem implements KeyInputListener {
 
+	private CoreGame game;
 	private boolean directionChange;
 	private boolean isAttack;
 	private int xFactor;
@@ -22,6 +25,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 	public PlayerMovementSystem(final CoreGame game) {
 		super(Family.all(PlayerComponent.class, Box2DComponent.class).get());
 		game.getInputManager().addInputListener(this);
+		this.game = game;
 		time = 0;
 	}
 
@@ -29,10 +33,17 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 	protected void processEntity(final Entity entity, float deltaTime) {
 		final PlayerComponent playerComponent = ECSEngine.playerCmpMapper.get(entity);
 		final Box2DComponent b2dComponent = ECSEngine.box2dCmpMapper.get(entity);
-		
+
+		//buff
+		playerComponent.timeBuff -= deltaTime;
+		if (playerComponent.timeBuff <= 0) {
+			playerComponent.resetBuff();
+		}
+
+		// movement
 		float speed = (float) Math.sqrt(xFactor * xFactor + yFactor * yFactor);
-		float speedx = speed > 0 ? playerComponent.speed.x * xFactor / speed : 0;
-		float speedy = speed > 0 ? playerComponent.speed.y * yFactor / speed : 0;
+		float speedx = speed > 0 ? (playerComponent.speed + playerComponent.speedBuff) * xFactor / speed : 0;
+		float speedy = speed > 0 ? (playerComponent.speed + playerComponent.speedBuff) * yFactor / speed : 0;
 		
 		if (isAttack && time < 0.75f) {
 			time += deltaTime;

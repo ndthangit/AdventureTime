@@ -655,7 +655,7 @@
 </data>
  </layer>
  <objectgroup id="15" name="playerStartPosition">
-  <object id="48" name="START" x="153.167" y="49.1667">
+  <object id="48" name="BEGIN_FOREST" x="153.167" y="49.1667">
    <point/>
   </object>
  </objectgroup>
@@ -709,7 +709,7 @@
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="14" name="MIll" visible="0">
+ <objectgroup id="14" name="MIll">
   <object id="18" gid="3570" x="10.3035" y="843.151" width="64" height="64"/>
   <object id="44" gid="2147488667" x="20" y="905.333" width="24" height="16"/>
   <object id="45" gid="2147488667" x="248.667" y="951.333" width="24" height="16"/>
@@ -1061,7 +1061,6 @@
   <object id="510" gid="166" x="880" y="208" width="16" height="16"/>
   <object id="512" gid="684" x="832" y="48" width="16" height="16"/>
   <object id="513" gid="717" x="832" y="64" width="16" height="16"/>
-  <object id="533" gid="3570" x="10" y="841.333" width="64" height="64"/>
  </objectgroup>
  <objectgroup id="11" name="gameObject">
   <object id="2" gid="2573" x="48" y="144" width="16" height="16"/>

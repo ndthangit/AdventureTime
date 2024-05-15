@@ -31,9 +31,6 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 		assetManager.load("Items/Weapons/weapon.atlas", TextureAtlas.class);
 
 		assetManager.load("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", TextureAtlas.class);
-		assetManager.load("Actor/Monsters/Beast2/beast2.atlas", TextureAtlas.class);
-		assetManager.load("Actor/Monsters/Beast/beast.atlas", TextureAtlas.class);
-		assetManager.load("Actor/Monsters/Cyclope/cyclope.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Monsters/SkullBlue/skullblue.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Monsters/Slime2/slime2.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Monsters/Slime4/slime4.atlas", TextureAtlas.class);
@@ -49,6 +46,10 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
 		assetManager.load("FX/Effect.atlas", TextureAtlas.class);
 		assetManager.load("Items/Food/food.atlas", TextureAtlas.class);
+
+		assetManager.load("HUD/HeartAtlas.atlas", TextureAtlas.class);
+		assetManager.load("number/Number.atlas", TextureAtlas.class);
+		assetManager.load("Items/Key.atlas", TextureAtlas.class);
 
 		//audio
 		isMusicLoaded = false;
@@ -100,7 +101,7 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
 	@Override
 	public void keyPressed(InputManager manager, GameKey gameKey) {
-		if (gameKey != GameKey.CHANGE_MAP_1 && gameKey != GameKey.CHANGE_MAP_2 && assetManager.isFinished()) {
+		if (assetManager.isFinished()) {
 			mapManager.setMap();
 			game.setScreen(ScreenType.GAME);
 		}

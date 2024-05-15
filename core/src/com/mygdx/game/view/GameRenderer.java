@@ -47,8 +47,6 @@ public class GameRenderer implements Disposable, MapListener{
 	private final SpriteBatch spriteBatch;
 	private final AssetManager assetManager;
 
-	private Entity player;
-
 	private final ImmutableArray<Entity> gameObjectEntities;
 	private final ImmutableArray<Entity> animatedEntities;
 	private final ImmutableArray<Entity> weaponEntities;
@@ -106,7 +104,6 @@ public class GameRenderer implements Disposable, MapListener{
 		ScreenUtils.clear(0, 0, 0, 1);
 		viewport.apply(false);
 
-//		if (game.getMapManager().getCurrentMapType() == game.getMapManager().getNextMapType() )
 		if( game.getScreenType() == ScreenType.GAME) {
 			spriteBatch.begin();
 			mapRenderer.setView(gameCamera);
