@@ -164,6 +164,7 @@ public class WorldContactListener implements ContactListener {
 		}
 		else {
 			bullet = null;
+			hasBullet = false;
 		}
 
 		if (hasPlayer && hasGameObj) {
@@ -232,6 +233,7 @@ public class WorldContactListener implements ContactListener {
 				listener.bulletVSPlayer(bullet, player);
 			}
 		}
+
 	}
 
 	@Override

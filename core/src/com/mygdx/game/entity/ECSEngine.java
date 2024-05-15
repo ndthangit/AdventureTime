@@ -483,13 +483,13 @@ public class ECSEngine extends PooledEngine{
 
 		this.addEntity(itemEntity);
 	}
-	public void createBullet(Vector2 start, boolean isLeft) {
+	public void createBullet(Vector2 start, Vector2 dir) {
 		final Entity bulletEntity = this.createEntity();
 
 		// Tạo và thêm BulletComponent
 		BulletComponent bulletComponent = this.createComponent(BulletComponent.class);
 		bulletComponent.start = start;
-		bulletComponent.isLeft = isLeft;
+		bulletComponent.dir = dir;
 		bulletEntity.add(bulletComponent);
 
 

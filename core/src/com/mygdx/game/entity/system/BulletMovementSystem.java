@@ -27,8 +27,7 @@ public class BulletMovementSystem extends IteratingSystem {
             entity.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
         } else {
             // Nếu không, di chuyển đạn
-            Vector2 velocity = new Vector2(bulletComponent.isLeft ? -BULLET_SPEED : BULLET_SPEED, 0);
-            box2DComponent.body.setLinearVelocity(velocity);
+            box2DComponent.body.setLinearVelocity(bulletComponent.dir);
         }
     }
 }

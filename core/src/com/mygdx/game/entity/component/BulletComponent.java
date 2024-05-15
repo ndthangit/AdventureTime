@@ -8,10 +8,10 @@ import com.badlogic.gdx.utils.Pool;
 
 public class BulletComponent implements Component, Pool.Poolable {
     public Vector2 start;
-    public boolean isLeft;
+    public Vector2 dir;
     @Override
     public void reset() {
         start = null;
-        isLeft = false;
+        dir=new Vector2();
     }
 }

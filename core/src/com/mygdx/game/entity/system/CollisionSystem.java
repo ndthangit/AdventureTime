@@ -161,11 +161,11 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
     }
     @Override
     public void bulletVSPlayer(Entity bullet, Entity player) {
-        final PlayerComponent playerCmp = ECSEngine.playerCmpMapper.get(player);
+        PlayerComponent playerCmp = ECSEngine.playerCmpMapper.get(player);
         // Giảm máu của Player
-        playerCmp.life -= 2; // Giả sử mỗi viên đạn làm mất 10 máu
-        game.getGameUI().updateHeart();
+        playerCmp.life =  Math.max(playerCmp.life - 2, 0);
         // Loại bỏ đạn khỏi hệ thống
         bullet.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+        game.getGameUI().updateHeart();
     }
 }

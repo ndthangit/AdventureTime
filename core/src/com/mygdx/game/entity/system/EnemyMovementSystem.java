@@ -103,12 +103,13 @@ public class EnemyMovementSystem extends IteratingSystem {
                     }
                 }
             }
-            //Kiểm tra xem Boss và Player có cùng hàng hoặc cột
+            //Nếu quái và Player cùng hàng
             if (Math.abs(playerPos.y - enemyPos.y) < 0.5f) {
                 // Nếu có, Boss sẽ bắn đạn theo phương ngang đó
+                Vector2 dir = new Vector2(playerPos.x > enemyPos.x ? 1 : -1, 0);
                 if(timeBullet >= 1) {
                     Vector2 bulletStart = new Vector2(enemyPos.x, enemyPos.y); // Mục tiêu là vị trí ngang của Player và dọc của Boss
-                    game.getEcsEngine().createBullet(bulletStart, playerPos.x<enemyPos.x); // Tạo đạn với tốc độ 1.0f
+                    game.getEcsEngine().createBullet(bulletStart, dir); // Tạo đạn với tốc độ 1.0f
                     timeBullet = 0;
                 } else timeBullet += deltaTime;
             }
