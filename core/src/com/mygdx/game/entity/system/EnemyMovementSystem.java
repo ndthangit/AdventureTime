@@ -78,7 +78,7 @@ public class EnemyMovementSystem extends IteratingSystem {
                     // Di chuyển ngẫu nhiên xung quanh startPosition
                     SteerableAgent enemySteerable = new SteerableAgent(b2dComponent.body, 1.5f);
                     enemySteerable.setMaxLinearSpeed(55); // Tăng tốc độ tối đa
-                    enemySteerable.setMaxLinearAcceleration(80); // Tăng gia tốc tối đa
+                    enemySteerable.setMaxLinearAcceleration(100); // Tăng gia tốc tối đa
 
                     Wander<Vector2> wanderSB = new Wander<>(enemySteerable) //
                             .setFaceEnabled(false) // We want to use Face internally (independent facing is on)
