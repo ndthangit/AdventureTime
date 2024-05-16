@@ -8,7 +8,10 @@ public enum EffectType {
     SLASHCURVED("FX/Effect.atlas", "SlashCurved", 0.125f, 16, 16, 1, Animation.PlayMode.NORMAL),
     SMOKE("FX/Effect.atlas", "Smoke", 0.1f, 16, 16, 0, Animation.PlayMode.NORMAL),
     BIG_ENERGY_BALL("FX/Effect.atlas", "BigEnergyBall", 0.1f, 12, 12, 2, Animation.PlayMode.LOOP),
-    CUTLEAVES( "FX/Effect.atlas", "Grass", 0.1f, 6, 6, 0,Animation.PlayMode.NORMAL);
+    ENERGY_BALL("FX/Effect.atlas", "EnergyBall", 0.1f, 8, 8, 2, Animation.PlayMode.LOOP),
+    ROCK("FX/Effect.atlas", "Rock", 0.1f, 15, 15, 2, Animation.PlayMode.NORMAL),
+    SHURIKEN("FX/Effect.atlas", "Shuriken", 0.1f, 8, 8, 1, Animation.PlayMode.LOOP),
+    CUTLEAVES( "FX/Effect.atlas", "Grass", 0.1f, 7, 7, 0, Animation.PlayMode.NORMAL);
 
     private final String atlasPath;
     private final String atlasKey;
@@ -55,4 +58,3 @@ public enum EffectType {
         this.fixDir = fixDir;
     }
 }
-
