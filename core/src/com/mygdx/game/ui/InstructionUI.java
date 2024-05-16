@@ -30,19 +30,14 @@ public class InstructionUI extends Table {
     private void createMenu() {
         instruct.clearChildren();
         TextButton Title = new TextButton("GETTING STARTED", skin, "huge");
-        instruct.add(Title).expandX().fillX().padBottom(200).top().row();
+        instruct.add(Title).expandX().fillX().padBottom(50).top().row();
         TextButton returnButton = new TextButton("RETURN", skin, "huge");
         // Thêm hình ảnh vào instruct table
         Texture texture = new Texture(Gdx.files.internal("instruction game IT3070.png"));
         Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
         Image image = new Image(drawable);
-
-        float desiredWidth = 200;
-        float desiredHeight = 150;
-        image.setWidth(desiredWidth);
-        image.setHeight(desiredHeight);
-        image.setScaling(Scaling.fit);
-        instruct.add(image).row();
+        image.setScaling(Scaling.contain);
+        instruct.add(image).width(400).height(300).row();
         returnButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
