@@ -10,7 +10,7 @@ import static com.mygdx.game.view.DirectionType.DOWN;
 public class EntityComponent implements Component, Pool.Poolable {
     public int life;
     public int maxLife;
-    public Vector2 speed = new Vector2();
+    public float speed;
     public DirectionType direction;
 
     @Override
@@ -18,6 +18,6 @@ public class EntityComponent implements Component, Pool.Poolable {
         direction = DOWN;
         life = 0;
         maxLife = 0;
-        speed.set(0,0);
+        speed = 0;
     }
 }

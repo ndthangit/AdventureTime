@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.audio.AudioType;
 import com.mygdx.game.character.player.PlayerType;
 import com.mygdx.game.effect.Effect;
 import com.mygdx.game.effect.EffectType;
@@ -50,8 +51,9 @@ public class PlayerAttackSystem extends IteratingSystem{
 			weapon.direction = playerComponent.direction;
 			weapon.effect.setPosition(b2DComponent.body.getPosition());
 			weapon.effect.setDirection(playerComponent.direction);
-			game.getEcsEngine().createPlayerWeapon(weapon);
+			game.getEcsEngine().createPlayerWeapon(weapon, playerComponent.damageBuff);
 			game.getEcsEngine().createEffect(weapon.effect);
+			game.getAudioManager().playAudio(AudioType.SWORD);
 		}
 	}
 
@@ -60,7 +62,11 @@ public class PlayerAttackSystem extends IteratingSystem{
 		for (Entity weaponEntity: weaponEnities)
 			weaponEntity.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
 		ImmutableArray<Entity> effectEtities = game.getEcsEngine().getEntitiesFor(Family.all(EffectComponent.class).get());
-		for (Entity effectEntity: effectEtities)
-			effectEntity.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+		for (Entity effectEntity: effectEtities) {
+			EffectComponent effectCmp = ECSEngine.effectCmpMapper.get(effectEntity);
+			if (effectCmp.owner == CoreGame.BIT_PLAYER) {
+				effectEntity.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+			}
+		}
 	}
 }

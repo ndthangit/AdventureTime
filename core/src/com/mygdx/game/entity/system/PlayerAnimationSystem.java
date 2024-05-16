@@ -3,6 +3,7 @@ package com.mygdx.game.entity.system;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.entity.ECSEngine;
@@ -24,8 +25,7 @@ public class PlayerAnimationSystem extends IteratingSystem {
 		final Box2DComponent b2DComponent = ECSEngine.box2dCmpMapper.get(entity);
 		final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(entity);
 		final PlayerComponent playerComponent = ECSEngine.playerCmpMapper.get(entity);
-		if(b2DComponent.body.getLinearVelocity().equals(Vector2.Zero)) {
-
+		if(b2DComponent.body.getLinearVelocity().isZero()) {
 			if (playerComponent.isAttack) {
 				if (playerComponent.direction == DOWN) {
 					aniComponent.aniType = AnimationType.ATTACK_DOWN;

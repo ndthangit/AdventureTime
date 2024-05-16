@@ -9,6 +9,7 @@ import com.mygdx.game.entity.component.AnimationComponent;
 import com.mygdx.game.entity.component.Box2DComponent;
 import com.mygdx.game.entity.component.EnemyComponent;
 import com.mygdx.game.view.AnimationType;
+import com.mygdx.game.view.DirectionType;
 
 public class EnemyAnimationSystem extends IteratingSystem {
     public EnemyAnimationSystem(CoreGame game) {
@@ -20,20 +21,25 @@ public class EnemyAnimationSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float v) {
         Box2DComponent box2DComponent = ECSEngine.box2dCmpMapper.get(entity);
         AnimationComponent animationComponent= ECSEngine.aniCmpMapper.get(entity);
+        EnemyComponent enemyComponent = ECSEngine.enemyCmpMapper.get(entity);
         if (Math.abs(box2DComponent.body.getLinearVelocityFromLocalPoint(box2DComponent.renderPosition).x) > Math.abs(box2DComponent.body.getLinearVelocityFromLocalPoint(box2DComponent.renderPosition).y)) {
             if (box2DComponent.body.getLinearVelocity().x > 0) {
                 animationComponent.aniType = AnimationType.RIGHT;
+                enemyComponent.direction = DirectionType.RIGHT;
             }
             else {
                 animationComponent.aniType = AnimationType.LEFT;
+                enemyComponent.direction = DirectionType.LEFT;
             }
         }
         else {
             if (box2DComponent.body.getLinearVelocity().y > 0) {
                 animationComponent.aniType = AnimationType.UP;
+                enemyComponent.direction = DirectionType.UP;
             }
             else {
                 animationComponent.aniType = AnimationType.DOWN;
+                enemyComponent.direction = DirectionType.DOWN;
             }
         }
     }
