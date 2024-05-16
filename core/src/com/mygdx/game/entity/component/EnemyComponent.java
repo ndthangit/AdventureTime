@@ -17,7 +17,12 @@ public class EnemyComponent extends EntityComponent {
     public float directionChangeInterval = 5; // giây
     public float wanderDir;
     public boolean stop;
-    public float timeChange;
+    public boolean focus;
+
+    //Bullet
+    public float shootDelay = 1f;
+    public float timeSinceLastShot = 0f;
+    public float timeDelayForBullet = 0f;
     @Override
     public void reset() {
         super.reset();

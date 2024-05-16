@@ -221,6 +221,7 @@ public class WorldContactListener implements ContactListener {
 		final Body bodyB = contact.getFixtureB().getBody();
 		bodyA.applyLinearImpulse(-bodyA.getLinearVelocity().x*bodyA.getMass(), -bodyA.getLinearVelocity().y*bodyA.getMass(), bodyA.getPosition().x, bodyA.getPosition().y, true);
 		bodyB.applyLinearImpulse(-bodyB.getLinearVelocity().x*bodyB.getMass(), -bodyB.getLinearVelocity().y*bodyB.getMass(), bodyB.getPosition().x, bodyB.getPosition().y, true);
+
 		for (final EnemyComponent enemyCmp : stoEnemy) {
 			enemyCmp.stop = false;
 		}

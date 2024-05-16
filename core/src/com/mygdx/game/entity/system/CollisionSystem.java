@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.WorldContactListener.CollisionListener;
 import com.mygdx.game.audio.AudioManager;
@@ -60,6 +61,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         final BossComponent bossCmp = ECSEngine.bossCmpMapper.get(enemy);
         int damage = enemyCmp != null ? enemyCmp.attack : bossCmp.attack;
         playerCmp.life =  Math.max(playerCmp.life - damage, 0);
+        enemyCmp.stop = true;
         game.getAudioManager().playAudio(AudioType.HIT);
         if (playerCmp.life <= 0) {
             player.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
@@ -146,6 +148,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
                 b2dCmp.body.applyLinearImpulse(-b2dCmp.body.getLinearVelocity().x*b2dCmp.body.getMass(), -b2dCmp.body.getLinearVelocity().y*b2dCmp.body.getMass(), b2dCmp.body.getPosition().x, b2dCmp.body.getPosition().y, true);
                 enemyCmp.stop = true;
                 enemyCmp.life -= damageAreaCmp.damage;
+                enemyCmp.stop = true;
                 if (enemyCmp.life <= 0) {
                     // thêm tạo cửa sổ để them do
                     FoodType foodType = randomFood();

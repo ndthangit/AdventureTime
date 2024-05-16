@@ -185,6 +185,21 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">Elemental/Rock/SpriteSheet.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>105,8,210,15</rect>
+                <key>scale9Paddings</key>
+                <rect>105,8,210,15</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">Particle/Grass.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -212,6 +227,36 @@
                 <rect>24,6,48,12</rect>
                 <key>scale9Paddings</key>
                 <rect>24,6,48,12</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">Projectile/BigKunai.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>9,2,17,5</rect>
+                <key>scale9Paddings</key>
+                <rect>9,2,17,5</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">Projectile/EnergyBall.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,4,32,8</rect>
+                <key>scale9Paddings</key>
+                <rect>16,4,32,8</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -268,6 +313,9 @@
             <filename>Projectile/Shuriken.png</filename>
             <filename>SlashFx/SlashCurved/SlashCurved.png</filename>
             <filename>Smoke/Smoke/Smoke.png</filename>
+            <filename>Elemental/Rock/SpriteSheet.png</filename>
+            <filename>Projectile/EnergyBall.png</filename>
+            <filename>Projectile/BigKunai.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

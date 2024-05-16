@@ -72,6 +72,7 @@ public class ECSEngine extends PooledEngine{
 		this.addSystem(new BossAnimationSystem(game));
 		this.addSystem(new BossAttackSystem(game));
 		this.addSystem(new DamageAreaSystem(game));
+		this.addSystem(new EnemyAttackSystem(game));
 	}
 
 	public Array<Item> getItemArray() {

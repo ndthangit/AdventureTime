@@ -14,6 +14,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.character.ai.SteerableAgent;
+import com.mygdx.game.effect.DamageArea;
+import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.Box2DComponent;
 import com.mygdx.game.entity.component.EnemyComponent;
@@ -36,6 +38,7 @@ public class EnemyMovementSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+        if (getPlayerEntity() == null) return;
         Box2DComponent playerCom = ECSEngine.box2dCmpMapper.get(getPlayerEntity());
         EnemyComponent enemyCom = ECSEngine.enemyCmpMapper.get(entity);
         Box2DComponent b2dComponent = ECSEngine.box2dCmpMapper.get(entity);
@@ -45,7 +48,8 @@ public class EnemyMovementSystem extends IteratingSystem {
         float distance = playerPos.dst(enemyPos);
         final Vector2 speed = new Vector2(enemyCom.speed * 0.3f, enemyCom.speed * 0.3f);
         if (enemyCom.stop == false) {
-            if (distance < 3) {
+            if (distance < enemyCom.type.getRange()) {
+                enemyCom.focus = true;
                 // Đuổi theo Player
                 Box2DComponent b2dPlayer = ECSEngine.box2dCmpMapper.get(getPlayerEntity());
                 SteerableAgent enemySteerable = new SteerableAgent(b2dComponent.body, 1.5f);
@@ -61,12 +65,13 @@ public class EnemyMovementSystem extends IteratingSystem {
 
                 // Limit the velocity to prevent the entity from moving too fast
                 Vector2 velocity = b2dComponent.body.getLinearVelocity();
-                float maxSpeed = 0.8f;
+                float maxSpeed = enemyCom.timeSinceLastShot >=1f ? enemyCom.speed : 0.008f;
                 if (velocity.len() > maxSpeed) {
                     velocity = velocity.nor().scl(maxSpeed);
                     b2dComponent.body.setLinearVelocity(velocity);
                 }
             } else {
+                enemyCom.focus = false;
                 // Quay về vị trí ban đầu nếu không đúng tại startPosition
                 if (!enemyPos.epsilonEquals(enemyCom.startPosition, 0.1f)) {
                     Vector2 dir = new Vector2(enemyCom.startPosition.x - enemyPos.x, enemyCom.startPosition.y - enemyPos.y);
@@ -76,13 +81,6 @@ public class EnemyMovementSystem extends IteratingSystem {
                             b2dComponent.body.getPosition().y + dir.y * deltaTime*0.5f ,
                             b2dComponent.body.getAngle());
                 } else {
-//                // Di chuyển ngẫu nhiên xung quanh startPosition
-//                float randomAngle = (float) (Math.random() * 2 * Math.PI);
-//                Vector2 randomDir = new Vector2((float) Math.cos(randomAngle), (float) Math.sin(randomAngle));
-//                randomDir.nor();
-//                b2dComponent.body.setTransform(b2dComponent.body.getPosition().x + randomDir.x * deltaTime,
-//                        b2dComponent.body.getPosition().y + randomDir.y * deltaTime,
-//                        b2dComponent.body.getAngle());
                     // Di chuyển ngẫu nhiên xung quanh startPosition
                     SteerableAgent enemySteerable = new SteerableAgent(b2dComponent.body, 1.5f);
                     enemySteerable.setMaxLinearSpeed(4000); // Tăng tốc độ tối đa
@@ -110,6 +108,9 @@ public class EnemyMovementSystem extends IteratingSystem {
                     }
                 }
             }
+            enemyCom.timeSinceLastShot += deltaTime;
+            //Nếu quái và Player cùng hàng
+
         }
     }
 

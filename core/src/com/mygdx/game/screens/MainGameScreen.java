@@ -69,16 +69,16 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 
 		switch (gameKey) {
 			case USE_ITEM_1:
-				playerCmp.useItem(1);
+				playerCmp.useItem(0);
 				break;
 			case USE_ITEM_2:
-				playerCmp.useItem(2);
+				playerCmp.useItem(1);
 				break;
 			case USE_ITEM_3:
-				playerCmp.useItem(3);
+				playerCmp.useItem(2);
 				break;
 			case USE_ITEM_4:
-				playerCmp.useItem(4);
+				playerCmp.useItem(3);
 				break;
 			// error
             case SWAP_WEAPON:

@@ -1,33 +1,35 @@
 package com.mygdx.game.character.enemy;
 
 public enum EnemyType {
-    BEAST("Actor/Monsters/Beast/beast.atlas", "BEAST", 30, 3, 1),
-    BEAST2("Actor/Monsters/Beast2/beast2.atlas", "BEAST2", 35, 3, 2),
-    CYCLOPE("Actor/Monsters/Cyclope/cyclope.atlas", "CYCLONE", 20, 2, 2),
-    BAMBOOYELLOW("Actor/Monsters/BambooYellow/bambooyellow.atlas", "BAMBOOYELLOW", 12, 3, 0),
-    SLIME2("Actor/Monsters/Slime2/slime2.atlas","SLIME2", 25, 2, 1),
-    SLIME4("Actor/Monsters/Slime4/slime4.atlas","SLIME4",20, 1, 1),
-    REPTILE2("Actor/Monsters/Reptile2/reptile2.atlas","REPTILE2", 25, 3, 1.5f),
-    SKULLBLUE("Actor/Monsters/SkullBlue/skullblue.atlas", "SKULLBLUE", 20, 4, 1),
-    LARVA("Actor/Monsters/Larva/larva.atlas", "LARVA", 20, 2 , 1),
-    REDFIGHTER("Actor/Characters/RedFighter/redfighter.atlas", "REDFIGHTER", 30, 5, 2),
-    REDNINJA("Actor/Characters/RedNinja/redninja.atlas", "REDNINJA", 30, 2, 2),
-    REDNINJA2("Actor/Characters/RedNinja2/redninja2.atlas", "REDNINJA2", 28, 2, 2),
-    REDSAMURAI("Actor/Characters/RedSamurai/redsamurai.atlas", "REDSAMURAI", 32, 2, 1.5f),
-    SAMURAI("Actor/Characters/Samurai/samurai.atlas", "SAMURAI", 32, 2, 1.5f),
-    ORANGESORCERER("Actor/Characters/OrangeSorcerer/orangeSorcerer.atlas", "ORANGESORCERER", 20, 4, 1),
+    SLIME2("Actor/Monsters/Slime2/slime2.atlas","SLIME2",EnemySkillType.NULL,null, 25, 2, 1, 3),
+    SLIME4("Actor/Monsters/Slime4/slime4.atlas","SLIME4",EnemySkillType.NULL,null,20, 1, 1, 3),
+    REPTILE2("Actor/Monsters/Reptile2/reptile2.atlas","REPTILE2",EnemySkillType.NULL,null, 25, 3, 1.5f, 3),
+    SKULLBLUE("Actor/Monsters/SkullBlue/skullblue.atlas", "SKULLBLUE",EnemySkillType.PROJECTILE, EnemyDetailSkillType.ENERGY_BALL, 20, 4, 1, 6),
+    LARVA("Actor/Monsters/Larva/larva.atlas", "LARVA",EnemySkillType.NULL,null, 20, 2 , 1, 3),
+    REDFIGHTER("Actor/Characters/RedFighter/redfighter.atlas", "REDFIGHTER", EnemySkillType.NULL,null, 30, 5, 2, 3),
+    REDNINJA("Actor/Characters/RedNinja/redninja.atlas", "REDNINJA", EnemySkillType.PROJECTILE,EnemyDetailSkillType.SHURIKEN, 30, 2, 2, 6),
+    REDNINJA2("Actor/Characters/RedNinja2/redninja2.atlas", "REDNINJA2", EnemySkillType.PROJECTILE, EnemyDetailSkillType.SHURIKEN, 28, 2, 2, 6),
+    REDSAMURAI("Actor/Characters/RedSamurai/redsamurai.atlas", "REDSAMURAI", EnemySkillType.NULL, null, 32, 2, 1.5f, 3),
+    SAMURAI("Actor/Characters/Samurai/samurai.atlas", "SAMURAI",EnemySkillType.NULL, null,32, 2, 1.5f, 3),
+    ORANGESORCERER("Actor/Characters/OrangeSorcerer/orangeSorcerer.atlas", "ORANGESORCERER", EnemySkillType.SWAP, EnemyDetailSkillType.SWAP_ROCK, 20, 4, 1, 6),
     ;
     private final String atlasPath;
     private final String name;
     private final int maxLife;
     private final int attack;
     private final float speed;
-    EnemyType(String atlasPath, String name, int maxLife, int  attack, float speed) {
+    private final float range;
+    private final EnemySkillType skillType;
+    private final EnemyDetailSkillType detailSkillType;
+    EnemyType(String atlasPath, String name, EnemySkillType type, EnemyDetailSkillType skill, int maxLife, int  attack, float speed, float range) {
         this.atlasPath = atlasPath;
         this.name = name;
         this.maxLife = maxLife;
         this.attack = attack;
         this.speed = speed;
+        this.skillType = type;
+        this.detailSkillType = skill;
+        this.range = range;
     }
 
     public String getAtlasPath() {
@@ -46,7 +48,19 @@ public enum EnemyType {
         return maxLife;
     }
 
+    public EnemySkillType getSkillType() {
+        return skillType;
+    }
+
+    public EnemyDetailSkillType getDetailSkillType() {
+        return detailSkillType;
+    }
+
     public float getSpeed() {
         return speed;
+    }
+
+    public float getRange() {
+        return range;
     }
 }

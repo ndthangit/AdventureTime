@@ -1,5 +1,5 @@
 Effect.png
-size: 960, 32
+size: 1680, 64
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
@@ -10,31 +10,52 @@ BigEnergyBall
   orig: 96, 24
   offset: 0, 0
   index: -1
+BigKunai
+  rotate: false
+  xy: 420, 0
+  size: 35, 9
+  orig: 35, 9
+  offset: 0, 0
+  index: -1
+EnergyBall
+  rotate: false
+  xy: 840, 0
+  size: 64, 16
+  orig: 64, 16
+  offset: 0, 0
+  index: -1
 Grass
   rotate: false
-  xy: 192, 0
+  xy: 1260, 0
   size: 72, 13
   orig: 72, 13
   offset: 0, 0
   index: -1
 Shuriken
   rotate: false
-  xy: 384, 0
+  xy: 0, 32
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 SlashCurved
   rotate: false
-  xy: 576, 0
+  xy: 420, 32
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 Smoke
   rotate: false
-  xy: 768, 0
+  xy: 840, 32
   size: 192, 32
   orig: 192, 32
+  offset: 0, 0
+  index: -1
+SpriteSheet
+  rotate: false
+  xy: 1260, 32
+  size: 420, 30
+  orig: 420, 30
   offset: 0, 0
   index: -1
