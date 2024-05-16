@@ -9,13 +9,13 @@ public enum ScreenType {
 	OPTION (OptionScreen.class),
 	DEAD (DeadScreen.class),
 	INSTRUCT(InstructionScreen.class);
-	
+
 	private final Class<? extends AbstractScreen> screenClass;
-	
+
 	ScreenType (Class<? extends AbstractScreen> screenClass) {
 		this.screenClass = screenClass;
 	}
-	
+
 	public Class<? extends Screen> getScreenClass() {
 		return screenClass;
 	}
