@@ -8,37 +8,26 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.maps.tiled.BaseTmxMapLoader;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.audio.AudioManager;
 import com.mygdx.game.entity.ECSEngine;
+import com.mygdx.game.entity.component.ItemComponent;
 import com.mygdx.game.input.InputManager;
-import com.mygdx.game.items.food.FoodType;
 import com.mygdx.game.map.MapManager;
 import com.mygdx.game.map.MapType;
 import com.mygdx.game.screens.ScreenType;
@@ -77,7 +66,7 @@ public class CoreGame extends Game {
 	private AssetManager assetManager;
 	private AudioManager audioManager;
 	private MapManager mapManager;
-	
+	private ItemComponent itemComponent;
 	private Stage stage;
 	private Skin skin;
 	private GameUI gameUI; 
@@ -158,7 +147,9 @@ public class CoreGame extends Game {
 
 		this.skin = skin;
 	}
-
+public ItemComponent getItemComponent(){
+		return itemComponent;
+}
 	public FitViewport getScreenViewport() {
 		return screenViewport;
 	}
