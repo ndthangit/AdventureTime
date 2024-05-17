@@ -25,6 +25,7 @@ public class BossAnimationSystem extends IteratingSystem {
         if (bossCmp.isHit) {
             animationCmp.aniType = AnimationType.B_HIT;
         } else if (bossCmp.isCharge) {
+
             if (bossCmp.direction == DirectionType.LEFT) {
                 animationCmp.aniType = AnimationType.CHARGE_LEFT;
             }

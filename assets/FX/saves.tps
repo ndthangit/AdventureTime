@@ -200,7 +200,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">Particle/Grass.png</key>
+            <key type="filename">Particle/Grass1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -209,9 +209,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>18,3,36,7</rect>
+                <rect>18,3,36,6</rect>
                 <key>scale9Paddings</key>
-                <rect>18,3,36,7</rect>
+                <rect>18,3,36,6</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -308,7 +308,6 @@
         </map>
         <key>fileList</key>
         <array>
-            <filename>Particle/Grass.png</filename>
             <filename>Projectile/BigEnergyBall.png</filename>
             <filename>Projectile/Shuriken.png</filename>
             <filename>SlashFx/SlashCurved/SlashCurved.png</filename>
@@ -316,6 +315,7 @@
             <filename>Elemental/Rock/SpriteSheet.png</filename>
             <filename>Projectile/EnergyBall.png</filename>
             <filename>Projectile/BigKunai.png</filename>
+            <filename>Particle/Grass1.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

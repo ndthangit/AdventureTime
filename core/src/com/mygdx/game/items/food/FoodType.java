@@ -4,17 +4,19 @@ import com.mygdx.game.effect.EffectType;
 
 public enum FoodType {
     BEAF("Items/Food/food.atlas", "Beaf", 12,12, 0, 2, 0, 60),
-    CALAMARI("Items/Food/food.atlas", "Calamari", 12, 12, 3, 0, 2, 15);
+    CALAMARI("Items/Food/food.atlas", "Calamari", 12, 12, 3, 0, 2, 15),
+    FISH("Items/Food/food.atlas", "Fish", 12, 12, 0, 0, 2.5f, 30),
+    FORTUNE_COOKIE("Items/Food/food.atlas", "FortuneCookie", 12, 12, 0, 2, 1, 30);
     private final String atlasPath;
     private final String key;
     private final int width;
     private final int height;
     private final int heal;
     private final int strength;
-    private final int speed;
+    private final float speed;
     private final float time;
 
-    FoodType(String atlasPath, String key, int width, int height, int heal, int strength, int speed, float time) {
+    FoodType(String atlasPath, String key, int width, int height, int heal, int strength, float speed, float time) {
         this.atlasPath = atlasPath;
         this.key = key;
         this.width = width;
@@ -49,7 +51,7 @@ public enum FoodType {
         return strength;
     }
 
-    public int getSpeed() {
+    public float getSpeed() {
         return speed;
     }
 

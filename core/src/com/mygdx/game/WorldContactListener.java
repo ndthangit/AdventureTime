@@ -213,6 +213,11 @@ public class WorldContactListener implements ContactListener {
 				listener.damageAreaVSGround(damageArea);
 			}
 		}
+		else if (hasDamageArea && hasWeapon) {
+			for (final CollisionListener listener : listeners) {
+				listener.damageAreaVSWeapon(damageArea);
+			}
+		}
 	}
 
 	@Override
@@ -261,5 +266,6 @@ public class WorldContactListener implements ContactListener {
 		void playerVSDamageArea(final Entity player, final Entity damageArea);
 		void damageAreaVSEnemy(final Entity damageArea, final Entity enemy);
 		void damageAreaVSGround(final Entity damageArea);
+		void damageAreaVSWeapon(final Entity damageArea);
 	}
 }

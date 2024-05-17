@@ -197,7 +197,9 @@ public class GameRenderer implements Disposable, MapListener{
 			final Sprite frame = animation.getKeyFrame(aniComponent.aniTime);
 			box2DComponent.renderPosition.lerp(box2DComponent.body.getPosition(), delta);
 			frame.setBounds(box2DComponent.renderPosition.x - aniComponent.width * 0.5f, box2DComponent.renderPosition.y - aniComponent.height * 0.5f, aniComponent.width, aniComponent.height);
+			frame.setAlpha(aniComponent.alpha);
 			frame.draw(spriteBatch);
+			aniComponent.isFinished = animation.isAnimationFinished(aniComponent.aniTime);
 		}
 	}
 
@@ -298,6 +300,9 @@ public class GameRenderer implements Disposable, MapListener{
 		frame.setOriginCenter();
 		frame.setRotation(-(effectComponent.direction.getCode()+type.getFixDir()) * 90);
 		frame.draw(spriteBatch);
+		if (animation.getPlayMode() == Animation.PlayMode.NORMAL && animation.isAnimationFinished(effectComponent.aniTime)) {
+			entity.add(new RemoveComponent());
+		}
 	}
 
 	private Animation<Sprite> getAnimation(String path, AnimationType aniType, int width, int height, boolean isSquare) {

@@ -5,9 +5,9 @@ import com.mygdx.game.effect.EffectType;
 import static com.mygdx.game.effect.EffectType.SLASHCURVED;
 
 public enum WeaponType {
-    KATANA ("Items/Weapons/weapon.atlas","Katana", SLASHCURVED, 5, 0.05f, 7, 12),
-    BIGSWORD("Items/Weapons/weapon.atlas", "BigSword", SLASHCURVED, 3, 0.05f, 7, 16),
-    CLUB("Items/Weapons/weapon.atlas", "Club", SLASHCURVED, 3, 0.05f, 8, 14),;
+    KATANA ("Items/Weapons/weapon.atlas","Katana", SLASHCURVED, 5, 0.05f, 7, 12, 0.5f),
+    BIGSWORD("Items/Weapons/weapon.atlas", "BigSword", SLASHCURVED, 3, 0.05f, 7, 16, 0.75f),
+    CLUB("Items/Weapons/weapon.atlas", "Club", SLASHCURVED, 3, 0.05f, 8, 14, 0.5f),;
 
     private final String atlasPath;
     private final String atlasKey;
@@ -17,8 +17,9 @@ public enum WeaponType {
     private final int attack;
     private final int width;
     private final int height;
+    private final float speed;
 
-    WeaponType(String atlasPath, String key, EffectType effect, int attack, float frameTime, int width, int height) {
+    WeaponType(String atlasPath, String key, EffectType effect, int attack, float frameTime, int width, int height, float speed) {
         this.atlasPath = atlasPath;
         this.effect = effect;
         this.atlasKeyIcon = key;
@@ -27,6 +28,7 @@ public enum WeaponType {
         this.attack = attack;
         this.width = width;
         this.height = height;
+        this.speed = speed;
     }
 
     public String getAtlasKey() {
@@ -58,5 +60,9 @@ public enum WeaponType {
 
     public String getAtlasKeyIcon() {
         return atlasKeyIcon;
+    }
+
+    public float getSpeed() {
+        return speed;
     }
 }

@@ -128,7 +128,7 @@
 </data>
  </layer>
  <objectgroup id="6" name="playerStartPosition">
-  <object id="2" name="START" x="136" y="124.833">
+  <object id="2" name="START" x="167.5" y="123.833">
    <point/>
   </object>
   <object id="18" name="BEGIN_FOREST" x="167.75" y="191">
@@ -138,11 +138,7 @@
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="10" name="boss">
-  <object id="20" name="GIANTBLUESAMURAI" x="231.5" y="158.5">
-   <point/>
-  </object>
- </objectgroup>
+ <objectgroup id="10" name="boss"/>
  <objectgroup id="8" name="door">
   <object id="8" name="BEGIN_FOREST" gid="1330" x="160" y="224.667" width="16" height="16"/>
   <object id="12" name="BASEMENT" gid="2182" x="287.667" y="80.3333" width="16" height="16"/>

@@ -21,10 +21,10 @@ public enum AnimationType {
 	SKILL("Special1", 0.1f, 0),
 
 	// for boss
-	CHARGE_RIGHT("ChargeLeft", 0.3f, 0),
-	CHARGE_LEFT("ChargeRight", 0.3f, 0),
-	B_ATTACK_RIGHT("AttackLeft", 0.3f, 0),
-	B_ATTACK_LEFT("AttackRight", 0.3f, 0),
+	CHARGE_RIGHT("ChargeLeft", 0.4f, 0),
+	CHARGE_LEFT("ChargeRight", 0.4f, 0),
+	B_ATTACK_RIGHT("AttackLeft", 0.2f, 0),
+	B_ATTACK_LEFT("AttackRight", 0.2f, 0),
 
 	B_HIT("Hit", 0.2f, 0);
 

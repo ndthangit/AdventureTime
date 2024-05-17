@@ -19,7 +19,6 @@ import static com.mygdx.game.character.boss.system.GiantBlueSamurai.GBS_attack;
 
 public class BossAttackSystem extends IteratingSystem {
     private final CoreGame game;
-    private boolean attacking = false;
 
     public BossAttackSystem(CoreGame game) {
         super(Family.all(AnimationComponent.class, BossComponent.class, Box2DComponent.class).get());
@@ -47,7 +46,7 @@ public class BossAttackSystem extends IteratingSystem {
         ImmutableArray<Entity> areaEntities = game.getEcsEngine().getEntitiesFor(Family.all(DamageAreaComponent.class, Box2DComponent.class).get());
         for (Entity areaEntity: areaEntities) {
             DamageAreaComponent damageAreaCmp = areaEntity.getComponent(DamageAreaComponent.class);
-            if (!damageAreaCmp.isbullet && damageAreaCmp.owner == CoreGame.BIT_BOSS)
+            if (damageAreaCmp.owner == CoreGame.BIT_BOSS && !damageAreaCmp.isbullet )
                 areaEntity.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
         }
     }

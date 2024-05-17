@@ -1,0 +1,12 @@
+BigKunai1.png.png
+size: 38, 12
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+BigKunai
+  rotate: false
+  xy: 1, 1
+  size: 36, 10
+  orig: 35, 9
+  offset: 0, -1
+  index: -1

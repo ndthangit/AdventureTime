@@ -13,8 +13,8 @@ BigEnergyBall
 BigKunai
   rotate: false
   xy: 420, 0
-  size: 35, 9
-  orig: 35, 9
+  size: 36, 10
+  orig: 36, 10
   offset: 0, 0
   index: -1
 EnergyBall
@@ -24,11 +24,11 @@ EnergyBall
   orig: 64, 16
   offset: 0, 0
   index: -1
-Grass
+Grass1
   rotate: false
   xy: 1260, 0
-  size: 72, 13
-  orig: 72, 13
+  size: 72, 12
+  orig: 72, 12
   offset: 0, 0
   index: -1
 Shuriken

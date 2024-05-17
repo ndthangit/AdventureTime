@@ -42,25 +42,11 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 
 		// movement
 		float speed = (float) Math.sqrt(xFactor * xFactor + yFactor * yFactor);
-		float speedx = speed > 0 ? (playerComponent.speed + playerComponent.speedBuff) * xFactor / speed : 0;
-		float speedy = speed > 0 ? (playerComponent.speed + playerComponent.speedBuff) * yFactor / speed : 0;
-		
-		if (isAttack && time < 0.75f) {
-			time += deltaTime;
-			if (time < 0.5f) {
-				playerComponent.isAttack = true;
-				speedx = 0;
-				speedy = 0;
-			}
-			else {
-				playerComponent.isAttack = false;
-			}
+		if (playerComponent.stop) {
+			speed = 0;
 		}
-		else {
-			isAttack = false;
-			time = 0;
-			playerComponent.isAttack = false;
-		}
+		float speedx = speed > 0 ? (playerComponent.speed + playerComponent.speedBuff + playerComponent.speedBuffSkill2) * xFactor / speed : 0;
+		float speedy = speed > 0 ? (playerComponent.speed + playerComponent.speedBuff + playerComponent.speedBuffSkill2) * yFactor / speed : 0;
 
 		if (directionChange) {
 			b2dComponent.body.applyLinearImpulse(speedx - b2dComponent.body.getLinearVelocity().x * b2dComponent.body.getMass(),
@@ -88,11 +74,6 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 		case RIGHT:
 			directionChange = true;
 			xFactor = 1;
-			break;
-		case ATTACK:
-			isAttack = true;
-			break;
-		case SKILL:
 			break;
 		default:
 			break;

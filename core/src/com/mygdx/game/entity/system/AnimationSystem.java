@@ -18,6 +18,9 @@ public class AnimationSystem extends IteratingSystem {
 		final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(entity);
 		if (aniComponent != null) {
 			aniComponent.aniTime += deltaTime;
+			if (aniComponent.isFinished) {
+				aniComponent.aniTime = 0;
+			}
 		}
 	}
 

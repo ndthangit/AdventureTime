@@ -21,7 +21,7 @@ import com.mygdx.game.map.GameObject;
 import com.mygdx.game.view.AnimationType;
 
 import static com.mygdx.game.CoreGame.UNIT_SCALE;
-import static com.mygdx.game.view.DirectionType.DOWN;
+import static com.mygdx.game.view.DirectionType.*;
 
 public class ECSEngine extends PooledEngine{
 
@@ -307,17 +307,25 @@ public class ECSEngine extends PooledEngine{
 
 		// box 2D component
 		CoreGame.resetBodiesAndFixtureDefinition();
-		final float halfW = area.width * UNIT_SCALE / 2;
-		final float halfH = area.height * UNIT_SCALE / 2;
+		final float halfW;
+		final float halfH;
+		if (area.direction == LEFT || area.direction == RIGHT) {
+			halfW = area.width * UNIT_SCALE / 2;
+			halfH = area.height * UNIT_SCALE / 2;
+		}
+		else {
+			halfW = area.height * UNIT_SCALE / 2;
+			halfH = area.width * UNIT_SCALE / 2;
+		}
 		final Box2DComponent box2DComponent = this.createComponent(Box2DComponent.class);
 		CoreGame.BODY_DEF.type = BodyDef.BodyType.DynamicBody;
 		// dat hitbox cho don danh
-		CoreGame.BODY_DEF.position.set(area.position.x + halfW, area.position.y + halfH);
+		CoreGame.BODY_DEF.position.set(area.position.x, area.position.y);
 		box2DComponent.body = world.createBody(CoreGame.BODY_DEF);
 		box2DComponent.body.setUserData(damAreaEnity);
-		box2DComponent.body.setBullet(damageAreaComponent.isbullet);
-		box2DComponent.width = area.width * UNIT_SCALE;
-		box2DComponent.height = area.height * UNIT_SCALE;
+		box2DComponent.body.setBullet(false);
+		box2DComponent.width = halfW * 2;
+		box2DComponent.height = halfH * 2;
 		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
 
 		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_DAMAGE_AREA;

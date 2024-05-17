@@ -11,7 +11,7 @@ public enum EffectType {
     ENERGY_BALL("FX/Effect.atlas", "EnergyBall", 0.1f, 8, 8, 2, Animation.PlayMode.LOOP),
     ROCK("FX/Effect.atlas", "Rock", 0.1f, 15, 15, 2, Animation.PlayMode.NORMAL),
     SHURIKEN("FX/Effect.atlas", "Shuriken", 0.1f, 8, 8, 1, Animation.PlayMode.LOOP),
-    ;
+    BIG_KUNAI("FX/Effect.atlas", "BigKunai", 0.1f, 18, 5, 1, Animation.PlayMode.LOOP);
 
     private final String atlasPath;
     private final String atlasKey;

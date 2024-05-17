@@ -93,7 +93,7 @@ public class MapManager {
 
 	public void spawnPlayer() {
 		if (ecsEngine.getPlayerEntity() == null) {
-			Weapon weapon = new Weapon(WeaponType.KATANA,new Effect(WeaponType.KATANA.getEffect(),CoreGame.BIT_PLAYER, Vector2.Zero, DirectionType.DOWN), Vector2.Zero, DirectionType.DOWN);
+			Weapon weapon = new Weapon(WeaponType.KATANA,new Effect(WeaponType.KATANA.getEffect(),CoreGame.BIT_WEAPON, Vector2.Zero, DirectionType.DOWN), Vector2.Zero, DirectionType.DOWN);
 			ecsEngine.createPlayer(this.getCurrentMap().getStartPosition("START"), PlayerType.BLACK_NINJA_MAGE, 0.75f, 0.75f, weapon);
 		}
 		else {
