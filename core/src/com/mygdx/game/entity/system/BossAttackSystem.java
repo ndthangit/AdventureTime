@@ -46,7 +46,7 @@ public class BossAttackSystem extends IteratingSystem {
             }
             bossCmp.resetState();
         }
-
+    // them am thanh khi boss dung ki nang
     }
 
     public void destroyArea () {

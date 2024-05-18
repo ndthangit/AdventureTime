@@ -48,7 +48,8 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 					break;
 				case BEGIN_FOREST:
 					audioManager.playAudio(AudioType.LOL1);
-			}
+					break;
+			} // them am thanh map
 		}
 	}
 	
