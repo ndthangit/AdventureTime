@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.character.boss.BossType;
 import com.mygdx.game.character.boss.system.GiantBlueSamurai;
+import com.mygdx.game.character.boss.system.GiantSpirit;
 import com.mygdx.game.effect.DamageArea;
 import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
@@ -28,14 +29,20 @@ public class BossAttackSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float v) {
         BossComponent bossCmp = ECSEngine.bossCmpMapper.get(entity);
-        if (bossCmp.type == BossType.GIANTBLUESAMURAI) {
-            GBS_attack(game, entity, v);
+        switch (bossCmp.type) {
+            case GIANTBLUESAMURAI:
+                GiantBlueSamurai.GBS_attack(game, entity, v);
+                break;
+            case GIANTSPIRIT:
+                GiantSpirit.GS_attack(game, entity, v);
+                break;
         }
         if (!bossCmp.isAttack && !bossCmp.isCharge) {
             //huy damage area cho don danh thuong
             destroyArea();
             if (bossCmp.type == BossType.GIANTBLUESAMURAI) {
                 GiantBlueSamurai.attacking = false;
+
             }
             bossCmp.resetState();
         }

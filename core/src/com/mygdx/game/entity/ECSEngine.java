@@ -249,8 +249,8 @@ public class ECSEngine extends PooledEngine{
 
 		// animation component
 		final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
-		animationComponent.width = boss.getWidth() * UNIT_SCALE;
-		animationComponent.height = boss.getHeight()* UNIT_SCALE;
+		animationComponent.width = boss.getWidth() * UNIT_SCALE * 2;
+		animationComponent.height = boss.getHeight() * UNIT_SCALE * 2;
 		animationComponent.aniType = AnimationType.IDLE_DOWN;
 		animationComponent.isSquare = false;
 		animationComponent.path = boss.getBossType().getAtlasPath();
@@ -258,8 +258,8 @@ public class ECSEngine extends PooledEngine{
 
 		// box 2D component
 		CoreGame.resetBodiesAndFixtureDefinition();
-		final float halfW = boss.getWidth() * UNIT_SCALE / 4;
-		final float halfH = boss.getWidth() * UNIT_SCALE / 4;
+		final float halfW = boss.getWidth() * UNIT_SCALE / 2;
+		final float halfH = boss.getWidth() * UNIT_SCALE / 2;
 		final Box2DComponent box2DComponent = this.createComponent(Box2DComponent.class);
 		CoreGame.BODY_DEF.type = BodyDef.BodyType.DynamicBody;
 		CoreGame.BODY_DEF.position.set(boss.getPosition().x + halfW, boss.getPosition().y + halfH);

@@ -1,61 +1,82 @@
 Effect.png
-size: 1680, 64
+size: 1260, 1056
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 BigEnergyBall
   rotate: false
   xy: 0, 0
-  size: 96, 24
-  orig: 96, 24
+  size: 288, 72
+  orig: 288, 72
   offset: 0, 0
   index: -1
 BigKunai
   rotate: false
-  xy: 420, 0
-  size: 36, 10
-  orig: 36, 10
+  xy: 0, 96
+  size: 108, 30
+  orig: 108, 30
   offset: 0, 0
   index: -1
 EnergyBall
   rotate: false
-  xy: 840, 0
-  size: 64, 16
-  orig: 64, 16
+  xy: 0, 192
+  size: 192, 48
+  orig: 192, 48
   offset: 0, 0
   index: -1
-Grass1
+Fireball
   rotate: false
-  xy: 1260, 0
-  size: 72, 12
-  orig: 72, 12
+  xy: 0, 288
+  size: 192, 48
+  orig: 192, 48
+  offset: 0, 0
+  index: -1
+Grass
+  rotate: false
+  xy: 0, 384
+  size: 216, 36
+  orig: 216, 36
   offset: 0, 0
   index: -1
 Shuriken
   rotate: false
-  xy: 0, 32
-  size: 32, 16
-  orig: 32, 16
+  xy: 0, 480
+  size: 96, 48
+  orig: 96, 48
   offset: 0, 0
   index: -1
 SlashCurved
   rotate: false
-  xy: 420, 32
-  size: 128, 32
-  orig: 128, 32
+  xy: 0, 576
+  size: 384, 96
+  orig: 384, 96
   offset: 0, 0
   index: -1
 Smoke
   rotate: false
-  xy: 840, 32
-  size: 192, 32
-  orig: 192, 32
+  xy: 0, 672
+  size: 576, 96
+  orig: 576, 96
   offset: 0, 0
   index: -1
-SpriteSheet
+Rock
   rotate: false
-  xy: 1260, 32
-  size: 420, 30
-  orig: 420, 30
+  xy: 0, 768
+  size: 1260, 90
+  orig: 1260, 90
+  offset: 0, 0
+  index: -1
+Blast
+  rotate: false
+  xy: 0, 864
+  size: 384, 96
+  orig: 384, 96
+  offset: 0, 0
+  index: -1
+WhiteAura
+  rotate: false
+  xy: 0, 960
+  size: 384, 96
+  orig: 384, 96
   offset: 0, 0
   index: -1

@@ -1,7 +1,8 @@
 package com.mygdx.game.character.boss;
 
 public enum BossType {
-    GIANTBLUESAMURAI("Actor/Boss/GiantBlueSamurai/giantbluesamurai.atlas", 96, 96, 60, 5, 4, 4, BossSkillType.SLASH, BossSkillType.CHARGE);
+    GIANTBLUESAMURAI("Actor/Boss/GiantBlueSamurai/giantbluesamurai.atlas", 48, 48, 60, 5, 4, 4, BossSkillType.SLASH, BossSkillType.CHARGE),
+    GIANTSPIRIT("Actor/Boss/GiantSpirit/giantspirit.atlas", 48, 48, 60, 5, 4, 4, BossSkillType.SLASH, BossSkillType.CHARGE),;
     private final String atlasPath;
     private final int width;
     private final int height;

@@ -1,5 +1,5 @@
 giantbluesamurai.png
-size: 3456, 1152
+size: 1728, 2016
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
@@ -12,49 +12,42 @@ Hit
   index: -1
 AttackLeft
   rotate: false
-  xy: 1728, 0
+  xy: 0, 288
   size: 1152, 288
   orig: 1152, 288
   offset: 0, 0
   index: -1
 AttackRight
   rotate: false
-  xy: 0, 288
+  xy: 0, 576
   size: 1152, 288
   orig: 1152, 288
   offset: 0, 0
   index: -1
 ChargeLeft
   rotate: false
-  xy: 1728, 288
+  xy: 0, 864
   size: 864, 288
   orig: 864, 288
   offset: 0, 0
   index: -1
 ChargeRight
   rotate: false
-  xy: 0, 576
+  xy: 0, 1152
   size: 864, 288
   orig: 864, 288
   offset: 0, 0
   index: -1
-Faceset
-  rotate: false
-  xy: 1728, 576
-  size: 114, 114
-  orig: 114, 114
-  offset: 0, 0
-  index: -1
 Idle
   rotate: false
-  xy: 0, 864
+  xy: 0, 1440
   size: 1728, 288
   orig: 1728, 288
   offset: 0, 0
   index: -1
 Walk
   rotate: false
-  xy: 1728, 864
+  xy: 0, 1728
   size: 1728, 288
   orig: 1728, 288
   offset: 0, 0

@@ -5,7 +5,10 @@ import com.mygdx.game.effect.EffectType;
 
 public enum BossSkillType {
     CHARGE(null, 0,0,0, 0.5f),
-    SLASH(EffectType.BIG_ENERGY_BALL, 48,48,6,2);
+    SLASH(EffectType.BIG_ENERGY_BALL, 48,48,6,2),
+    BLAST(EffectType.BLAST, 48,48,6,2),;
+
+
     private EffectType effectType;
     private final int width;
     private final int height;

@@ -127,7 +127,8 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         if (((damageAreaCmp.owner & CoreGame.BIT_BOSS) == CoreGame.BIT_BOSS ||
             (damageAreaCmp.owner & CoreGame.BIT_ENEMY) == CoreGame.BIT_ENEMY) &&
                 (!playerCmp.vincible)) {
-            damageArea.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+            if (damageAreaCmp.isbullet)
+                damageArea.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
             playerCmp.life =  Math.max(playerCmp.life - damageAreaCmp.damage, 0);
             game.getAudioManager().playAudio(AudioType.HIT);
             if (playerCmp.life <= 0) {

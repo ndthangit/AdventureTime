@@ -280,7 +280,7 @@ public class GameRenderer implements Disposable, MapListener{
         if (animation == null) {
             Gdx.app.debug(TAG, "Creating new effect of type " + type);
             final TextureAtlas.AtlasRegion atlasRegion = assetManager.get(path, TextureAtlas.class).findRegion(type.getAtlasKey());
-            final TextureRegion[][] textureRegions = atlasRegion.split(effectComponent.type.getWidth()*2, effectComponent.type.getHeight()*2);
+            final TextureRegion[][] textureRegions = atlasRegion.split(effectComponent.type.getWidth()*6, effectComponent.type.getHeight()*6);
             final Array<Sprite> keyFrame = new Array<Sprite>();
             for (TextureRegion subRegion : textureRegions[0]) {
 				Gdx.app.debug("effect", effectComponent.toString());

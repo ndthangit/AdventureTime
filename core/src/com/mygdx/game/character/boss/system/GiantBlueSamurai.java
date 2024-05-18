@@ -11,6 +11,8 @@ import com.mygdx.game.CoreGame;
 import com.mygdx.game.character.ai.SteerableAgent;
 import com.mygdx.game.character.boss.BossSkillType;
 import com.mygdx.game.character.boss.BossType;
+import com.mygdx.game.character.enemy.Enemy;
+import com.mygdx.game.character.enemy.EnemyType;
 import com.mygdx.game.effect.DamageArea;
 import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
@@ -37,48 +39,76 @@ public class GiantBlueSamurai {
         Vector2 playerPos = b2dPlayer.renderPosition;
         Vector2 bossPos = b2dCmp.body.getPosition();
         float distance = playerPos.dst(bossPos);
-        int dir = 1;
-        if (bossCmp.time < 0.5f) { // lui lai khi danh xong
-            dir = -1;
-        }
-        if (bossCmp.time >= 2 && distance < 3) { // dieu kien danh thuong
-            bossCmp.isCharge = true;
-            bossCmp.time -= bossCmp.reload;
-            b2dCmp.body.applyLinearImpulse(-b2dCmp.body.getLinearVelocity().x*b2dCmp.body.getMass(),
-                    -b2dCmp.body.getLinearVelocity().y*b2dCmp.body.getMass(),
-                    b2dCmp.body.getPosition().x,
-                    b2dCmp.body.getPosition().y, true);
-            b2dCmp.body.applyForceToCenter(Vector2.Zero, true);
-        }
-        // dieu kien danh skill 1
-        else if (bossCmp.time >= bossCmp.reload && playerPos.y - b2dPlayer.height/2 > bossPos.y - b2dCmp.height/2 && playerPos.y + b2dPlayer.height/2 < bossPos.y + b2dCmp.height/2) {
-            bossCmp.isCharge = true;
-            bossCmp.isSkill1 = true;
-            aniCmp.isFinished = false;
-            bossCmp.time -= bossCmp.reload;
-            b2dCmp.body.applyLinearImpulse(-b2dCmp.body.getLinearVelocity().x*b2dCmp.body.getMass(),
-                    -b2dCmp.body.getLinearVelocity().y*b2dCmp.body.getMass(),
-                    b2dCmp.body.getPosition().x,
-                    b2dCmp.body.getPosition().y, true);
-            b2dCmp.body.applyForceToCenter(Vector2.Zero, true);
-        }
-        else { // di chuyen
-            bossCmp.resetState();
-            Arrive<Vector2> arriveBehavior = new Arrive<>(enemySteerable, playerSteerable)
-                    .setArrivalTolerance(0.1f)
-                    .setDecelerationRadius(3)
-                    .setTimeToTarget(0.1f);
-            arriveBehavior.calculateSteering(steeringOutput);
-            Vector2 force = steeringOutput.linear.scl(deltaTime);
-            force.set(force.x*dir, force.y*dir);
-            b2dCmp.body.applyForceToCenter(force, true);
 
-            // Limit the velocity to prevent the entity from moving too fast
-            Vector2 velocity = b2dCmp.body.getLinearVelocity();
-            float maxSpeed = 0.8f;
-            if (velocity.len() > maxSpeed) {
-                velocity = velocity.nor().scl(maxSpeed);
-                b2dCmp.body.setLinearVelocity(velocity);
+        if (bossCmp.isHit) { // bi danh trung
+            bossCmp.resetState();
+
+            if (aniCmp.isFinished && aniCmp.aniType == AnimationType.B_HIT) {
+                bossCmp.isHit = false;
+            }
+        }
+        else if (bossCmp.isCharge) { // nap don danh
+            if (aniCmp.isFinished && (aniCmp.aniType == AnimationType.CHARGE_LEFT || aniCmp.aniType == AnimationType.CHARGE_RIGHT)) {
+                bossCmp.isCharge = false;
+                bossCmp.isAttack = true;
+                aniCmp.isFinished = false;
+            }
+        } else if (bossCmp.isAttack) { // danh thuong
+
+            bossCmp.timeAttack += deltaTime;
+            if (aniCmp.isFinished && (aniCmp.aniType == AnimationType.B_ATTACK_LEFT || aniCmp.aniType == AnimationType.B_ATTACK_RIGHT)) {
+                bossCmp.isAttack = false;
+            }
+        }
+        else {
+            int dir = 1;
+            if (bossCmp.time < 0.5f) { // lui lai khi danh xong
+                dir = -1;
+            }
+
+            if (bossCmp.life <= bossCmp.maxLife/2) {
+                bossCmp.isSkill2 = true;
+            }
+            if (bossCmp.time >= 2 && distance < 3) { // dieu kien danh thuong
+                bossCmp.isCharge = true;
+                aniCmp.isFinished = false;
+                bossCmp.time -= bossCmp.reload;
+                b2dCmp.body.applyLinearImpulse(-b2dCmp.body.getLinearVelocity().x*b2dCmp.body.getMass(),
+                        -b2dCmp.body.getLinearVelocity().y*b2dCmp.body.getMass(),
+                        b2dCmp.body.getPosition().x,
+                        b2dCmp.body.getPosition().y, true);
+                b2dCmp.body.applyForceToCenter(Vector2.Zero, true);
+            }
+            // dieu kien danh skill 1
+            else if (bossCmp.time >= bossCmp.reload && playerPos.y - b2dPlayer.height/2 > bossPos.y - b2dCmp.height/2 && playerPos.y + b2dPlayer.height/2 < bossPos.y + b2dCmp.height/2) {
+                bossCmp.isCharge = true;
+                bossCmp.isSkill1 = true;
+                aniCmp.isFinished = false;
+                bossCmp.time -= bossCmp.reload;
+                b2dCmp.body.applyLinearImpulse(-b2dCmp.body.getLinearVelocity().x*b2dCmp.body.getMass(),
+                        -b2dCmp.body.getLinearVelocity().y*b2dCmp.body.getMass(),
+                        b2dCmp.body.getPosition().x,
+                        b2dCmp.body.getPosition().y, true);
+                b2dCmp.body.applyForceToCenter(Vector2.Zero, true);
+            }
+            else { // di chuyen
+                bossCmp.resetState();
+                Arrive<Vector2> arriveBehavior = new Arrive<>(enemySteerable, playerSteerable)
+                        .setArrivalTolerance(0.1f)
+                        .setDecelerationRadius(3)
+                        .setTimeToTarget(0.1f);
+                arriveBehavior.calculateSteering(steeringOutput);
+                Vector2 force = steeringOutput.linear.scl(deltaTime);
+                force.set(force.x*dir, force.y*dir);
+                b2dCmp.body.applyForceToCenter(force, true);
+
+                // Limit the velocity to prevent the entity from moving too fast
+                Vector2 velocity = b2dCmp.body.getLinearVelocity();
+                float maxSpeed = 0.8f;
+                if (velocity.len() > maxSpeed) {
+                    velocity = velocity.nor().scl(maxSpeed);
+                    b2dCmp.body.setLinearVelocity(velocity);
+                }
             }
         }
     }
@@ -100,11 +130,44 @@ public class GiantBlueSamurai {
 
         if (bossCmp.isAttack) {
             if (!attacking) {
-                float localPositionX = bossCmp.direction == DirectionType.LEFT ? -b2dCmp.width/4: b2dCmp.width/4;
+                float localPositionX = bossCmp.direction == DirectionType.LEFT ? -b2dCmp.width/2: b2dCmp.width/2;
                 Vector2 position = new Vector2(b2dCmp.renderPosition.x + localPositionX, b2dCmp.renderPosition.y);
-                DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, bossCmp.direction,bossCmp.type.getWidth()/2, 3*bossCmp.type.getHeight()/4, bossCmp.attack, EffectType.NONE, false, 0);
+                DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, bossCmp.direction,bossCmp.type.getWidth(), 3*bossCmp.type.getHeight()/2, bossCmp.attack, EffectType.NONE, false, 0);
                 game.getEcsEngine().createDamageArea(area);
                 attacking = true;
+            }
+        }
+    }
+
+    public static void GBS_animation(BossComponent bossCmp, AnimationComponent animationCmp, Box2DComponent box2DCmp) {
+        if (bossCmp.isHit) {
+            animationCmp.aniType = AnimationType.B_HIT;
+        } else if (bossCmp.isCharge) {
+            Gdx.app.debug("Boss", " why");
+            if (bossCmp.direction == DirectionType.LEFT) {
+                animationCmp.aniType = AnimationType.CHARGE_LEFT;
+            }
+            else {
+                animationCmp.aniType = AnimationType.CHARGE_RIGHT;
+            }
+            Gdx.app.debug("Boss", animationCmp.aniType.toString());
+        } else if (bossCmp.isAttack) {
+            if (bossCmp.direction == DirectionType.LEFT) {
+                animationCmp.aniType = AnimationType.B_ATTACK_LEFT;
+            }
+            else {
+                animationCmp.aniType = AnimationType.B_ATTACK_RIGHT;
+            }
+        } else if (bossCmp.isSkill1) {
+
+        } else if (bossCmp.isSkill2) {
+
+        } else {
+            if (box2DCmp.body.getLinearVelocity().equals(Vector2.Zero)) {
+                animationCmp.aniType = AnimationType.IDLE_DOWN;
+            }
+            else {
+                animationCmp.aniType = AnimationType.DOWN;
             }
         }
     }
@@ -112,13 +175,22 @@ public class GiantBlueSamurai {
     private static void createSkill1(Entity entity) {
         BossComponent bossCmp = ECSEngine.bossCmpMapper.get(entity);
         Box2DComponent b2dCmp = ECSEngine.box2dCmpMapper.get(entity);
-        float localPositionX = bossCmp.direction == DirectionType.LEFT ? -b2dCmp.width/4: + b2dCmp.width/4;
+        float localPositionX = bossCmp.direction == DirectionType.LEFT ? -b2dCmp.width/2: + b2dCmp.width/2;
         Vector2 position = new Vector2(b2dCmp.renderPosition.x + localPositionX, b2dCmp.renderPosition.y);
         BossSkillType type = bossCmp.type.getSkill1();
-        DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, bossCmp.direction,bossCmp.type.getWidth()/2, bossCmp.type.getHeight()/2, type.getDamage() , type.getEffectType(), true, type.getSpeed());
+        DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, bossCmp.direction,bossCmp.type.getWidth(), bossCmp.type.getHeight(), type.getDamage() , type.getEffectType(), true, type.getSpeed());
         thisGame.getEcsEngine().createDamageArea(area);
     }
     private static void createSkill2(Entity entity) {
-
+        BossComponent bossCmp = ECSEngine.bossCmpMapper.get(entity);
+        Box2DComponent b2dCmp = ECSEngine.box2dCmpMapper.get(entity);
+        int dir[][] = {{1, 1}, {1, -1}, {-1, -1}, {-1, 1}};
+        for (int sub[] : dir) {
+            Vector2 position = new Vector2(b2dCmp.body.getPosition().x + sub[0] * b2dCmp.width , b2dCmp.body.getPosition().y + sub[1] * b2dCmp.height);
+            Enemy enemy = new Enemy(EnemyType.REDSAMURAI, position, 16, 16);
+            thisGame.getEcsEngine().createEnemy(enemy);
+        }
+        bossCmp.isSkill2 = false;
+        isUsedSkill2 = true;
     }
 }
