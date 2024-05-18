@@ -91,7 +91,7 @@ public class GameRenderer implements Disposable, MapListener{
 		this.profiler = new GLProfiler(Gdx.graphics);
 		profiler.enable();
 		if (profiler.isEnabled()) {
-			this.b2dDebugRenderer = new Box2DDebugRenderer();
+			this.b2dDebugRenderer = game.getBox2DDebugRenderer();
 			this.world = game.getWorld();
 		}
 		else {

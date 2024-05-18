@@ -39,7 +39,7 @@ public class EnemyAttackSystem extends IteratingSystem {
                 ProjectileSystem.Projectile(game, enemyCom, enemyPos, playerPos, b2dComponent);
             }
         }
-    }
+    } // am thanh khi dung ki nang
 
     public Entity getPlayerEntity() {
         ImmutableArray<Entity> entities = game.getEcsEngine().getEntitiesFor(Family.all(PlayerComponent.class).get());

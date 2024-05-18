@@ -199,6 +199,7 @@ public class Map {
 		final MapLayer bossLayer = tiledMap.getLayers().get("boss");
 		if (bossLayer == null) {
 			Gdx.app.debug(TAG, "There is no boss layer");
+			hasBoss = false;
 			return;
 		}
 		BossType bossType;

@@ -46,7 +46,7 @@ public class MapManager {
 		bodies = new Array<Body>();
 		mapCache = new EnumMap<MapType, Map>(MapType.class);
 		listeners = new Array<MapListener>();
-		entityToRemove = new Array<Entity>();;
+		entityToRemove = new Array<Entity>();
 	}
 	
 	public void addMapListener(final MapListener listener) {
@@ -123,6 +123,7 @@ public class MapManager {
 	}
 
 	private void spawnDoorLayer() {
+//		}
 		for (final GameObject door : currentMap.getDoorObject()) {
 			ecsEngine.createDoorLayer(door);
 		}
@@ -135,6 +136,7 @@ public class MapManager {
 	}
 
 	private void spawnBoss() {
+		if (currentMap.isBossKilled()) {return;}
 		for (final Boss boss: currentMap.getBosses()) {
 			ecsEngine.createBoss(boss);
 		}

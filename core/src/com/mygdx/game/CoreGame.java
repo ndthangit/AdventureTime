@@ -57,6 +57,7 @@ public class CoreGame extends Game {
 	private FitViewport screenViewport;
 	
 	public static final float UNIT_SCALE = 4 / 64f;
+
 	public static final short BIT_PLAYER = 1 << 0;
 	public static final short BIT_GROUND = 1 << 1;
 	public static final short BIT_GAME_OBJECT = 1 << 2;
@@ -67,7 +68,7 @@ public class CoreGame extends Game {
 	public static final short BIT_BOSS = 1 << 7;
 	public static final short BIT_DAMAGE_AREA = 1 << 8;
 
-	public static final float FIXED_TIME_STEP = 1/ 60f;
+	public static final float FIXED_TIME_STEP = 1/60f;
 
 	public static final BodyDef BODY_DEF = new BodyDef();
 	public static final FixtureDef FIXTURE_DEF = new FixtureDef();
@@ -108,6 +109,7 @@ public class CoreGame extends Game {
 		world.setContactListener(worldContactListener);
 		box2DDebugRenderer = new Box2DDebugRenderer();
 		box2DDebugRenderer.setDrawBodies(true);
+
 		
 		//initialize assetManager
 		assetManager = new AssetManager();
@@ -141,7 +143,7 @@ public class CoreGame extends Game {
 		gameRenderer = new GameRenderer(this);
 		
 		screenCache = new EnumMap<ScreenType, Screen> (ScreenType.class);		
-		mapManager.setNextMapType(MapType.SAMU_BOSS);
+		mapManager.setNextMapType(MapType.DOJO);
 		screenType = ScreenType.MENU;
 		setScreen(ScreenType.MENU);
 	}

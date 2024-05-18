@@ -6,7 +6,6 @@ public enum AnimationType {
 	IDLE_LEFT("Idle", 0.1f, 2),
 	IDLE_RIGHT("Idle", 0.1f, 3),
 
-
 	DOWN("Walk", 0.2f,0),
 	UP("Walk", 0.2f, 1),
 	LEFT("Walk", 0.2f, 2),

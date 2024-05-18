@@ -13,7 +13,7 @@ public enum EffectType {
     SHURIKEN("FX/Effect.atlas", "Shuriken", 0.1f, 8, 8, 1, Animation.PlayMode.LOOP),
     BIG_KUNAI("FX/Effect.atlas", "BigKunai", 0.1f, 18, 5, 1, Animation.PlayMode.LOOP),
     FIREBALL("FX/Effect.atlas", "Fireball", 0.1f, 8, 8, 2, Animation.PlayMode.LOOP),
-    AURA("FX/Effect.atlas", "WhiteAura", 0.1f, 16, 16, 0, Animation.PlayMode.LOOP),
+    AURA("FX/Effect.atlas", "WhiteAura", 0.1f, 16, 16, 0, Animation.PlayMode.NORMAL),
     BLAST("FX/Effect.atlas", "Blast", 0.1f, 16, 16, 0, Animation.PlayMode.NORMAL);
 
     private final String atlasPath;

@@ -67,8 +67,7 @@ public class GiantSpirit {
                 dir = -1;
             }
 
-            if (bossCmp.time >= 4 && distance < 6) { // dieu kien danh thuong
-                bossCmp.isCharge = true;
+            if (bossCmp.time >= 8 && distance < 6) { // dieu kien danh thuong
                 bossCmp.time -= bossCmp.reload;
                 position.set(playerPos);
                 b2dCmp.body.applyLinearImpulse(-b2dCmp.body.getLinearVelocity().x*b2dCmp.body.getMass(),
@@ -76,6 +75,7 @@ public class GiantSpirit {
                         b2dCmp.body.getPosition().x,
                         b2dCmp.body.getPosition().y, true);
                 b2dCmp.body.applyForceToCenter(Vector2.Zero, true);
+                bossCmp.isCharge = true;
             }
             // di chuyen
             Arrive<Vector2> arriveBehavior = new Arrive<>(enemySteerable, playerSteerable)
