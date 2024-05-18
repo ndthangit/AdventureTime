@@ -22,7 +22,7 @@ import com.mygdx.game.map.MapType;
 import com.mygdx.game.screens.ScreenType;
 import com.mygdx.game.view.DirectionType;
 
-import static com.mygdx.game.character.enemy.RandomItem.randomFood;
+import static com.mygdx.game.items.RandomItem.randomFood;
 import static com.mygdx.game.map.GameObjectType.GRASS;
 
 public class CollisionSystem extends IteratingSystem implements CollisionListener {
@@ -177,5 +177,10 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         if (damageAreaComponent.isbullet) {
             damageArea.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
         }
+    }
+
+    @Override
+    public void damageAreaVSWeapon(Entity damageArea) {
+
     }
 }

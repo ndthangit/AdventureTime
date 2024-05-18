@@ -47,14 +47,13 @@ public class GameRenderer implements Disposable, MapListener{
 	private final SpriteBatch spriteBatch;
 	private final AssetManager assetManager;
 
-	private Entity player;
-
 	private final ImmutableArray<Entity> gameObjectEntities;
 	private final ImmutableArray<Entity> animatedEntities;
 	private final ImmutableArray<Entity> weaponEntities;
 	private final ImmutableArray<Entity> effectEntities;
 	private final ImmutableArray<Entity> itemEntities;
 	private final ImmutableArray<Entity> hideEntities;
+	private final ImmutableArray<Entity> damageEntities;
 	private final OrthogonalTiledMapRenderer mapRenderer;
 	private final Array<TiledMapTileLayer> tiledMapLayers;
 	
@@ -84,6 +83,7 @@ public class GameRenderer implements Disposable, MapListener{
 		weaponEntities = game.getEcsEngine().getEntitiesFor(Family.all(WeaponComponent.class, AnimationComponent.class, Box2DComponent.class).get());
 		effectEntities = game.getEcsEngine().getEntitiesFor(Family.all(EffectComponent.class).get());
 		hideEntities = game.getEcsEngine().getEntitiesFor(Family.all(HideLayerComponent.class, AnimationComponent.class).get());
+		damageEntities = game.getEcsEngine().getEntitiesFor(Family.all(DamageAreaComponent.class,Box2DComponent.class, AnimationComponent.class).get());
 		this.mapRenderer = new OrthogonalTiledMapRenderer(null, UNIT_SCALE, game.getSpriteBatch());
 		game.getMapManager().addMapListener(this);
 		tiledMapLayers = new Array<TiledMapTileLayer>();
@@ -91,7 +91,7 @@ public class GameRenderer implements Disposable, MapListener{
 		this.profiler = new GLProfiler(Gdx.graphics);
 		profiler.enable();
 		if (profiler.isEnabled()) {
-			this.b2dDebugRenderer = new Box2DDebugRenderer();
+			this.b2dDebugRenderer = game.getBox2DDebugRenderer();
 			this.world = game.getWorld();
 		}
 		else {
@@ -104,7 +104,6 @@ public class GameRenderer implements Disposable, MapListener{
 		ScreenUtils.clear(0, 0, 0, 1);
 		viewport.apply(false);
 
-//		if (game.getMapManager().getCurrentMapType() == game.getMapManager().getNextMapType() )
 		if( game.getScreenType() == ScreenType.GAME) {
 			spriteBatch.begin();
 			mapRenderer.setView(gameCamera);
@@ -139,6 +138,10 @@ public class GameRenderer implements Disposable, MapListener{
 
 			for (final Entity entity : weaponEntities) {
 				renderWeapon(entity, delta);
+			}
+
+			for (final Entity entity : damageEntities) {
+				renderArea(entity, delta);
 			}
 
 			for (final Entity entity: effectEntities) {
@@ -194,7 +197,9 @@ public class GameRenderer implements Disposable, MapListener{
 			final Sprite frame = animation.getKeyFrame(aniComponent.aniTime);
 			box2DComponent.renderPosition.lerp(box2DComponent.body.getPosition(), delta);
 			frame.setBounds(box2DComponent.renderPosition.x - aniComponent.width * 0.5f, box2DComponent.renderPosition.y - aniComponent.height * 0.5f, aniComponent.width, aniComponent.height);
+			frame.setAlpha(aniComponent.alpha);
 			frame.draw(spriteBatch);
+			aniComponent.isFinished = animation.isAnimationFinished(aniComponent.aniTime);
 		}
 	}
 
@@ -224,8 +229,46 @@ public class GameRenderer implements Disposable, MapListener{
 		frame.draw(spriteBatch);
 	}
 
+	private void renderArea(Entity entity, float delta) {
+		final DamageAreaComponent damageAreaComponent = ECSEngine.damageAreaCmpMapper.get(entity);
+		if (damageAreaComponent.type == EffectType.NONE) {
+			return;
+		}
+//		final EffectComponent effectComponent = ECSEngine.effectCmpMapper.get(entity);
+//		String path = effectComponent.path;
+//		EffectType type = effectComponent.type;
+//		EnumMap<EffectType, Animation<Sprite>> subCache = effectCache.get(path);
+//		if (subCache == null) {
+//			subCache = new EnumMap<EffectType, Animation<Sprite>>(EffectType.class);
+//			effectCache.put(path, subCache);
+//		}
+//		Animation<Sprite> animation = subCache.get(type);
+//		if (animation == null) {
+//			Gdx.app.debug(TAG, "Creating new effect of type " + type);
+//			final TextureAtlas.AtlasRegion atlasRegion = assetManager.get(path, TextureAtlas.class).findRegion(type.getAtlasKey());
+//			final TextureRegion[][] textureRegions = atlasRegion.split(32, 32);
+//			final Array<Sprite> keyFrame = new Array<Sprite>();
+//			for (TextureRegion subRegion : textureRegions[0]) {
+//				Gdx.app.debug("effect", effectComponent.toString());
+//				final Sprite sprite = new Sprite(subRegion);
+//				sprite.setOriginCenter();
+//				keyFrame.add(sprite);
+//			}
+//			animation = new Animation<Sprite>(type.getFrameTime(), keyFrame, Animation.PlayMode.LOOP);
+//			subCache.put(type, animation);
+//			Gdx.app.debug("effect", effectComponent.toString());
+//		}
+//		final Sprite frame = animation.getKeyFrame(effectComponent.aniTime);
+//		frame.setBounds(effectComponent.position.x - effectComponent.width * 0.5f, effectComponent.position.y - effectComponent.height * 0.5f, effectComponent.width, effectComponent.height);
+//		frame.setOriginCenter();
+//		frame.setRotation(-(effectComponent.direction.getCode()+1) * 90);
+//		frame.draw(spriteBatch);
+	}
+
 	private void rederEffect(Entity entity, float delta) {
 		final EffectComponent effectComponent = ECSEngine.effectCmpMapper.get(entity);
+		final Box2DComponent box2DComponent = ECSEngine.box2dCmpMapper.get(entity);
+		if (effectComponent.type == EffectType.NONE) return;
         String path = effectComponent.path;
         EffectType type = effectComponent.type;
         EnumMap<EffectType, Animation<Sprite>> subCache = effectCache.get(path);
@@ -237,7 +280,7 @@ public class GameRenderer implements Disposable, MapListener{
         if (animation == null) {
             Gdx.app.debug(TAG, "Creating new effect of type " + type);
             final TextureAtlas.AtlasRegion atlasRegion = assetManager.get(path, TextureAtlas.class).findRegion(type.getAtlasKey());
-            final TextureRegion[][] textureRegions = atlasRegion.split(32, 32);
+            final TextureRegion[][] textureRegions = atlasRegion.split(effectComponent.type.getWidth()*6, effectComponent.type.getHeight()*6);
             final Array<Sprite> keyFrame = new Array<Sprite>();
             for (TextureRegion subRegion : textureRegions[0]) {
 				Gdx.app.debug("effect", effectComponent.toString());
@@ -245,15 +288,21 @@ public class GameRenderer implements Disposable, MapListener{
                 sprite.setOriginCenter();
                 keyFrame.add(sprite);
             }
-            animation = new Animation<Sprite>(type.getFrameTime(), keyFrame, Animation.PlayMode.NORMAL);
+            animation = new Animation<Sprite>(type.getFrameTime(), keyFrame, type.getMode());
             subCache.put(type, animation);
 			Gdx.app.debug("effect", effectComponent.toString());
         }
+		if (box2DComponent != null) {
+			effectComponent.position.set(box2DComponent.body.getPosition());
+		}
         final Sprite frame = animation.getKeyFrame(effectComponent.aniTime);
         frame.setBounds(effectComponent.position.x - effectComponent.width * 0.5f, effectComponent.position.y - effectComponent.height * 0.5f, effectComponent.width, effectComponent.height);
 		frame.setOriginCenter();
-		frame.setRotation(-(effectComponent.direction.getCode()+1) * 90);
+		frame.setRotation(-(effectComponent.direction.getCode()+type.getFixDir()) * 90);
 		frame.draw(spriteBatch);
+		if (animation.getPlayMode() == Animation.PlayMode.NORMAL && animation.isAnimationFinished(effectComponent.aniTime)) {
+			entity.add(new RemoveComponent());
+		}
 	}
 
 	private Animation<Sprite> getAnimation(String path, AnimationType aniType, int width, int height, boolean isSquare) {
@@ -268,7 +317,7 @@ public class GameRenderer implements Disposable, MapListener{
 				Gdx.app.debug(TAG, "Creating new animation of type " + aniType);
 				final AtlasRegion atlasRegion = assetManager.get(path, TextureAtlas.class).findRegion(aniType.getAtlasKey());
 				final TextureRegion[][] textureRegions = atlasRegion.split(3 * width, 3 * height);
-					animation = new Animation<Sprite>(aniType.getFrameTime(), getKeyFrame(textureRegions, aniType.getColIndex(), isSquare), Animation.PlayMode.LOOP);
+				animation = new Animation<Sprite>(aniType.getFrameTime(), getKeyFrame(textureRegions, aniType.getColIndex(), isSquare), Animation.PlayMode.LOOP);
 				subCache.put(aniType, animation);
 		}
 		return animation;

@@ -1,12 +1,12 @@
-Idle.png
-size: 576, 96
+spirit2.png
+size: 192, 192
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-Idle
+Walk
   rotate: false
   xy: 0, 0
-  size: 576, 96
-  orig: 576, 48
-  offset: 0, -48
+  size: 192, 192
+  orig: 192, 192
+  offset: 0, 0
   index: -1

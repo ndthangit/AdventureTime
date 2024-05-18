@@ -1,0 +1,13 @@
+HeartAtlas.png
+size:256,64
+repeat:xy
+Heart-0
+bounds:86,2,40,40
+Heart-1
+bounds:2,2,40,40
+Heart-2
+bounds:128,2,40,40
+Heart-3
+bounds:44,2,40,40
+Heart-4
+bounds:170,2,40,40

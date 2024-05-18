@@ -1,0 +1,26 @@
+Hit1.png
+size: 288, 96
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Hit-0
+  rotate: false
+  xy: 0, 0
+  size: 96, 96
+  orig: 50, 50
+  offset: 0, -46
+  index: -1
+Hit-1
+  rotate: false
+  xy: 96, 0
+  size: 96, 96
+  orig: 50, 50
+  offset: 0, -46
+  index: -1
+Hit-2
+  rotate: false
+  xy: 192, 0
+  size: 96, 96
+  orig: 50, 50
+  offset: 0, -46
+  index: -1

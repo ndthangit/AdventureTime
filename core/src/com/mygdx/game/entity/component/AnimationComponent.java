@@ -11,6 +11,8 @@ public class AnimationComponent implements Component, Poolable{
 	public float width;
 	public float height;
 	public boolean isSquare;
+	public boolean isFinished;
+	public float alpha = 1;
 	
 	@Override
 	public void reset() {

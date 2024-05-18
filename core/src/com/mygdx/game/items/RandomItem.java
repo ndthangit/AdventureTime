@@ -1,4 +1,4 @@
-package com.mygdx.game.character.enemy;
+package com.mygdx.game.items;
 
 
 import com.mygdx.game.items.food.FoodType;

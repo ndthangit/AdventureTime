@@ -1,0 +1,26 @@
+giantspirit.png
+size: 2880, 288
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Hit
+  rotate: false
+  xy: 0, 0
+  size: 864, 288
+  orig: 864, 288
+  offset: 0, 0
+  index: -1
+Idle
+  rotate: false
+  xy: 1440, 0
+  size: 1440, 288
+  orig: 1440, 288
+  offset: 0, 0
+  index: -1
+Walk
+  rotate: false
+  xy: 1440, 0
+  size: 1440, 288
+  orig: 1440, 288
+  offset: 0, 0
+  index: -1
