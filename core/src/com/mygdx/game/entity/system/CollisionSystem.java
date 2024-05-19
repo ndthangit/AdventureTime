@@ -57,7 +57,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         final BossComponent bossCmp = ECSEngine.bossCmpMapper.get(enemy);
         if (playerCmp.vincible) return;
         int damage = enemyCmp != null ? enemyCmp.attack : bossCmp.attack;
-        playerCmp.life =  Math.max(playerCmp.life - damage, 0);
+        //playerCmp.life =  Math.max(playerCmp.life - damage, 0);
         game.getAudioManager().playAudio(AudioType.HIT);
         if (playerCmp.life <= 0) {
             player.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));

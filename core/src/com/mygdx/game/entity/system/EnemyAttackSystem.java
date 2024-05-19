@@ -12,9 +12,8 @@ import com.mygdx.game.character.enemy.system.ProjectileSystem;
 import com.mygdx.game.effect.DamageArea;
 import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
-import com.mygdx.game.entity.component.Box2DComponent;
-import com.mygdx.game.entity.component.EnemyComponent;
-import com.mygdx.game.entity.component.PlayerComponent;
+import com.mygdx.game.entity.component.*;
+import com.mygdx.game.view.DirectionType;
 
 public class EnemyAttackSystem extends IteratingSystem {
 
@@ -39,6 +38,28 @@ public class EnemyAttackSystem extends IteratingSystem {
                 ProjectileSystem.Projectile(game, enemyCom, enemyPos, playerPos, b2dComponent);
             }
         }
+
+        if(enemyCom.isAttack)
+            if(!enemyCom.isAttacking) {//Đánh thường
+                b2dComponent.body.applyLinearImpulse(-b2dComponent.body.getLinearVelocity().x*b2dComponent.body.getMass(),
+                        -b2dComponent.body.getLinearVelocity().y*b2dComponent.body.getMass(),
+                        b2dComponent.body.getPosition().x,
+                        b2dComponent.body.getPosition().y, true);
+                b2dComponent.body.applyForceToCenter(Vector2.Zero, true);
+
+                float localPositionX = enemyCom.direction == DirectionType.RIGHT ?  b2dComponent.width/4: -b2dComponent.width/4;
+                Vector2 position = new Vector2(b2dComponent.renderPosition.x + localPositionX, b2dComponent.renderPosition.y);
+                DamageArea area = new DamageArea(position, CoreGame.BIT_ENEMY, enemyCom.direction, 12, 18, enemyCom.attack, EffectType.NONE, false, 0);
+                game.getEcsEngine().createDamageArea(area);
+                enemyCom.isAttacking=true;
+            }
+        if(enemyCom.isAttack && enemyCom.time>=enemyCom.reload){
+            destroyArea();
+            enemyCom.isAttack = false;
+            enemyCom.isAttacking = false;
+            enemyCom.time = 0;
+        }
+
     }
 
     public Entity getPlayerEntity() {
@@ -47,5 +68,13 @@ public class EnemyAttackSystem extends IteratingSystem {
             return entities.first();
         }
         return null;
+    }
+    public void destroyArea () {
+        ImmutableArray<Entity> areaEntities = game.getEcsEngine().getEntitiesFor(Family.all(DamageAreaComponent.class, Box2DComponent.class).get());
+        for (Entity areaEntity: areaEntities) {
+            DamageAreaComponent damageAreaCmp = areaEntity.getComponent(DamageAreaComponent.class);
+            if (damageAreaCmp.owner == CoreGame.BIT_ENEMY)
+                areaEntity.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+        }
     }
 }

@@ -18,6 +18,8 @@ import com.mygdx.game.entity.component.*;
 import com.mygdx.game.view.AnimationType;
 import com.mygdx.game.view.DirectionType;
 
+import static com.mygdx.game.CoreGame.UNIT_SCALE;
+
 public class GiantBlueSamurai {
     public static boolean attacking = false;
     public static boolean isUsedSkill2 = false;
@@ -113,7 +115,7 @@ public class GiantBlueSamurai {
         BossComponent bossCmp = ECSEngine.bossCmpMapper.get(entity);
         Box2DComponent b2dCmp = ECSEngine.box2dCmpMapper.get(entity);
         float localPositionX = bossCmp.direction == DirectionType.LEFT ? -b2dCmp.width/4: + b2dCmp.width/4;
-        Vector2 position = new Vector2(b2dCmp.renderPosition.x + localPositionX, b2dCmp.renderPosition.y);
+        Vector2 position = new Vector2(b2dCmp.renderPosition.x+UNIT_SCALE/2 + localPositionX, b2dCmp.renderPosition.y+UNIT_SCALE/2);
         BossSkillType type = bossCmp.type.getSkill1();
         DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, bossCmp.direction,bossCmp.type.getWidth()/2, bossCmp.type.getHeight()/2, type.getDamage() , type.getEffectType(), true, type.getSpeed());
         thisGame.getEcsEngine().createDamageArea(area);

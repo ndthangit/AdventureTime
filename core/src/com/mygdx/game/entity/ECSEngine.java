@@ -307,8 +307,8 @@ public class ECSEngine extends PooledEngine{
 
 		// box 2D component
 		CoreGame.resetBodiesAndFixtureDefinition();
-		final float halfW;
-		final float halfH;
+		float halfW;
+		float halfH;
 		if (area.direction == LEFT || area.direction == RIGHT) {
 			halfW = area.width * UNIT_SCALE / 2;
 			halfH = area.height * UNIT_SCALE / 2;
@@ -316,6 +316,11 @@ public class ECSEngine extends PooledEngine{
 		else {
 			halfW = area.height * UNIT_SCALE / 2;
 			halfH = area.width * UNIT_SCALE / 2;
+		}
+
+		if(area.owner == CoreGame.BIT_ENEMY) {
+			halfW = area.width * UNIT_SCALE / 2;
+			halfH = area.height * UNIT_SCALE / 2;
 		}
 		final Box2DComponent box2DComponent = this.createComponent(Box2DComponent.class);
 		CoreGame.BODY_DEF.type = BodyDef.BodyType.DynamicBody;
