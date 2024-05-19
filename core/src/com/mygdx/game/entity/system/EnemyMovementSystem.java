@@ -51,9 +51,9 @@ public class EnemyMovementSystem extends IteratingSystem {
         float distance = playerPos.dst(enemyPos);
         final Vector2 speed = new Vector2(enemyCom.speed * 0.3f, enemyCom.speed * 0.3f);
         // Cập nhật hướng di chuyển
-        if (playerPos.x < enemyPos.x + 8*UNIT_SCALE) {
+        if (playerPos.x <= enemyPos.x + b2dComponent.width/2) {
             enemyCom.direction = DirectionType.LEFT;
-        } else if (playerPos.x > enemyPos.x+8*UNIT_SCALE) {
+        } else if (playerPos.x > enemyPos.x+b2dComponent.width/2) {
             enemyCom.direction = DirectionType.RIGHT;
         }
         if (enemyCom.stop == false) {
