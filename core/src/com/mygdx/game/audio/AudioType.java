@@ -11,7 +11,7 @@ public enum AudioType {
 	CHILL("Musics/27 - Chill.ogg", false, 0.3f),
 	GOLD1("Sounds/Game/Gold1.wav",false,0.3f),
 	HIT("Sounds/Game/Hit1.wav",false, 0.3f),
-	HIT1("Sounds/Game/Hit1.wav",false, 0.3f),
+	HIT1("Sounds/Game/Hit3.wav",false, 0.3f),
 	HIT2("Sounds/Game/Hit2.wav", false, 0.3f),
 	KILL("Sounds/Game/Kill.wav", false, 0.5f),
 	REVELATION("Musics/3 - Revelation.ogg", true, 0.3f),
