@@ -40,6 +40,8 @@ public class Map {
 	private final Array<Enemy> enemies;
 	private final Array<Boss> bosses;
 	private final IntMap<Animation<Sprite>> mapAnimations;
+	private boolean hasBoss;
+	private boolean bossKilled;
 
 	public Map(final TiledMap tiledMap) {
 		this.tiledMap = tiledMap;
@@ -197,9 +199,11 @@ public class Map {
 		final MapLayer bossLayer = tiledMap.getLayers().get("boss");
 		if (bossLayer == null) {
 			Gdx.app.debug(TAG, "There is no boss layer");
+			hasBoss = false;
 			return;
 		}
 		BossType bossType;
+		hasBoss = true;
 		for (final MapObject obj: bossLayer.getObjects()) {
 			if (obj instanceof RectangleMapObject) {
 				final RectangleMapObject rectangleMapObject = (RectangleMapObject) obj;
@@ -312,4 +316,17 @@ public class Map {
 	public Array<Boss> getBosses() {
 		return bosses;
 	}
+
+	public boolean isHasBoss() {
+		return hasBoss;
+	}
+
+	public void setBossKilled(boolean bossKilled) {
+		this.bossKilled = bossKilled;
+	}
+
+	public boolean isBossKilled() {
+		return bossKilled;
+	}
+
 }
