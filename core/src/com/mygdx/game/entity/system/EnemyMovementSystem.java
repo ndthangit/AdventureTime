@@ -24,6 +24,8 @@ import com.mygdx.game.view.DirectionType;
 
 import java.util.Random;
 
+import static com.mygdx.game.CoreGame.UNIT_SCALE;
+
 public class EnemyMovementSystem extends IteratingSystem {
     private CoreGame game;
     private Vector2 originalPosition; // Thêm biến này để lưu vị trí ban đầu của Enemy
@@ -48,6 +50,12 @@ public class EnemyMovementSystem extends IteratingSystem {
         Vector2 enemyPos = b2dComponent.body.getPosition();
         float distance = playerPos.dst(enemyPos);
         final Vector2 speed = new Vector2(enemyCom.speed * 0.3f, enemyCom.speed * 0.3f);
+        // Cập nhật hướng di chuyển
+        if (playerPos.x < enemyPos.x + 8*UNIT_SCALE) {
+            enemyCom.direction = DirectionType.LEFT;
+        } else if (playerPos.x > enemyPos.x+8*UNIT_SCALE) {
+            enemyCom.direction = DirectionType.RIGHT;
+        }
         if (enemyCom.stop == false) {
             if(!enemyCom.isAttack) {
                 if (distance < enemyCom.type.getRange()) {
@@ -112,13 +120,6 @@ public class EnemyMovementSystem extends IteratingSystem {
                 }
                 enemyCom.timeSinceLastShot += deltaTime;
                 //Nếu quái và Player cùng hàng
-
-                // Cập nhật hướng di chuyển
-                if (playerPos.x < enemyPos.x) {
-                    enemyCom.direction = DirectionType.LEFT;
-                } else if (playerPos.x > enemyPos.x) {
-                    enemyCom.direction = DirectionType.RIGHT;
-                }
             }
             enemyCom.time += deltaTime;
             if(distance < 1.25f) {
