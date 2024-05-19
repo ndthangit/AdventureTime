@@ -12,7 +12,9 @@ public enum AudioType {
 	GOLD1("Sounds/Game/Gold1.wav",false,0.3f),
 	HIT("Sounds/Game/Hit1.wav",false, 0.3f),
 	KILL("Sounds/Game/Kill.wav", false, 0.5f),
-    REVELATION("Musics/3 - Revelation.ogg", true, 0.3f);
+	REVELATION("Musics/3 - Revelation.ogg", true, 0.3f),
+	TEMPLE("Musics/12 - Temple.ogg", true, 0.3f),
+	DUNGEON("Musics/21 - Dungeon.ogg", true, 0.3f);
 	
 	private final String filePath;
 	private final boolean isMusic;
