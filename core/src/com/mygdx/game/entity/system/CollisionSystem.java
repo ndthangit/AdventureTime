@@ -4,26 +4,19 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.WorldContactListener.CollisionListener;
-import com.mygdx.game.audio.AudioManager;
 import com.mygdx.game.audio.AudioType;
-import com.mygdx.game.effect.Effect;
-import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.*;
-import com.mygdx.game.items.Item;
 import com.mygdx.game.items.food.Food;
 import com.mygdx.game.items.food.FoodType;
 import com.mygdx.game.items.weapon.Weapon;
 import com.mygdx.game.map.GameObjectType;
 import com.mygdx.game.map.MapType;
 import com.mygdx.game.screens.ScreenType;
-import com.mygdx.game.view.DirectionType;
 
-import static com.mygdx.game.character.enemy.RandomItem.randomFood;
-import static com.mygdx.game.map.GameObjectType.GRASS;
+import static com.mygdx.game.items.RandomItem.randomFood;
 
 public class CollisionSystem extends IteratingSystem implements CollisionListener {
     CoreGame game;
@@ -49,9 +42,10 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
     public void weaponCollision(Entity weapon, Entity gameObj) {
         final GameObjectComponent gameObjCmp = ECSEngine.gameObjCmpMapper.get(gameObj);
         final Box2DComponent box2DCmp = ECSEngine.box2dCmpMapper.get(gameObj);
-        if (gameObjCmp.type == GRASS) {
-            Effect effect = new Effect(EffectType.CUTLEAVES, 0 , box2DCmp.body.getPosition(), DirectionType.DOWN);
-            game.getEcsEngine().createEffect(effect);
+        if (gameObjCmp.type == GameObjectType.GRASS) {
+            box2DCmp.body.getPosition();
+//           Effect effect = new Effect();
+  //          game.getEcsEngine().createEffect(effect);
             gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
         }
     }
@@ -61,9 +55,9 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         final PlayerComponent playerCmp = ECSEngine.playerCmpMapper.get(player);
         final EnemyComponent enemyCmp = ECSEngine.enemyCmpMapper.get(enemy);
         final BossComponent bossCmp = ECSEngine.bossCmpMapper.get(enemy);
+        if (playerCmp.vincible) return;
         int damage = enemyCmp != null ? enemyCmp.attack : bossCmp.attack;
         playerCmp.life =  Math.max(playerCmp.life - damage, 0);
-        enemyCmp.stop = true;
         game.getAudioManager().playAudio(AudioType.HIT);
         if (playerCmp.life <= 0) {
             player.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
@@ -76,6 +70,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         final WeaponComponent weaponCmp = ECSEngine.weaponCmpMapper.get(weapon);
         final EnemyComponent enemyCmp = ECSEngine.enemyCmpMapper.get(enemy);
         final BossComponent bossCmp = ECSEngine.bossCmpMapper.get(enemy);
+        final AnimationComponent aniCmp = ECSEngine.aniCmpMapper.get(enemy);
         final Box2DComponent box2dEnCmp = ECSEngine.box2dCmpMapper.get(enemy);
         Gdx.app.debug("Boss" , "ok");
         if (enemyCmp != null) {
@@ -93,6 +88,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         else {
             bossCmp.life -= weaponCmp.attack;
             bossCmp.isHit = true;
+            aniCmp.isFinished = false;
             if (bossCmp.life <= 0) {
                 game.getAudioManager().playAudio(AudioType.KILL);
                 enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
@@ -128,8 +124,11 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
     public void playerVSDamageArea(Entity player, Entity damageArea) {
         DamageAreaComponent damageAreaCmp = ECSEngine.damageAreaCmpMapper.get(damageArea);
         PlayerComponent playerCmp = ECSEngine.playerCmpMapper.get(player);
-        if ((damageAreaCmp.owner & CoreGame.BIT_BOSS) == CoreGame.BIT_BOSS||
-            (damageAreaCmp.owner & CoreGame.BIT_ENEMY) == CoreGame.BIT_ENEMY) {
+        if (((damageAreaCmp.owner & CoreGame.BIT_BOSS) == CoreGame.BIT_BOSS ||
+            (damageAreaCmp.owner & CoreGame.BIT_ENEMY) == CoreGame.BIT_ENEMY) &&
+                (!playerCmp.vincible)) {
+            if (damageAreaCmp.isbullet)
+                damageArea.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
             playerCmp.life =  Math.max(playerCmp.life - damageAreaCmp.damage, 0);
             game.getAudioManager().playAudio(AudioType.HIT);
             if (playerCmp.life <= 0) {
@@ -144,11 +143,12 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         DamageAreaComponent damageAreaCmp = ECSEngine.damageAreaCmpMapper.get(damageArea);
         EnemyComponent enemyCmp = ECSEngine.enemyCmpMapper.get(enemy);
         BossComponent bossCmp = ECSEngine.bossCmpMapper.get(enemy);
+        AnimationComponent aniCmp = ECSEngine.aniCmpMapper.get(enemy);
         Box2DComponent b2dCmp = ECSEngine.box2dCmpMapper.get(enemy);
         if ((damageAreaCmp.owner & CoreGame.BIT_PLAYER) == CoreGame.BIT_PLAYER) {
+            damageArea.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
             if (enemyCmp != null) {
                 b2dCmp.body.applyLinearImpulse(-b2dCmp.body.getLinearVelocity().x*b2dCmp.body.getMass(), -b2dCmp.body.getLinearVelocity().y*b2dCmp.body.getMass(), b2dCmp.body.getPosition().x, b2dCmp.body.getPosition().y, true);
-                enemyCmp.stop = true;
                 enemyCmp.life -= damageAreaCmp.damage;
                 enemyCmp.stop = true;
                 if (enemyCmp.life <= 0) {
@@ -164,6 +164,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             else {
                 bossCmp.life -= damageAreaCmp.damage;
                 bossCmp.isHit = true;
+                aniCmp.isFinished = false;
                 if (bossCmp.life <= 0) {
                     enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
                 }
@@ -178,4 +179,14 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             damageArea.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
         }
     }
+
+    @Override
+    public void damageAreaVSWeapon(Entity damageArea) {
+        DamageAreaComponent damageAreaComponent = ECSEngine.damageAreaCmpMapper.get(damageArea);
+        if (damageAreaComponent.isbullet && damageAreaComponent.owner != CoreGame.BIT_PLAYER) {
+            damageArea.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+        }
+    }
+
+
 }

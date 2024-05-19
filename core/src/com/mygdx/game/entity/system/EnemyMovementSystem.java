@@ -48,7 +48,7 @@ public class EnemyMovementSystem extends IteratingSystem {
         float distance = playerPos.dst(enemyPos);
         final Vector2 speed = new Vector2(enemyCom.speed * 0.3f, enemyCom.speed * 0.3f);
         if (enemyCom.stop == false) {
-            if (distance < enemyCom.type.getRange()) {
+            if (distance < enemyCom.type.getRange() || game.getMapManager().getCurrentMap().isHasBoss()) {
                 enemyCom.focus = true;
                 // Đuổi theo Player
                 Box2DComponent b2dPlayer = ECSEngine.box2dCmpMapper.get(getPlayerEntity());
