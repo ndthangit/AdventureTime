@@ -26,11 +26,20 @@ public class PlayerComponent extends EntityComponent {
 
 	public boolean isAttack;
 	public boolean isSkill;
+	public boolean stop;
+	public boolean vincible;
+
+	public float reloadSkill1;
+	public float reloadSkill2;
+	public float durationSmoke;
+	public float durationSkill2;
 
 	public float timeBuff;
 
 	public int damageBuff;
 	public float speedBuff;
+	public float speedBuffSkill2 = 0;
+
 
 	@Override
 	public void reset() {
@@ -64,11 +73,13 @@ public class PlayerComponent extends EntityComponent {
 	public boolean addItem(Item newItem) {
 		if (newItem instanceof Food) {
 			for (int i=0; i<4; i++) {
-				if (inventory[i] != null && inventory[i].key.equals(newItem.key)) {
+				if (inventory[i] != null && inventory[i].key.equals(newItem.key) && inventory[i].quatity < 5) {
 					inventory[i].quatity += 1;
 					return true;
 				}
-				else if (inventory[i] == null) {
+			}
+			for (int i=0; i<4; i++) {
+				if (inventory[i] == null) {
 					inventory[i] = newItem;
 					newItem.quatity = 1;
 					return true;

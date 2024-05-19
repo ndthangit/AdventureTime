@@ -9,7 +9,7 @@ import com.mygdx.game.view.DirectionType;
 public class EffectComponent implements Component, Pool.Poolable {
     public EffectType type;
     public DirectionType direction;
-    public int owner;
+    public short owner;
     public String path;
     public float width;
     public float height;

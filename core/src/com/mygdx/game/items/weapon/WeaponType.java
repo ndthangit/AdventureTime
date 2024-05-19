@@ -5,7 +5,7 @@ import com.mygdx.game.effect.EffectType;
 import static com.mygdx.game.effect.EffectType.SLASHCURVED;
 
 public enum WeaponType {
-    KATANA ("Items/Weapons/weapon.atlas","Katana", SLASHCURVED, 5, 0.05f, 7, 12, 0.5f),
+    KATANA ("Items/Weapons/weapon.atlas","Katana", SLASHCURVED, 100, 0.05f, 7, 12, 0.5f),
     BIGSWORD("Items/Weapons/weapon.atlas", "BigSword", SLASHCURVED, 3, 0.05f, 7, 16, 0.75f),
     CLUB("Items/Weapons/weapon.atlas", "Club", SLASHCURVED, 3, 0.05f, 8, 14, 0.5f),;
 

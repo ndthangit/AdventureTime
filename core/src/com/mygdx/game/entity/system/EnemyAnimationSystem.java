@@ -22,6 +22,9 @@ public class EnemyAnimationSystem extends IteratingSystem {
         Box2DComponent box2DComponent = ECSEngine.box2dCmpMapper.get(entity);
         AnimationComponent animationComponent= ECSEngine.aniCmpMapper.get(entity);
         EnemyComponent enemyComponent = ECSEngine.enemyCmpMapper.get(entity);
+        if (box2DComponent.body.getLinearVelocity().isZero()) {
+            animationComponent.aniTime = 0;
+        }
         if (Math.abs(box2DComponent.body.getLinearVelocityFromLocalPoint(box2DComponent.renderPosition).x) > Math.abs(box2DComponent.body.getLinearVelocityFromLocalPoint(box2DComponent.renderPosition).y)) {
             if (box2DComponent.body.getLinearVelocity().x > 0) {
                 animationComponent.aniType = AnimationType.RIGHT;

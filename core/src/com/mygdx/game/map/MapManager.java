@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.GameState;
 import com.mygdx.game.character.boss.Boss;
 import com.mygdx.game.character.enemy.Enemy;
 import com.mygdx.game.character.player.PlayerType;
@@ -36,6 +37,7 @@ public class MapManager {
 	private final EnumMap<MapType, Map>mapCache;
 	private final Array<MapListener> listeners;
 	private Array<Entity> entityToRemove;
+	private GameState gameState;
 
 	public MapManager(final CoreGame game) {
 		currentMapType = null;
@@ -110,8 +112,12 @@ public class MapManager {
 	}
 
 	private void spawnGameObjects() {
+		Array<Vector2> gameObjectsPosition= gameState.getMapState(currentMapType).getGameObjectsArray();
+
 		for (final GameObject gameObject: currentMap.getGameObjects()) {
-			ecsEngine.createGameObject(gameObject);
+			if (gameObjectsPosition.contains(gameObject.getPosition(), true)) {
+				ecsEngine.createGameObject(gameObject);
+			}
 		}
 
 	}

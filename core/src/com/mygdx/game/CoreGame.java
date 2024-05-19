@@ -8,26 +8,38 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.maps.tiled.BaseTmxMapLoader;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.audio.AudioManager;
 import com.mygdx.game.entity.ECSEngine;
-import com.mygdx.game.entity.component.ItemComponent;
 import com.mygdx.game.input.InputManager;
+import com.mygdx.game.items.food.FoodType;
 import com.mygdx.game.map.MapManager;
 import com.mygdx.game.map.MapType;
 import com.mygdx.game.screens.ScreenType;
@@ -45,6 +57,7 @@ public class CoreGame extends Game {
 	private FitViewport screenViewport;
 	
 	public static final float UNIT_SCALE = 4 / 64f;
+
 	public static final short BIT_PLAYER = 1 << 0;
 	public static final short BIT_GROUND = 1 << 1;
 	public static final short BIT_GAME_OBJECT = 1 << 2;
@@ -53,8 +66,9 @@ public class CoreGame extends Game {
 	public static final short BIT_ITEM = 1 << 5;
 	public static final short BIT_DOOR = 1 << 6;
 	public static final short BIT_BOSS = 1 << 7;
+	public static final short BIT_DAMAGE_AREA = 1 << 8;
 
-	public static final float FIXED_TIME_STEP = 1/ 60f;
+	public static final float FIXED_TIME_STEP = 1/60f;
 
 	public static final BodyDef BODY_DEF = new BodyDef();
 	public static final FixtureDef FIXTURE_DEF = new FixtureDef();
@@ -66,7 +80,7 @@ public class CoreGame extends Game {
 	private AssetManager assetManager;
 	private AudioManager audioManager;
 	private MapManager mapManager;
-	private ItemComponent itemComponent;
+	
 	private Stage stage;
 	private Skin skin;
 	private GameUI gameUI; 
@@ -83,7 +97,6 @@ public class CoreGame extends Game {
 	private ScreenType screenType;
 
 
-
 	@Override
 	public void create () {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
@@ -96,6 +109,7 @@ public class CoreGame extends Game {
 		world.setContactListener(worldContactListener);
 		box2DDebugRenderer = new Box2DDebugRenderer();
 		box2DDebugRenderer.setDrawBodies(true);
+
 		
 		//initialize assetManager
 		assetManager = new AssetManager();
@@ -147,9 +161,7 @@ public class CoreGame extends Game {
 
 		this.skin = skin;
 	}
-public ItemComponent getItemComponent(){
-		return itemComponent;
-}
+
 	public FitViewport getScreenViewport() {
 		return screenViewport;
 	}

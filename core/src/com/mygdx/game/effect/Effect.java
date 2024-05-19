@@ -6,7 +6,7 @@ import com.mygdx.game.view.DirectionType;
 public class Effect {
     private final EffectType type;
     private Vector2 position;
-    private int owner;
+    private short owner;
     private DirectionType direction;
 
     public EffectType getType() {
@@ -25,7 +25,7 @@ public class Effect {
         this.position = position;
     }
 
-    public Effect(EffectType type, int owner, Vector2 position, DirectionType direction) {
+    public Effect(EffectType type, short owner, Vector2 position, DirectionType direction) {
         this.type = type;
         this.position = position;
         this.owner = owner;
@@ -36,7 +36,7 @@ public class Effect {
         this.direction = direction;
     }
 
-    public int getOwner() {
+    public short getOwner() {
         return owner;
     }
 }

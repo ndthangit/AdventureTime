@@ -7,15 +7,14 @@ public enum ScreenType {
 	LOAD (LoadingScreen.class),
 	MENU (MainMenuScreen.class),
 	OPTION (OptionScreen.class),
-	DEAD (DeadScreen.class),
-	INSTRUCT(InstructionScreen.class);
-
+	DEAD (DeadScreen.class);
+	
 	private final Class<? extends AbstractScreen> screenClass;
-
+	
 	ScreenType (Class<? extends AbstractScreen> screenClass) {
 		this.screenClass = screenClass;
 	}
-
+	
 	public Class<? extends Screen> getScreenClass() {
 		return screenClass;
 	}

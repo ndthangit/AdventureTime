@@ -49,10 +49,7 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 				case BEGIN_FOREST:
 					audioManager.playAudio(AudioType.LOL1);
 					break;
-				case TOWN:
-					audioManager.playAudio(AudioType.REVELATION);
-					break;
-			}
+			} // them am thanh map
 		}
 	}
 	
