@@ -10,13 +10,17 @@ public enum AudioType {
 	LOL1("Musics/1 - Adventure Begin.ogg", true, 0.2f),
 	CHILL("Musics/27 - Chill.ogg", false, 0.3f),
 	GOLD1("Sounds/Game/Gold1.wav",false,0.3f),
-	HIT("Sounds/Game/Hit1.wav",false, 0.3f),
+	HIT("Sounds/Game/Hit.wav",false, 0.3f),
 	HIT1("Sounds/Game/Hit3.wav",false, 0.3f),
 	HIT2("Sounds/Game/Hit2.wav", false, 0.3f),
 	KILL("Sounds/Game/Kill.wav", false, 0.5f),
 	REVELATION("Musics/3 - Revelation.ogg", true, 0.3f),
 	TEMPLE("Musics/12 - Temple.ogg", true, 0.3f),
-	DUNGEON("Musics/21 - Dungeon.ogg", true, 0.3f);
+	DUNGEON("Musics/21 - Dungeon.ogg", true, 0.3f),
+	FX("Sounds/Game/Fx.wav", false, 1.0f),
+	FOOTSTEPS("Sounds/Game/FootSteps3.mp3", false, 0.2f),
+	EXPLOSION("Sounds/Game/Explosion2.wav",false ,0.2f ),
+	FIREBALL("Sounds/Game/Fireball.wav",false,0.2f);
 	
 	private final String filePath;
 	private final boolean isMusic;
