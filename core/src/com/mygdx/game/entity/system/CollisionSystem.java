@@ -64,6 +64,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             positionObj.x -= 0.5f;
             Weapon weapon1 = new Weapon(weaponType, new Effect(EffectType.SLASHCURVED, (short) 0, positionObj, DirectionType.DOWN), positionObj, DirectionType.DOWN);
             game.getEcsEngine().getItemArray().add(weapon1);
+            gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
         }
     }
 
