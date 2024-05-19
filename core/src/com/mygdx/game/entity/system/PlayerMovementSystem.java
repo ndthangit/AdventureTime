@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.audio.AudioType;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.Box2DComponent;
 import com.mygdx.game.entity.component.PlayerComponent;
@@ -62,18 +63,22 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 		case UP:
 			directionChange = true;
 			yFactor = 1;
+			game.getAudioManager().playAudio(AudioType.FOOTSTEPS);
 			break;
 		case DOWN:
 			directionChange = true;
 			yFactor = -1;
+			game.getAudioManager().playAudio(AudioType.FOOTSTEPS);
 			break;
 		case LEFT:
 			directionChange = true;
 			xFactor = -1;
+			game.getAudioManager().playAudio(AudioType.FOOTSTEPS);
 			break;
 		case RIGHT:
 			directionChange = true;
 			xFactor = 1;
+			game.getAudioManager().playAudio(AudioType.FOOTSTEPS);
 			break;
 		default:
 			break;
@@ -102,7 +107,5 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 		default:
 			break;
 		}
-		
 	}
-	
 }

@@ -77,6 +77,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             box2dEnCmp.body.applyLinearImpulse(-box2dEnCmp.body.getLinearVelocity().x*box2dEnCmp.body.getMass(), -box2dEnCmp.body.getLinearVelocity().y*box2dEnCmp.body.getMass(), box2dEnCmp.body.getPosition().x, box2dEnCmp.body.getPosition().y, true);
             enemyCmp.stop = true;
             enemyCmp.life -= weaponCmp.attack;
+            game.getAudioManager().playAudio(AudioType.FX);
             if (enemyCmp.life <= 0) {
                 // thêm tạo cửa sổ để them do
                 FoodType foodType = randomFood();
