@@ -39,6 +39,14 @@ public class EnemyAttackSystem extends IteratingSystem {
             }
         }
 
+        if(enemyCom.isAttacking) {
+            b2dComponent.body.applyLinearImpulse(-b2dComponent.body.getLinearVelocity().x*b2dComponent.body.getMass(),
+                    -b2dComponent.body.getLinearVelocity().y*b2dComponent.body.getMass(),
+                    b2dComponent.body.getPosition().x,
+                    b2dComponent.body.getPosition().y, true);
+            b2dComponent.body.applyForceToCenter(Vector2.Zero, true);
+        }
+
         if(enemyCom.isAttack)
             if(!enemyCom.isAttacking) {//Đánh thường
                 b2dComponent.body.applyLinearImpulse(-b2dComponent.body.getLinearVelocity().x*b2dComponent.body.getMass(),
