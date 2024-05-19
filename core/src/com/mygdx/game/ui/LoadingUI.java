@@ -13,9 +13,10 @@ public class LoadingUI extends Table{
 	private final ProgressBar progressBar;
 	private final TextButton pressAnyKeyButton;
 	private final TextButton textButton;
-	
+
 	public LoadingUI(Skin skin, CoreGame game) {
 		super(skin);
+
 		setFillParent(true);		
 		progressBar = null;
 //		progressBar = new ProgressBar(0, 1, 0.01f, false, skin, "default");

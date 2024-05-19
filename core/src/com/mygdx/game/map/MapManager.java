@@ -49,6 +49,8 @@ public class MapManager {
 		mapCache = new EnumMap<MapType, Map>(MapType.class);
 		listeners = new Array<MapListener>();
 		entityToRemove = new Array<Entity>();
+
+		gameState = new GameState();
 	}
 	
 	public void addMapListener(final MapListener listener) {
@@ -75,6 +77,10 @@ public class MapManager {
 		final TiledMap tiledMap = assetManager.get(nextMapType.getFilePath(), TiledMap.class);
 		if (currentMap == null) {
 			Gdx.app.debug(TAG, "Creating new map of type" + nextMapType);
+
+			gameState.getMapState(nextMapType).createMapState(ecsEngine);
+			System.out.println("num objs"+gameState.getMapState(nextMapType).getGameObjectsArray().size);
+
 			currentMap = new Map(tiledMap);
 			mapCache.put(currentMapType, currentMap);
 		}
@@ -90,6 +96,8 @@ public class MapManager {
 
 		for (final MapListener listener: listeners) {
 			listener.mapChange(currentMap);
+			gameState.getMapState(currentMapType).updateMapState(ecsEngine);
+			System.out.println("num objs:"+ gameState.getMapState(currentMapType).getGameObjectsArray().size);
 		}
 	}
 
@@ -112,12 +120,10 @@ public class MapManager {
 	}
 
 	private void spawnGameObjects() {
-		Array<Vector2> gameObjectsPosition= gameState.getMapState(currentMapType).getGameObjectsArray();
+//		Array<Vector2> gameObjectsPosition= gameState.getMapState(currentMapType).getGameObjectsArray();
 
 		for (final GameObject gameObject: currentMap.getGameObjects()) {
-			if (gameObjectsPosition.contains(gameObject.getPosition(), true)) {
-				ecsEngine.createGameObject(gameObject);
-			}
+			ecsEngine.createGameObject(gameObject);
 		}
 
 	}

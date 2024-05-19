@@ -15,11 +15,11 @@ import com.mygdx.game.map.GameObject;
 import com.mygdx.game.map.Map;
 import com.mygdx.game.map.MapType;
 
-public class MapState implements Json.Serializable{
+public class MapState implements Json.Serializable {
     public static final String SAVE_STATE_PREFERENCE_KEY = "saveState";
     private static final String SAVE_STATE_REMAINING_GAME_OBJ_IDS_KEY = "remainingGameObjects";
 
-    private final Array<Vector2> gameObjectsArray;
+    private final Array<GameObjectComponent> gameObjectsArray;
     private final Array<Vector2> enemiesArray;
     private final Array<Vector2> itemsArray;
     private final ComponentMapper<Box2DComponent> b2dCmpMapper;
@@ -30,7 +30,6 @@ public class MapState implements Json.Serializable{
     private final ComponentMapper<BossComponent> bossCmpMapper;
     private final Json json;
     private final JsonReader jsonReader;
-    private boolean isDead;
 
     public MapState() {
         gameObjectsArray = new Array<>();
@@ -46,34 +45,31 @@ public class MapState implements Json.Serializable{
         jsonReader = new JsonReader();
     }
 
-    public void loadState( final ECSEngine ecsEngine, final Map map){
+    public void loadState(final ECSEngine ecsEngine, final Map map) {
         // load state
-
-
     }
+
     public void updateMapState(final ECSEngine ecsEngine) {
         // update map state
-        gameObjectsArray.clear();
-        for (Entity entity : ecsEngine.getEntitiesFor(Family.all(GameObjectComponent.class, Box2DComponent.class, AnimationComponent.class).get())) {
-            gameObjectsArray.add(gameObjCmpMapper.get(entity).position);
-        }
+        if ( gameObjectsArray.size > 0) {
+            gameObjectsArray.clear();
+            for (Entity entity : ecsEngine.getEntitiesFor(
+                    Family.all(GameObjectComponent.class).get())) {
+                gameObjectsArray.add(gameObjCmpMapper.get(entity));
+            }
+        } 
     }
 
-    public void loadValuesFromPreference(){
-        
-    }
-
-    public void loadInitialValues(final ECSEngine ecsEngine) {
-        // load initial values
-        for (Entity gameObject : ecsEngine.getEntitiesFor(Family.all(GameObjectComponent.class, Box2DComponent.class, AnimationComponent.class).get()) ) {
-            gameObjectsArray.add(gameObjCmpMapper.get(gameObject).position);
+    public void createMapState(final ECSEngine ecsEngine) {
+        // create map state
+        for (Entity gameObject : ecsEngine.getEntitiesFor(
+                Family.all(GameObjectComponent.class,Box2DComponent.class,AnimationComponent.class).get())) {
+            gameObjectsArray.add(gameObjCmpMapper.get(gameObject));
         }
     }
 
     @Override
     public void write(Json json) {
-        json.writeValue(SAVE_STATE_REMAINING_GAME_OBJ_IDS_KEY, gameObjectsArray);
-        
     }
 
     @Override
@@ -81,7 +77,7 @@ public class MapState implements Json.Serializable{
 
     }
 
-    public Array<Vector2> getGameObjectsArray() {
+    public Array<GameObjectComponent> getGameObjectsArray() {
         return gameObjectsArray;
     }
 }
