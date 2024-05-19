@@ -55,7 +55,7 @@ public class EnemyAttackSystem extends IteratingSystem {
                         b2dComponent.body.getPosition().y, true);
                 b2dComponent.body.applyForceToCenter(Vector2.Zero, true);
 
-                float localPositionX = enemyCom.direction == DirectionType.RIGHT ?  b2dComponent.width/4: -b2dComponent.width/4;
+                float localPositionX = enemyCom.direction == DirectionType.RIGHT ?  +b2dComponent.width/2: -b2dComponent.width/2;
                 Vector2 position = new Vector2(b2dComponent.renderPosition.x + localPositionX, b2dComponent.renderPosition.y);
                 DamageArea area = new DamageArea(position, CoreGame.BIT_ENEMY, enemyCom.direction, 16, 22, enemyCom.attack, EffectType.NONE, false, 0);
                 game.getEcsEngine().createDamageArea(area);
