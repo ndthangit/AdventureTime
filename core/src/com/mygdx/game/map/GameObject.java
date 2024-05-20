@@ -10,6 +10,7 @@ public class GameObject {
     private final float height;
     private final float rotDegree;
     private final int animationIndex;
+    private boolean isUsed;
 
     public GameObject(GameObjectType type, Vector2 position, float width, float height, float rotDegree, int animationIndex) {
         this.type = type;
@@ -19,6 +20,7 @@ public class GameObject {
         this.height = height;
         this.rotDegree = rotDegree;
         this.animationIndex = animationIndex;
+        isUsed = false;
     }
 
     public GameObject(GameObjectType type, Vector2 position, String name, float width, float height, float rotDegree, int animationIndex) {
@@ -29,6 +31,7 @@ public class GameObject {
         this.height = height;
         this.rotDegree = rotDegree;
         this.animationIndex = animationIndex;
+        isUsed = false;
     }
 
     public GameObjectType getType() {
@@ -54,5 +57,12 @@ public class GameObject {
     }
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setUsed(boolean used) {
+        isUsed = used;
+    }
+    public boolean getIsUsed() {
+        return isUsed;
     }
 }

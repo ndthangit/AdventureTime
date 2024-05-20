@@ -56,13 +56,14 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         }
 
         if (gameObjCmp.type == GameObjectType.CHEST) {
+            gameObjCmp.gameObject.setUsed(true);
             gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
 //            WeaponType weaponType = RandomItem.randomWeapon();
             WeaponType weaponType = randomHotWeapon();
             Vector2 positionObj = gameObj.getComponent(Box2DComponent.class).body.getPosition();
             positionObj.y -= 1f;
             positionObj.x -= 0.5f;
-            Weapon weapon1 = new Weapon(weaponType, new Effect(EffectType.SLASHCURVED, (short) 0, positionObj, DirectionType.DOWN), positionObj, DirectionType.DOWN);
+            Weapon weapon1 = new Weapon(weaponType, new Effect(EffectType.SLASHCURVED, CoreGame.BIT_PLAYER, positionObj, DirectionType.DOWN), positionObj, DirectionType.DOWN);
             game.getEcsEngine().getItemArray().add(weapon1);
             gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
         }
@@ -127,7 +128,12 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             }
         }
         else if (itemCmp.item instanceof Weapon) {
-
+            if (playerCmp.addItem(itemCmp.item)) {
+                item.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+                game.getGameUI().updateBag();
+                game.getGameUI().updateNumTable();
+                game.getAudioManager().playAudio(AudioType.GOLD1);
+            }
         }
     }
 

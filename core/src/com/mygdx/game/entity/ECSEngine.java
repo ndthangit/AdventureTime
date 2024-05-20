@@ -144,9 +144,6 @@ public class ECSEngine extends PooledEngine{
 		final GameObjectComponent gameObjectComponent = this.createComponent(GameObjectComponent.class);
 		gameObjectComponent.animationIndex = gameObject.getAnimationIndex();
 		gameObjectComponent.type = gameObject.getType();
-
-		gameObjectComponent.position = gameObject.getPosition();
-
 		gameObjEntity.add(gameObjectComponent);
 
 		// animation component
