@@ -29,6 +29,15 @@ public class OptionUI extends Table {
 
     private void createMenu() {
         menu.clearChildren();
+        TextButton Title = new TextButton("SETTINGS", skin, "huge");
+        TextButton InstructionButton = new TextButton("INSTRUCTION", skin, "huge");
+        InstructionButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                game.setScreen(ScreenType.INSTRUCT);
+                return true;
+            }
+        });
         TextButton labelSwitchSound = new TextButton("MUSIC: ", skin, "huge");
         TextButton switchSound;
         if (game.isSoundEnabled()) {
@@ -53,6 +62,8 @@ public class OptionUI extends Table {
                 return true;
             }
         });
+        menu.add(Title).padBottom(200).row();
+        menu.add(InstructionButton).padBottom(50).row();
         menu.add(labelSwitchSound);
         menu.add(switchSound).row();
         menu.add(returnButton).padTop(50).row();

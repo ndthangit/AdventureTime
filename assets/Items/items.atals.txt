@@ -1,0 +1,19 @@
+items.atals.png
+size: 60, 33
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+LifePot
+  rotate: false
+  xy: 0, 0
+  size: 27, 33
+  orig: 27, 33
+  offset: 0, 0
+  index: -1
+Medipack
+  rotate: false
+  xy: 30, 0
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1

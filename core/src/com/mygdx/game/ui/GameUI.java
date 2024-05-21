@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.effect.Effect;
@@ -39,6 +40,7 @@ public class GameUI extends Table {
 	private final CoreGame game;
 	private final Table heartBG;
 	private final Image heartImage[];
+	private final Array<Image> heart;
 	private final Table heartTable;
 	private final Entity player;
 	public final PlayerComponent playerCmp;
@@ -54,6 +56,7 @@ public class GameUI extends Table {
 		player = game.getEcsEngine().getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
 		playerCmp = player.getComponent(PlayerComponent.class);
 
+
 		this.heartBG = new Table();
 		this.bagTable = new Table(skin);
 		this.bagItems = new ImageButton[5];
@@ -61,6 +64,7 @@ public class GameUI extends Table {
 
 		heartTable = new Table();
 		heartImage = new Image[ (int) playerCmp.maxLife/4];
+		heart = new Array<Image>();
 		setFillParent(true);
 		this.numTable = new Table();
 
@@ -69,6 +73,10 @@ public class GameUI extends Table {
 		createBag();
 		createNumTable();
 
+	}
+
+	public Entity getPlayer() {
+		return player;
 	}
 
 	public void createHeart() {
@@ -89,19 +97,19 @@ public class GameUI extends Table {
 
 		int i;
 		for (i = 4; i <= playerCmp.maxLife; i += 4) {
-			heartImage[(int) (i / 4) - 1] = new Image(setHeartImage(4));
+			heart.add(new Image(setHeartImage(4)));
 		}
 
 		for (i = 4; i <= playerCmp.life; i += 4) {
-			heartImage[(int) (i / 4) - 1] = new Image(setHeartImage(0));
+			heart.set(((int)(i/4)) -1, new Image(setHeartImage(0)));
 		}
 
 		if (i <= playerCmp.maxLife) {
-			heartImage[(int) (i / 4) - 1] = new Image(setHeartImage(i - playerCmp.life));
+			heart.set(((int)(i/4)) -1, new Image(setHeartImage(i - playerCmp.life)));
 			i += 4;
 		}
 		for (i = 0; i < playerCmp.maxLife / 4; i++) {
-			heartTable.add(heartImage[i]).pad(15);
+			heartTable.add(heart.get(i)).pad(15);
 		}
 
 		this.addActor(heartTable);
@@ -122,24 +130,23 @@ public class GameUI extends Table {
 //        stack.debug();
 //        add(stack).top();
 		heartTable.add(stack);
-
+		heart.clear();
 		int i;
 
 		for (i = 4; i <= playerCmp.maxLife; i += 4) {
-			heartImage[(int) (i / 4) - 1] = new Image(setHeartImage(4));
+			heart.add(new Image(setHeartImage(4)));
 		}
 
 		for (i = 4; i <= playerCmp.life; i += 4) {
-			heartImage[(int) (i / 4) - 1] = new Image(setHeartImage(0));
+			heart.set(((int)(i/4)) -1, new Image(setHeartImage(0)));
 		}
 
 		if (i <= playerCmp.maxLife) {
-			heartImage[(int) (i / 4) - 1] = new Image(setHeartImage(i - playerCmp.life));
+			heart.set(((int)(i/4)) -1, new Image(setHeartImage(i - playerCmp.life)));
 			i += 4;
 		}
-
 		for (i = 0; i < playerCmp.maxLife / 4; i++) {
-			heartTable.add(heartImage[i]).pad(15);
+			heartTable.add(heart.get(i)).pad(15);
 		}
 		if (playerCmp.life <= 0) {
 			game.setScreen(ScreenType.DEAD);

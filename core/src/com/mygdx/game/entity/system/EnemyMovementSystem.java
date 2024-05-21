@@ -76,10 +76,11 @@ public class EnemyMovementSystem extends IteratingSystem {
                 if (!enemyPos.epsilonEquals(enemyCom.startPosition, 0.1f)) {
                     Vector2 dir = new Vector2(enemyCom.startPosition.x - enemyPos.x, enemyCom.startPosition.y - enemyPos.y);
                     dir.nor();
-                    dir.set(dir.x * enemyCom.speed, dir.y * enemyCom.speed);
-                    b2dComponent.body.setTransform(b2dComponent.body.getPosition().x + dir.x * deltaTime*0.5f ,
-                            b2dComponent.body.getPosition().y + dir.y * deltaTime*0.5f ,
-                            b2dComponent.body.getAngle());
+                    dir.set(dir.x * enemyCom.speed *0.5f * b2dComponent.body.getMass(), dir.y * enemyCom.speed *0.5f * b2dComponent.body.getMass());
+//                    b2dComponent.body.setTransform(b2dComponent.body.getPosition().x + dir.x * deltaTime*0.5f ,
+//                            b2dComponent.body.getPosition().y + dir.y * deltaTime*0.5f ,
+//                            b2dComponent.body.getAngle());
+                    b2dComponent.body.applyForceToCenter(dir, true);
                 } else {
                     // Di chuyển ngẫu nhiên xung quanh startPosition
                     SteerableAgent enemySteerable = new SteerableAgent(b2dComponent.body, 1.5f);
@@ -109,8 +110,15 @@ public class EnemyMovementSystem extends IteratingSystem {
                 }
             }
             enemyCom.timeSinceLastShot += deltaTime;
-            //Nếu quái và Player cùng hàng
 
+        }
+        enemyCom.time += deltaTime;
+        if(distance < 1.25f) {
+            if(!enemyCom.isAttack && enemyCom.time>=enemyCom.reload) {
+                enemyCom.isAttack = true;
+                enemyCom.isAttacking = false;
+                enemyCom.time = 0;
+            }
         }
     }
 

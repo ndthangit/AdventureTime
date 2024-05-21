@@ -1,22 +1,32 @@
 package com.mygdx.game.entity.system;
 
+import box2dLight.PointLight;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.WorldContactListener.CollisionListener;
 import com.mygdx.game.audio.AudioType;
+import com.mygdx.game.character.boss.BossType;
+import com.mygdx.game.effect.Effect;
+import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.*;
 import com.mygdx.game.items.food.Food;
 import com.mygdx.game.items.food.FoodType;
 import com.mygdx.game.items.weapon.Weapon;
+import com.mygdx.game.items.weapon.WeaponType;
 import com.mygdx.game.map.GameObjectType;
 import com.mygdx.game.map.MapType;
 import com.mygdx.game.screens.ScreenType;
+import com.mygdx.game.view.DirectionType;
+import com.mygdx.game.items.RandomItem;
 
 import static com.mygdx.game.items.RandomItem.randomFood;
+import static com.mygdx.game.items.RandomItem.randomHotWeapon;
 
 public class CollisionSystem extends IteratingSystem implements CollisionListener {
     CoreGame game;
@@ -44,9 +54,27 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         final Box2DComponent box2DCmp = ECSEngine.box2dCmpMapper.get(gameObj);
         if (gameObjCmp.type == GameObjectType.GRASS) {
             box2DCmp.body.getPosition();
-//            Effect effect = new Effect();
-//            game.getEcsEngine().createEffect(effect);
+            Effect effect = new Effect(EffectType.CUTLEAVES, CoreGame.BIT_GAME_OBJECT , box2DCmp.body.getPosition(), DirectionType.DOWN);
+            game.getEcsEngine().createEffect(effect);
             gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+        }
+        if (gameObjCmp.type == GameObjectType.CHEST) {
+            GameObjectComponent gameObjectCmp = ECSEngine.gameObjCmpMapper.get(gameObj);
+            gameObjectCmp.gameObject.setIsUsed(true);
+            gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+//            WeaponType weaponType = RandomItem.randomWeapon();
+            if (game.getMapManager().getCurrentMapType() == MapType.CAVE) {
+                game.getGameUI().playerCmp.maxLife += 4;
+                game.getGameUI().playerCmp.life =  game.getGameUI().playerCmp.maxLife;
+            }
+            else {
+                WeaponType weaponType = randomHotWeapon();
+                Vector2 positionObj = gameObj.getComponent(Box2DComponent.class).body.getPosition();
+                positionObj.y -= 1f;
+                positionObj.x -= 0.5f;
+                Weapon weapon1 = new Weapon(weaponType, new Effect(EffectType.SLASHCURVED, CoreGame.BIT_PLAYER, positionObj, DirectionType.DOWN), positionObj, DirectionType.DOWN);
+                game.getEcsEngine().getItemArray().add(weapon1);
+            }
         }
     }
 
@@ -60,6 +88,11 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         playerCmp.life =  Math.max(playerCmp.life - damage, 0);
         game.getAudioManager().playAudio(AudioType.HIT);
         if (playerCmp.life <= 0) {
+            for (int i=0; i<4; i++) {
+                playerCmp.inventory[i] = null;
+            }
+            game.getGameUI().updateBag();
+            game.getGameUI().updateNumTable();
             player.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
         }
         game.getGameUI().updateHeart();
@@ -91,6 +124,9 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             aniCmp.isFinished = false;
             if (bossCmp.life <= 0) {
                 game.getAudioManager().playAudio(AudioType.KILL);
+                if(bossCmp.type == BossType.GIANTSPIRIT){
+                    game.setScreen(ScreenType.END);
+                }
                 enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
             }
         }
@@ -110,6 +146,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         }
         else if (itemCmp.item instanceof Weapon) {
 
+            game.getAudioManager().playAudio(AudioType.GOLD1);
         }
     }
 
@@ -130,8 +167,15 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             if (damageAreaCmp.isbullet)
                 damageArea.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
             playerCmp.life =  Math.max(playerCmp.life - damageAreaCmp.damage, 0);
-            game.getAudioManager().playAudio(AudioType.HIT);
-            if (playerCmp.life <= 0) {
+            if (damageAreaCmp.damage != 0)
+                game.getAudioManager().playAudio(AudioType.HIT);
+
+            if (playerCmp.life <= 0) {;
+                for (int i=0; i<4; i++) {
+                    playerCmp.inventory[i] = null;
+                }
+                game.getGameUI().updateBag();
+                game.getGameUI().updateNumTable();
                 player.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
             }
             game.getGameUI().updateHeart();
@@ -146,6 +190,10 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         AnimationComponent aniCmp = ECSEngine.aniCmpMapper.get(enemy);
         Box2DComponent b2dCmp = ECSEngine.box2dCmpMapper.get(enemy);
         if ((damageAreaCmp.owner & CoreGame.BIT_PLAYER) == CoreGame.BIT_PLAYER) {
+            if (damageAreaCmp.type == EffectType.BIG_KUNAI) {
+                b2dCmp.light = new PointLight(game.getRayHandler(), 64, new Color(1,1,1,0.5f), 3, b2dCmp.body.getPosition().x, b2dCmp.body.getPosition().y);
+                b2dCmp.light.attachToBody(b2dCmp.body);
+            }
             damageArea.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
             if (enemyCmp != null) {
                 b2dCmp.body.applyLinearImpulse(-b2dCmp.body.getLinearVelocity().x*b2dCmp.body.getMass(), -b2dCmp.body.getLinearVelocity().y*b2dCmp.body.getMass(), b2dCmp.body.getPosition().x, b2dCmp.body.getPosition().y, true);
@@ -166,6 +214,9 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
                 bossCmp.isHit = true;
                 aniCmp.isFinished = false;
                 if (bossCmp.life <= 0) {
+                    if(bossCmp.type == BossType.GIANTSPIRIT){
+                        game.setScreen(ScreenType.END);
+                    }
                     enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
                 }
             }

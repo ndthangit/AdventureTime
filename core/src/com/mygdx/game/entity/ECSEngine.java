@@ -1,8 +1,11 @@
 package com.mygdx.game.entity;
 
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -13,6 +16,7 @@ import com.mygdx.game.character.enemy.Enemy;
 import com.mygdx.game.character.player.PlayerType;
 import com.mygdx.game.effect.DamageArea;
 import com.mygdx.game.effect.Effect;
+import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.component.*;
 import com.mygdx.game.entity.system.*;
 import com.mygdx.game.items.Item;
@@ -37,12 +41,15 @@ public class ECSEngine extends PooledEngine{
 	public static final ComponentMapper<DoorLayerComponent> doorLayerCmpMapper = ComponentMapper.getFor(DoorLayerComponent.class);
 	public static final ComponentMapper<BossComponent> bossCmpMapper = ComponentMapper.getFor(BossComponent.class);
 	public static final ComponentMapper<DamageAreaComponent> damageAreaCmpMapper = ComponentMapper.getFor(DamageAreaComponent.class);
+	public static final ComponentMapper<EntityComponent> entityCmpMapper = ComponentMapper.getFor(EntityComponent.class);
 
 	private final World world;
 
 	private final Vector2 localPosition;
 	private final Vector2 posBeforeRotation;
 	private final Vector2 posAfterRotation;
+
+	private final RayHandler rayHandler;
 
 	private final Array<Item> itemArray;
 	private Entity playerEntity;
@@ -55,6 +62,7 @@ public class ECSEngine extends PooledEngine{
 		localPosition = new Vector2();
 		posBeforeRotation = new Vector2();
 		posAfterRotation = new Vector2();
+		rayHandler = game.getRayHandler();
 
 		itemArray = new Array<Item>();
 
@@ -125,6 +133,10 @@ public class ECSEngine extends PooledEngine{
 		pShape.dispose();
 		player.add(box2DComponent);
 
+		//Light component
+		box2DComponent.light = new PointLight(rayHandler, 64, new Color(1,1,1,0.7f), 5, box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
+		box2DComponent.light.attachToBody(box2DComponent.body);
+
 		//animation component
 		final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
 		animationComponent.width = 16 * UNIT_SCALE;
@@ -133,6 +145,18 @@ public class ECSEngine extends PooledEngine{
 		animationComponent.isSquare = true;
 		animationComponent.path = playerComponent.aniType.getAtlasPath();
 		player.add(animationComponent);
+
+
+		//effect component
+		final EffectComponent effectComponent = this.createComponent(EffectComponent.class);
+		effectComponent.type = EffectType.NONE;
+		effectComponent.position = new Vector2(playerSpawnLocation.x, playerSpawnLocation.y);
+		effectComponent.direction = DOWN;
+		effectComponent.path = EffectType.SMOKE.getAtlasPath();
+		effectComponent.width = 16 * UNIT_SCALE;
+		effectComponent.height = 16 * UNIT_SCALE;
+		effectComponent.owner = CoreGame.BIT_PLAYER;
+		player.add(effectComponent);
 		this.addEntity(player);
 		playerEntity = player;
 	}
@@ -144,6 +168,7 @@ public class ECSEngine extends PooledEngine{
 		final GameObjectComponent gameObjectComponent = this.createComponent(GameObjectComponent.class);
 		gameObjectComponent.animationIndex = gameObject.getAnimationIndex();
 		gameObjectComponent.type = gameObject.getType();
+		gameObjectComponent.gameObject = gameObject;
 		gameObjEntity.add(gameObjectComponent);
 
 		// animation component
@@ -328,6 +353,11 @@ public class ECSEngine extends PooledEngine{
 		box2DComponent.height = halfH * 2;
 		box2DComponent.renderPosition.set(box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
 
+		if (area.type == EffectType.FIREBALL || area.type == EffectType.ENERGY_BALL || area.type == EffectType.BIG_KUNAI) {
+			box2DComponent.light = new PointLight(rayHandler, 64, new Color(1,1,1,0.5f), 3, box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
+			box2DComponent.light.attachToBody(box2DComponent.body);
+		}
+
 		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_DAMAGE_AREA;
 		CoreGame.FIXTURE_DEF.filter.maskBits = -1;
 		CoreGame.FIXTURE_DEF.isSensor = true;
@@ -390,6 +420,7 @@ public class ECSEngine extends PooledEngine{
 		CoreGame.FIXTURE_DEF.shape = pShape;
 		box2DComponent.body.createFixture(CoreGame.FIXTURE_DEF);
 		pShape.dispose();
+
 		weaponEntity.add(box2DComponent);
 
 		this.addEntity(weaponEntity);

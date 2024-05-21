@@ -6,8 +6,10 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.Box2DComponent;
+import com.mygdx.game.entity.component.EffectComponent;
 import com.mygdx.game.entity.component.PlayerComponent;
 import com.mygdx.game.input.GameKey;
 import com.mygdx.game.input.InputManager;
@@ -33,11 +35,16 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 	protected void processEntity(final Entity entity, float deltaTime) {
 		final PlayerComponent playerComponent = ECSEngine.playerCmpMapper.get(entity);
 		final Box2DComponent b2dComponent = ECSEngine.box2dCmpMapper.get(entity);
+		final EffectComponent effectComponent = ECSEngine.effectCmpMapper.get(entity);
 
 		//buff
 		playerComponent.timeBuff -= deltaTime;
 		if (playerComponent.timeBuff <= 0) {
 			playerComponent.resetBuff();
+			effectComponent.type = EffectType.NONE;
+		}
+		else {
+			effectComponent.type = EffectType.LOOP_AURA;
 		}
 
 		// movement

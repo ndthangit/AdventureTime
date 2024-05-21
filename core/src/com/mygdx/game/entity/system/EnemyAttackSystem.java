@@ -8,6 +8,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.character.enemy.EnemySkillType;
+import com.mygdx.game.character.enemy.system.AttackSystem;
 import com.mygdx.game.character.enemy.system.ProjectileSystem;
 import com.mygdx.game.effect.DamageArea;
 import com.mygdx.game.effect.EffectType;
@@ -15,6 +16,7 @@ import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.Box2DComponent;
 import com.mygdx.game.entity.component.EnemyComponent;
 import com.mygdx.game.entity.component.PlayerComponent;
+import com.mygdx.game.view.DirectionType;
 
 public class EnemyAttackSystem extends IteratingSystem {
 
@@ -35,10 +37,18 @@ public class EnemyAttackSystem extends IteratingSystem {
         Vector2 enemyPos = b2dComponent.body.getPosition();
         float distance = playerPos.dst(enemyPos);
         if (!enemyCom.stop && enemyCom.focus) {
-            if (enemyCom.type.getSkillType() == EnemySkillType.PROJECTILE) {
-                ProjectileSystem.Projectile(game, enemyCom, enemyPos, playerPos, b2dComponent);
+            switch (enemyCom.type.getSkillType()) {
+                case PROJECTILE:
+                    ProjectileSystem.Projectile(game, enemyCom, enemyPos, playerPos, b2dComponent);
+                    break;
+                case ATTACK:
+                    AttackSystem.attackSystem(game, enemyCom, b2dComponent);
+                    break;
             }
         }
+
+
+
     } // am thanh khi dung ki nang
 
     public Entity getPlayerEntity() {

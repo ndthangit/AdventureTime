@@ -1,0 +1,75 @@
+items.atals.png
+size: 160, 16
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Beaf
+  rotate: false
+  xy: 0, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Calamari
+  rotate: false
+  xy: 16, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Fish
+  rotate: false
+  xy: 32, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+FortuneCookie
+  rotate: false
+  xy: 48, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Honey
+  rotate: false
+  xy: 64, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+LifePot
+  rotate: false
+  xy: 80, 0
+  size: 9, 11
+  orig: 9, 11
+  offset: 0, 0
+  index: -1
+Medipack
+  rotate: false
+  xy: 96, 0
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+Noodle
+  rotate: false
+  xy: 112, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Nut
+  rotate: false
+  xy: 128, 0
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: -1
+Nut2
+  rotate: false
+  xy: 144, 0
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: -1

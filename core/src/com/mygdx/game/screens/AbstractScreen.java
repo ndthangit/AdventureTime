@@ -1,5 +1,6 @@
 package com.mygdx.game.screens;
 
+import box2dLight.RayHandler;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -19,6 +20,7 @@ public abstract class AbstractScreen<T extends Table> implements Screen, KeyInpu
 	protected final FitViewport viewPort;
 	protected final World world;
 	protected final Box2DDebugRenderer box2DDebugRenderer;
+	protected final RayHandler rayHandler;
 	protected final Stage stage;
 	protected T screenUI;
 	protected InputManager inputManager;
@@ -29,6 +31,7 @@ public abstract class AbstractScreen<T extends Table> implements Screen, KeyInpu
 		this.game = context;
 		viewPort = context.getScreenViewport();
 		world = context.getWorld();
+		rayHandler = context.getRayHandler();
 		box2DDebugRenderer = context.getBox2DDebugRenderer();
 		inputManager = game.getInputManager();
 		mapManager = game.getMapManager();
@@ -44,6 +47,8 @@ public abstract class AbstractScreen<T extends Table> implements Screen, KeyInpu
 	public void resize(int width, int height) {
 		viewPort.update(width, height);
 		stage.getViewport().update(width, height, true);
+		rayHandler.useCustomViewport(viewPort.getScreenX(), viewPort.getScreenY(), viewPort.getScreenWidth(), viewPort.getScreenHeight());
+
 	}
 
 	@Override

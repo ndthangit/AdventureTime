@@ -2,6 +2,7 @@ package com.mygdx.game.view;
 
 import java.util.EnumMap;
 
+import box2dLight.RayHandler;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
@@ -29,9 +30,7 @@ import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.*;
 import com.mygdx.game.items.Item;
 import com.mygdx.game.items.food.Food;
-import com.mygdx.game.map.GameObjectType;
-import com.mygdx.game.map.Map;
-import com.mygdx.game.map.MapListener;
+import com.mygdx.game.map.*;
 import com.mygdx.game.screens.MainGameScreen;
 import com.mygdx.game.screens.ScreenType;
 
@@ -46,6 +45,7 @@ public class GameRenderer implements Disposable, MapListener{
 	private final FitViewport viewport;
 	private final SpriteBatch spriteBatch;
 	private final AssetManager assetManager;
+	private final MapManager mapManager;
 
 	private final ImmutableArray<Entity> gameObjectEntities;
 	private final ImmutableArray<Entity> animatedEntities;
@@ -60,6 +60,7 @@ public class GameRenderer implements Disposable, MapListener{
 	private final GLProfiler profiler;
 	private final Box2DDebugRenderer b2dDebugRenderer;
 	private final World world;
+	private final RayHandler rayHandler;
 	private final ObjectMap<String, EnumMap<AnimationType, Animation<Sprite>>> animationCache;
 	private final ObjectMap<String, EnumMap<EffectType, Animation<Sprite>>> effectCache;
 
@@ -68,7 +69,7 @@ public class GameRenderer implements Disposable, MapListener{
 
 	public GameRenderer (CoreGame game) {
 		this.game = game;
-
+		this.mapManager = game.getMapManager();
 		this.assetManager = game.getAssetManager();
 		this.viewport = game.getScreenViewport();
 		this.gameCamera = game.getGameCamera();
@@ -87,7 +88,7 @@ public class GameRenderer implements Disposable, MapListener{
 		this.mapRenderer = new OrthogonalTiledMapRenderer(null, UNIT_SCALE, game.getSpriteBatch());
 		game.getMapManager().addMapListener(this);
 		tiledMapLayers = new Array<TiledMapTileLayer>();
-		
+		rayHandler = game.getRayHandler();
 		this.profiler = new GLProfiler(Gdx.graphics);
 		profiler.enable();
 		if (profiler.isEnabled()) {
@@ -154,6 +155,10 @@ public class GameRenderer implements Disposable, MapListener{
 
 			spriteBatch.end();
 			b2dDebugRenderer.render(world, viewport.getCamera().combined);
+			rayHandler.setCombinedMatrix(gameCamera);
+			if(this.mapManager.getCurrentMapType() == MapType.CAVE){
+				rayHandler.updateAndRender();
+			}
 		}
 		profiler.reset();
 
@@ -268,6 +273,7 @@ public class GameRenderer implements Disposable, MapListener{
 	private void rederEffect(Entity entity, float delta) {
 		final EffectComponent effectComponent = ECSEngine.effectCmpMapper.get(entity);
 		final Box2DComponent box2DComponent = ECSEngine.box2dCmpMapper.get(entity);
+		final EntityComponent entityComponent = ECSEngine.playerCmpMapper.get(entity);
 		if (effectComponent.type == EffectType.NONE) return;
         String path = effectComponent.path;
         EffectType type = effectComponent.type;
@@ -301,7 +307,7 @@ public class GameRenderer implements Disposable, MapListener{
 		frame.setRotation(-(effectComponent.direction.getCode()+type.getFixDir()) * 90);
 		frame.draw(spriteBatch);
 		if (animation.getPlayMode() == Animation.PlayMode.NORMAL && animation.isAnimationFinished(effectComponent.aniTime)) {
-			entity.add(new RemoveComponent());
+				entity.add(new RemoveComponent());
 		}
 	}
 

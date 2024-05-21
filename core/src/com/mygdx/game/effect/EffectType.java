@@ -14,7 +14,10 @@ public enum EffectType {
     BIG_KUNAI("FX/Effect.atlas", "BigKunai", 0.1f, 18, 5, 1, Animation.PlayMode.LOOP),
     FIREBALL("FX/Effect.atlas", "Fireball", 0.1f, 8, 8, 2, Animation.PlayMode.LOOP),
     AURA("FX/Effect.atlas", "WhiteAura", 0.1f, 16, 16, 0, Animation.PlayMode.NORMAL),
-    BLAST("FX/Effect.atlas", "Blast", 0.1f, 16, 16, 0, Animation.PlayMode.NORMAL);
+    BLAST("FX/Effect.atlas", "Blast", 0.1f, 16, 16, 0, Animation.PlayMode.NORMAL),
+    CUTLEAVES( "FX/Effect.atlas", "Grass", 0.1f, 6, 6, 0, Animation.PlayMode.NORMAL),
+    LOOP_AURA("FX/Effect.atlas", "WhiteAura", 0.1f, 16, 16, 0, Animation.PlayMode.LOOP),
+    ;
 
     private final String atlasPath;
     private final String atlasKey;

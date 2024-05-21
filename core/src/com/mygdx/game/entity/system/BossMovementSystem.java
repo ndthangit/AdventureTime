@@ -34,7 +34,7 @@ public class BossMovementSystem extends IteratingSystem {
         Box2DComponent b2dComponent = ECSEngine.box2dCmpMapper.get(entity);
         AnimationComponent aniCmp = ECSEngine.aniCmpMapper.get(entity);
         // Đuổi theo Player
-        Gdx.app.debug("Boss", getPlayerEntity().toString());
+
         if (getPlayerEntity() == null) return;
         Box2DComponent b2dPlayer = ECSEngine.box2dCmpMapper.get(getPlayerEntity());
 

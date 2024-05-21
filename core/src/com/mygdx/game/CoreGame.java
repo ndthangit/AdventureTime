@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import java.util.EnumMap;
 
+import box2dLight.RayHandler;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -94,6 +95,8 @@ public class CoreGame extends Game {
 
 	private float accumulator = 0;
 
+	private RayHandler rayHandler;
+
 	private ScreenType screenType;
 
 
@@ -110,6 +113,8 @@ public class CoreGame extends Game {
 		box2DDebugRenderer = new Box2DDebugRenderer();
 		box2DDebugRenderer.setDrawBodies(true);
 
+		rayHandler = new RayHandler(world);
+		rayHandler.setAmbientLight(0, 0, 0, 0.05f);
 		
 		//initialize assetManager
 		assetManager = new AssetManager();
@@ -168,6 +173,10 @@ public class CoreGame extends Game {
 
 	public World getWorld() {
 		return world;
+	}
+
+	public RayHandler getRayHandler() {
+		return rayHandler;
 	}
 
 	public Box2DDebugRenderer getBox2DDebugRenderer() {

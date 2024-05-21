@@ -67,8 +67,8 @@ public class GiantSpirit {
                 dir = -1;
             }
 
-            if (bossCmp.time >= 8 && distance < 6) { // dieu kien danh thuong
-                bossCmp.time -= bossCmp.reload;
+            if (bossCmp.time >= bossCmp.reload && distance < 6) { // dieu kien danh thuong
+                bossCmp.time = 0;
                 position.set(playerPos);
                 b2dCmp.body.applyLinearImpulse(-b2dCmp.body.getLinearVelocity().x*b2dCmp.body.getMass(),
                         -b2dCmp.body.getLinearVelocity().y*b2dCmp.body.getMass(),
@@ -107,7 +107,7 @@ public class GiantSpirit {
 
         if (bossCmp.isCharge) {
             if (!isCharge)
-             chargeSkill(entity);
+                chargeSkill(entity);
 
         }
         if (bossCmp.isSkill1 && bossCmp.isAttack) {
@@ -128,9 +128,8 @@ public class GiantSpirit {
     private static void chargeSkill(Entity entity) {
         Box2DComponent box2DCmp = ECSEngine.box2dCmpMapper.get(entity);
         BossComponent bossCmp = ECSEngine.bossCmpMapper.get(entity);
-        Vector2 cPosition = new Vector2(box2DCmp.body.getPosition());
         BossSkillType type = BossSkillType.BLAST;
-        DamageArea area = new DamageArea(cPosition, CoreGame.BIT_BOSS, DirectionType.DOWN, type.getWidth(), type.getHeight(), type.getDamage(), EffectType.AURA, false, 0);
+        DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, DirectionType.DOWN, type.getWidth(), type.getHeight(), 0, EffectType.AURA, false, 0);
         thisGame.getEcsEngine().createDamageArea(area);
         isCharge = true;
     }

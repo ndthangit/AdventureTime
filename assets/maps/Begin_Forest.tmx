@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="64" height="31" tilewidth="16" tileheight="16" infinite="0" nextlayerid="17" nextobjectid="108">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="64" height="31" tilewidth="16" tileheight="16" infinite="0" nextlayerid="17" nextobjectid="110">
  <tileset firstgid="1" source="Dungeon.tsx"/>
  <tileset firstgid="49" source="Floor.tsx"/>
  <tileset firstgid="621" source="tileset.tsx"/>
@@ -294,6 +294,9 @@
    <point/>
   </object>
   <object id="107" name="TOWN" x="904" y="443">
+   <point/>
+  </object>
+  <object id="108" name="CAVE" x="951" y="85.5">
    <point/>
   </object>
  </objectgroup>

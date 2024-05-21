@@ -23,6 +23,7 @@ import com.mygdx.game.view.DirectionType;
 public class GiantBlueSamurai {
     public static boolean attacking = false;
     public static boolean isUsedSkill2 = false;
+    private static boolean isHitted = false;
     private static CoreGame thisGame;
     private static SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<>(new Vector2());
 
@@ -42,9 +43,13 @@ public class GiantBlueSamurai {
 
         if (bossCmp.isHit) { // bi danh trung
             bossCmp.resetState();
-
+            if (!isHitted) {
+                aniCmp.isFinished = false;
+                isHitted = true;
+            }
             if (aniCmp.isFinished && aniCmp.aniType == AnimationType.B_HIT) {
                 bossCmp.isHit = false;
+                isHitted = false;
             }
         }
         else if (bossCmp.isCharge) { // nap don danh

@@ -32,6 +32,7 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
 		assetManager.load("Actor/Characters/BlackNinjaMage/blackninjamage.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Monsters/SkullBlue/skullblue.atlas", TextureAtlas.class);
+		assetManager.load("Actor/Monsters/Cyclope/Cyclope.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Monsters/Slime2/slime2.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Monsters/Slime4/slime4.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Monsters/Reptile2/reptile2.atlas", TextureAtlas.class);
@@ -42,6 +43,7 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 		assetManager.load("Actor/Characters/RedNinja2/redninja2.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Characters/OrangeSorcerer/orangeSorcerer.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Characters/RedNinja/redninja.atlas", TextureAtlas.class);
+		assetManager.load("Actor/Characters/Skeleton/skeleton.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Monsters/Skull/skull.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Monsters/Spirit/spirit.atlas", TextureAtlas.class);
 		assetManager.load("Actor/Monsters/Spirit2/spirit2.atlas", TextureAtlas.class);
@@ -52,6 +54,7 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
 		assetManager.load("FX/Effect.atlas", TextureAtlas.class);
 		assetManager.load("Items/Food/food.atlas", TextureAtlas.class);
+		assetManager.load("Items/items.atlas", TextureAtlas.class);
 
 		assetManager.load("HUD/HeartAtlas.atlas", TextureAtlas.class);
 		assetManager.load("number/Number.atlas", TextureAtlas.class);

@@ -71,9 +71,11 @@ public class PlayerAttackSystem extends IteratingSystem implements KeyInputListe
 		}
 		if (isSkill1 && readySkill1) {
 			usingSkill1(entity);
+			game.getAudioManager().playAudio(AudioType.HIT1);
 		}
 		else if (isSkill2 && readySkill2) {
 			usingSkill2(entity);
+			game.getAudioManager().playAudio(AudioType.HIT2);
 		}
 		else if (isAttack) {
 			playerComponent.isAttack = true;

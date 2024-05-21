@@ -18,6 +18,7 @@ import com.mygdx.game.effect.Effect;
 import com.mygdx.game.entity.ECSEngine;
 
 import com.badlogic.ashley.core.Entity;
+import com.mygdx.game.entity.component.PlayerComponent;
 import com.mygdx.game.items.weapon.Weapon;
 import com.mygdx.game.items.weapon.WeaponType;
 import com.mygdx.game.view.DirectionType;
@@ -103,6 +104,7 @@ public class MapManager {
 	}
 
 	public void destroyPlayer() {
+
 		ecsEngine.removeEntity(ecsEngine.getPlayerEntity());
 		ecsEngine.setPlayerEntity(null);
 		currentMapType = null;
@@ -111,6 +113,7 @@ public class MapManager {
 
 	private void spawnGameObjects() {
 		for (final GameObject gameObject: currentMap.getGameObjects()) {
+			if (gameObject.getType() == GameObjectType.CHEST && gameObject.isUsed()) continue;
 			ecsEngine.createGameObject(gameObject);
 		}
 

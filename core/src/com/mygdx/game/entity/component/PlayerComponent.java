@@ -51,7 +51,7 @@ public class PlayerComponent extends EntityComponent {
 	}
 
 	public boolean useItem(int i) {
-		if (inventory[i].quatity > 0) {
+		if (inventory[i] != null) {
 			Item item = inventory[i];
 			if (item instanceof Food){
 				Food food = (Food) item;

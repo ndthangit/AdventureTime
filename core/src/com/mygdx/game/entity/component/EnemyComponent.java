@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.mygdx.game.character.enemy.EnemyType;
 import com.mygdx.game.items.food.FoodType;
+import com.mygdx.game.view.DirectionType;
 
 public class EnemyComponent extends EntityComponent {
     public int attack;
@@ -18,6 +19,12 @@ public class EnemyComponent extends EntityComponent {
     public float wanderDir;
     public boolean stop;
     public boolean focus;
+
+    public boolean isAttack = false;
+    public boolean isAttacking = false;
+    public float time;
+    public DirectionType direction;
+    public float reload = 0.5f;
 
     //Bullet
     public float shootDelay = 1f;
