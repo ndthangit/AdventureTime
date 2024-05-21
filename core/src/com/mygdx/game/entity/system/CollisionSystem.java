@@ -16,6 +16,7 @@ import com.mygdx.game.items.food.Food;
 import com.mygdx.game.items.food.FoodType;
 import com.mygdx.game.items.weapon.Weapon;
 import com.mygdx.game.items.weapon.WeaponType;
+import com.mygdx.game.map.GameObject;
 import com.mygdx.game.map.GameObjectType;
 import com.mygdx.game.map.MapType;
 import com.mygdx.game.screens.ScreenType;
@@ -56,7 +57,9 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         }
 
         if (gameObjCmp.type == GameObjectType.CHEST) {
-            gameObjCmp.gameObject.setUsed(true);
+            // create a copy of gameObjCmp.gameObject
+//            gameObjCmp.isDead = true;
+
             gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
 //            WeaponType weaponType = RandomItem.randomWeapon();
             WeaponType weaponType = randomHotWeapon();
@@ -109,6 +112,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             bossCmp.isHit = true;
             aniCmp.isFinished = false;
             if (bossCmp.life <= 0) {
+                bossCmp.boss.setIskilled(true);
                 game.getAudioManager().playAudio(AudioType.KILL);
                 enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
             }
@@ -181,15 +185,16 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
                     Food food = new Food(foodType, b2dCmp.body.getPosition());
                     game.getEcsEngine().getItemArray().add(food);
                     game.getAudioManager().playAudio(AudioType.KILL);
-
                     enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
                 }
             }
             else {
+
                 bossCmp.life -= damageAreaCmp.damage;
                 bossCmp.isHit = true;
                 aniCmp.isFinished = false;
                 if (bossCmp.life <= 0) {
+                    bossCmp.boss.setIskilled(true);
                     enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
                 }
             }

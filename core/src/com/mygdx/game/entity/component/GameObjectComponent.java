@@ -10,11 +10,11 @@ public class GameObjectComponent implements Component, Pool.Poolable {
     public GameObjectType type;
     public int animationIndex;
     public GameObject gameObject;
+//    public boolean isDead;
     @Override
     public void reset() {
         type = null;
         animationIndex = -1;
     }
-
 
 }

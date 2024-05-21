@@ -138,10 +138,13 @@ public class MapManager {
     }
 
     private void spawnBoss() {
-        if (currentMap.isBossKilled()) {
-            return;
-        }
+//        if (currentMap.isBossKilled()) {
+//            return;
+//        }
         for (final Boss boss : currentMap.getBosses()) {
+            if (boss.isIskilled()) {
+                continue;
+            }
             ecsEngine.createBoss(boss);
         }
     }
