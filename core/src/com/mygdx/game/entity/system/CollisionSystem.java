@@ -23,7 +23,6 @@ import com.mygdx.game.map.GameObjectType;
 import com.mygdx.game.map.MapType;
 import com.mygdx.game.screens.ScreenType;
 import com.mygdx.game.view.DirectionType;
-import com.mygdx.game.items.RandomItem;
 
 import static com.mygdx.game.items.RandomItem.randomFood;
 import static com.mygdx.game.items.RandomItem.randomHotWeapon;
@@ -83,10 +82,16 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         final PlayerComponent playerCmp = ECSEngine.playerCmpMapper.get(player);
         final EnemyComponent enemyCmp = ECSEngine.enemyCmpMapper.get(enemy);
         final BossComponent bossCmp = ECSEngine.bossCmpMapper.get(enemy);
+        final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(player);
         if (playerCmp.vincible) return;
+
         int damage = enemyCmp != null ? enemyCmp.attack : bossCmp.attack;
         playerCmp.life =  Math.max(playerCmp.life - damage, 0);
         game.getAudioManager().playAudio(AudioType.HIT);
+
+        PlayerCameraSystem.cameraShake(game, 1.f, 0.5f, Gdx.graphics.getDeltaTime() );
+        aniComponent.isDamaged = true;
+
         if (playerCmp.life <= 0) {
             for (int i=0; i<4; i++) {
                 playerCmp.inventory[i] = null;
@@ -105,7 +110,8 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         final BossComponent bossCmp = ECSEngine.bossCmpMapper.get(enemy);
         final AnimationComponent aniCmp = ECSEngine.aniCmpMapper.get(enemy);
         final Box2DComponent box2dEnCmp = ECSEngine.box2dCmpMapper.get(enemy);
-        Gdx.app.debug("Boss" , "ok");
+
+        aniCmp.isDamaged = true;
         if (enemyCmp != null) {
             box2dEnCmp.body.applyLinearImpulse(-box2dEnCmp.body.getLinearVelocity().x*box2dEnCmp.body.getMass(), -box2dEnCmp.body.getLinearVelocity().y*box2dEnCmp.body.getMass(), box2dEnCmp.body.getPosition().x, box2dEnCmp.body.getPosition().y, true);
             enemyCmp.stop = true;
@@ -161,6 +167,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
     public void playerVSDamageArea(Entity player, Entity damageArea) {
         DamageAreaComponent damageAreaCmp = ECSEngine.damageAreaCmpMapper.get(damageArea);
         PlayerComponent playerCmp = ECSEngine.playerCmpMapper.get(player);
+        AnimationComponent aniCmp = ECSEngine.aniCmpMapper.get(player);
         if (((damageAreaCmp.owner & CoreGame.BIT_BOSS) == CoreGame.BIT_BOSS ||
             (damageAreaCmp.owner & CoreGame.BIT_ENEMY) == CoreGame.BIT_ENEMY) &&
                 (!playerCmp.vincible)) {
@@ -169,6 +176,8 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             playerCmp.life =  Math.max(playerCmp.life - damageAreaCmp.damage, 0);
             if (damageAreaCmp.damage != 0)
                 game.getAudioManager().playAudio(AudioType.HIT);
+
+            aniCmp.isDamaged = true;
 
             if (playerCmp.life <= 0) {;
                 for (int i=0; i<4; i++) {
@@ -190,6 +199,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         AnimationComponent aniCmp = ECSEngine.aniCmpMapper.get(enemy);
         Box2DComponent b2dCmp = ECSEngine.box2dCmpMapper.get(enemy);
         if ((damageAreaCmp.owner & CoreGame.BIT_PLAYER) == CoreGame.BIT_PLAYER) {
+            aniCmp.isDamaged = true;
             if (damageAreaCmp.type == EffectType.BIG_KUNAI) {
                 b2dCmp.light = new PointLight(game.getRayHandler(), 64, new Color(1,1,1,0.5f), 3, b2dCmp.body.getPosition().x, b2dCmp.body.getPosition().y);
                 b2dCmp.light.attachToBody(b2dCmp.body);

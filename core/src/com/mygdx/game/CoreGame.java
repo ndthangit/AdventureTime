@@ -1,51 +1,30 @@
 package com.mygdx.game;
 
-import java.util.EnumMap;
-
 import box2dLight.RayHandler;
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.maps.tiled.BaseTmxMapLoader;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Box2D;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.audio.AudioManager;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.input.InputManager;
-import com.mygdx.game.items.food.FoodType;
 import com.mygdx.game.map.MapManager;
 import com.mygdx.game.map.MapType;
 import com.mygdx.game.screens.ScreenType;
 import com.mygdx.game.ui.GameUI;
 import com.mygdx.game.view.GameRenderer;
+
+import java.util.EnumMap;
 
 public class CoreGame extends Game {
 
@@ -148,7 +127,7 @@ public class CoreGame extends Game {
 		gameRenderer = new GameRenderer(this);
 		
 		screenCache = new EnumMap<ScreenType, Screen> (ScreenType.class);		
-		mapManager.setNextMapType(MapType.DOJO);
+		mapManager.setNextMapType(MapType.SAMU_BOSS);
 		screenType = ScreenType.MENU;
 		setScreen(ScreenType.MENU);
 	}

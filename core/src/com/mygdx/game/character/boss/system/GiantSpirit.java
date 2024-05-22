@@ -17,13 +17,14 @@ import com.mygdx.game.entity.component.AnimationComponent;
 import com.mygdx.game.entity.component.BossComponent;
 import com.mygdx.game.entity.component.Box2DComponent;
 import com.mygdx.game.entity.component.PlayerComponent;
+import com.mygdx.game.entity.system.PlayerCameraSystem;
 import com.mygdx.game.view.AnimationType;
 import com.mygdx.game.view.DirectionType;
 
 public class GiantSpirit {
 
     private static CoreGame thisGame;
-    private static SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<>(new Vector2());
+    private static SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<>(Vector2.Zero);
     static boolean isCharge;
     private static Vector2 position = new Vector2();
 
@@ -41,15 +42,7 @@ public class GiantSpirit {
         Vector2 bossPos = b2dCmp.body.getPosition();
         float distance = playerPos.dst(bossPos);
 
-
-        if (bossCmp.isHit) { // bi danh trung
-            bossCmp.resetState();
-
-            if (aniCmp.isFinished && aniCmp.aniType == AnimationType.B_HIT) {
-                bossCmp.isHit = false;
-            }
-        }
-        else if (bossCmp.isCharge) { // nap don danh
+        if (bossCmp.isCharge) { // nap don danh
             if (bossCmp.time >= 1) {
                 isCharge = false;
                 bossCmp.isSkill1 = true;
@@ -61,12 +54,22 @@ public class GiantSpirit {
                 bossCmp.isAttack = false;
             }
         }
-        else {
-            int dir = 1;
-            if (distance <= 3) { // lui lai khi danh xong
-                dir = -1;
-            }
 
+        if (bossCmp.isHit) { // bi danh trung
+            bossCmp.resetState();
+
+            if (aniCmp.isFinished && aniCmp.aniType == AnimationType.B_HIT) {
+                bossCmp.isHit = false;
+            }
+        } else if (bossCmp.isReady(deltaTime) && !bossCmp.isCharge && !bossCmp.isAttack) {
+            Arrive<Vector2> arriveBehavior = new Arrive<>(enemySteerable, playerSteerable)
+                    .setArrivalTolerance(0.1f)
+                    .setDecelerationRadius(3)
+                    .setTimeToTarget(0.1f);
+            arriveBehavior.calculateSteering(steeringOutput);
+            Vector2 force = steeringOutput.linear.scl(deltaTime);
+            force.set(force.x, force.y);
+            b2dCmp.body.applyForceToCenter(force, true);
             if (bossCmp.time >= bossCmp.reload && distance < 6) { // dieu kien danh thuong
                 bossCmp.time = 0;
                 position.set(playerPos);
@@ -77,25 +80,14 @@ public class GiantSpirit {
                 b2dCmp.body.applyForceToCenter(Vector2.Zero, true);
                 bossCmp.isCharge = true;
             }
-            // di chuyen
-            Arrive<Vector2> arriveBehavior = new Arrive<>(enemySteerable, playerSteerable)
-                    .setArrivalTolerance(0.1f)
-                    .setDecelerationRadius(3)
-                    .setTimeToTarget(0.1f);
-            arriveBehavior.calculateSteering(steeringOutput);
-            Vector2 force = steeringOutput.linear.scl(deltaTime);
-            force.set(force.x * dir, force.y * dir);
-            b2dCmp.body.applyForceToCenter(force, true);
-
             // Limit the velocity to prevent the entity from moving too fast
             Vector2 velocity = b2dCmp.body.getLinearVelocity();
-            float maxSpeed = 0.8f;
+            float maxSpeed = 12f;
             if (velocity.len() > maxSpeed) {
                 velocity = velocity.nor().scl(maxSpeed);
                 b2dCmp.body.setLinearVelocity(velocity);
             }
         }
-
     }
 
     public static void GS_attack(CoreGame game, Entity entity, float deltatime) {
@@ -131,6 +123,7 @@ public class GiantSpirit {
         BossSkillType type = BossSkillType.BLAST;
         DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, DirectionType.DOWN, type.getWidth(), type.getHeight(), 0, EffectType.AURA, false, 0);
         thisGame.getEcsEngine().createDamageArea(area);
+        PlayerCameraSystem.cameraShake(thisGame, 1.f, 1.f, Gdx.graphics.getDeltaTime());
         isCharge = true;
     }
 

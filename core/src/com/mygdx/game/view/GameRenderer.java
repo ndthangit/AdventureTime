@@ -1,20 +1,15 @@
 package com.mygdx.game.view;
 
-import java.util.EnumMap;
-
 import box2dLight.RayHandler;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -29,10 +24,13 @@ import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.*;
 import com.mygdx.game.items.Item;
-import com.mygdx.game.items.food.Food;
-import com.mygdx.game.map.*;
-import com.mygdx.game.screens.MainGameScreen;
+import com.mygdx.game.map.Map;
+import com.mygdx.game.map.MapListener;
+import com.mygdx.game.map.MapManager;
+import com.mygdx.game.map.MapType;
 import com.mygdx.game.screens.ScreenType;
+
+import java.util.EnumMap;
 
 import static com.mygdx.game.CoreGame.UNIT_SCALE;
 
@@ -51,6 +49,7 @@ public class GameRenderer implements Disposable, MapListener{
 	private final ImmutableArray<Entity> animatedEntities;
 	private final ImmutableArray<Entity> weaponEntities;
 	private final ImmutableArray<Entity> effectEntities;
+	private final ImmutableArray<Entity> bossEntities;
 	private final ImmutableArray<Entity> itemEntities;
 	private final ImmutableArray<Entity> hideEntities;
 	private final ImmutableArray<Entity> damageEntities;
@@ -85,6 +84,7 @@ public class GameRenderer implements Disposable, MapListener{
 		effectEntities = game.getEcsEngine().getEntitiesFor(Family.all(EffectComponent.class).get());
 		hideEntities = game.getEcsEngine().getEntitiesFor(Family.all(HideLayerComponent.class, AnimationComponent.class).get());
 		damageEntities = game.getEcsEngine().getEntitiesFor(Family.all(DamageAreaComponent.class,Box2DComponent.class, AnimationComponent.class).get());
+		bossEntities = game.getEcsEngine().getEntitiesFor(Family.all(BossComponent.class).get());
 		this.mapRenderer = new OrthogonalTiledMapRenderer(null, UNIT_SCALE, game.getSpriteBatch());
 		game.getMapManager().addMapListener(this);
 		tiledMapLayers = new Array<TiledMapTileLayer>();
@@ -202,6 +202,13 @@ public class GameRenderer implements Disposable, MapListener{
 			final Sprite frame = animation.getKeyFrame(aniComponent.aniTime);
 			box2DComponent.renderPosition.lerp(box2DComponent.body.getPosition(), delta);
 			frame.setBounds(box2DComponent.renderPosition.x - aniComponent.width * 0.5f, box2DComponent.renderPosition.y - aniComponent.height * 0.5f, aniComponent.width, aniComponent.height);
+			if(aniComponent.isDamaged){
+				frame.setColor(Color.RED);
+				aniComponent.setDamaged(false, 3, delta);
+			}
+			else{
+				frame.setColor(Color.WHITE);
+			}
 			frame.setAlpha(aniComponent.alpha);
 			frame.draw(spriteBatch);
 			aniComponent.isFinished = animation.isAnimationFinished(aniComponent.aniTime);
@@ -239,35 +246,6 @@ public class GameRenderer implements Disposable, MapListener{
 		if (damageAreaComponent.type == EffectType.NONE) {
 			return;
 		}
-//		final EffectComponent effectComponent = ECSEngine.effectCmpMapper.get(entity);
-//		String path = effectComponent.path;
-//		EffectType type = effectComponent.type;
-//		EnumMap<EffectType, Animation<Sprite>> subCache = effectCache.get(path);
-//		if (subCache == null) {
-//			subCache = new EnumMap<EffectType, Animation<Sprite>>(EffectType.class);
-//			effectCache.put(path, subCache);
-//		}
-//		Animation<Sprite> animation = subCache.get(type);
-//		if (animation == null) {
-//			Gdx.app.debug(TAG, "Creating new effect of type " + type);
-//			final TextureAtlas.AtlasRegion atlasRegion = assetManager.get(path, TextureAtlas.class).findRegion(type.getAtlasKey());
-//			final TextureRegion[][] textureRegions = atlasRegion.split(32, 32);
-//			final Array<Sprite> keyFrame = new Array<Sprite>();
-//			for (TextureRegion subRegion : textureRegions[0]) {
-//				Gdx.app.debug("effect", effectComponent.toString());
-//				final Sprite sprite = new Sprite(subRegion);
-//				sprite.setOriginCenter();
-//				keyFrame.add(sprite);
-//			}
-//			animation = new Animation<Sprite>(type.getFrameTime(), keyFrame, Animation.PlayMode.LOOP);
-//			subCache.put(type, animation);
-//			Gdx.app.debug("effect", effectComponent.toString());
-//		}
-//		final Sprite frame = animation.getKeyFrame(effectComponent.aniTime);
-//		frame.setBounds(effectComponent.position.x - effectComponent.width * 0.5f, effectComponent.position.y - effectComponent.height * 0.5f, effectComponent.width, effectComponent.height);
-//		frame.setOriginCenter();
-//		frame.setRotation(-(effectComponent.direction.getCode()+1) * 90);
-//		frame.draw(spriteBatch);
 	}
 
 	private void rederEffect(Entity entity, float delta) {

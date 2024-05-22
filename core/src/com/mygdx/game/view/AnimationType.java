@@ -25,7 +25,7 @@ public enum AnimationType {
 	B_ATTACK_RIGHT("AttackLeft", 0.2f, 0),
 	B_ATTACK_LEFT("AttackRight", 0.2f, 0),
 
-	B_HIT("Hit", 0.2f, 0);
+	B_HIT("Hit", 0.4f, 0);
 
 	public String getAtlasKey() {
 		return atlasKey;

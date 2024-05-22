@@ -47,12 +47,12 @@
 </data>
  </layer>
  <objectgroup id="15" name="playerStartPosition">
-  <object id="2" name="TOWN" x="200" y="303.877">
+  <object id="2" name="START" x="200" y="303.877">
    <point/>
   </object>
  </objectgroup>
  <objectgroup id="16" name="boss">
-  <object id="3" name="GIANTBLUESAMURAI" x="199.5" y="142">
+  <object id="3" name="GIANTSPIRIT" x="199.5" y="142">
    <point/>
   </object>
  </objectgroup>
