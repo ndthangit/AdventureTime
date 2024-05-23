@@ -1,52 +1,103 @@
 weapon.png
-size:128,32
-filter:Linear,Linear
-repeat:xy
+size: 1947, 98
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
 Axe
-bounds:21,17,11,13
+  rotate: false
+  xy: 1, 1
+  size: 78, 66
+  orig: 78, 66
+  offset: 0, 0
+  index: -1
 AxeInHand
-bounds:35,7,11,8
+  rotate: false
+  xy: 140, 1
+  size: 66, 48
+  orig: 66, 48
+  offset: 0, 0
+  index: -1
 BigSword
-bounds:86,4,7,16
+  rotate: false
+  xy: 279, 1
+  size: 96, 42
+  orig: 96, 42
+  offset: 0, 0
+  index: -1
 BigSwordInHand
-bounds:61,18,7,12
-Bone
-bounds:43,18,7,12
-BoneInHand
-bounds:81,22,7,8
-Book
-bounds:66,7,9,9
-BookInHand
-bounds:10,3,12,9
-Club
-bounds:48,2,8,14
-ClubInHand
-bounds:103,2,8,10
+  rotate: false
+  xy: 418, 1
+  size: 42, 72
+  orig: 42, 72
+  offset: 0, 0
+  index: -1
 Fork
-bounds:77,3,7,16
+  rotate: false
+  xy: 557, 1
+  size: 96, 42
+  orig: 96, 42
+  offset: 0, 0
+  index: -1
 ForkInHand
-bounds:52,18,7,12
+  rotate: false
+  xy: 696, 1
+  size: 42, 72
+  orig: 42, 72
+  offset: 0, 0
+  index: -1
 Hammer
-bounds:10,14,9,16
+  rotate: false
+  xy: 835, 1
+  size: 96, 54
+  orig: 96, 54
+  offset: 0, 0
+  index: -1
 HammerInHand
-bounds:70,21,9,9
-Katana
-bounds:58,2,6,14
-KatanaInHand
-bounds:113,7,6,10
+  rotate: false
+  xy: 974, 1
+  size: 54, 54
+  orig: 54, 54
+  offset: 0, 0
+  index: -1
 Lance
-bounds:2,7,6,23
+  rotate: false
+  xy: 1113, 1
+  size: 138, 36
+  orig: 138, 36
+  offset: 0, 0
+  index: -1
 LanceInHand
-bounds:103,14,6,16
+  rotate: false
+  xy: 1252, 1
+  size: 36, 96
+  orig: 36, 96
+  offset: 0, 0
+  index: -1
 Sai
-bounds:34,17,7,13
+  rotate: false
+  xy: 1391, 1
+  size: 78, 42
+  orig: 78, 42
+  offset: 0, 0
+  index: -1
 SaiInHand
-bounds:90,22,7,8
-Sword
-bounds:95,3,6,17
-SwordInHand
-bounds:111,19,6,11
-Whip
-bounds:24,2,9,13
-WhipInHand
-bounds:121,16,3,14
+  rotate: false
+  xy: 1530, 1
+  size: 42, 48
+  orig: 42, 48
+  offset: 0, 0
+  index: -1
+Sword2
+  rotate: false
+  xy: 1669, 1
+  size: 90, 36
+  orig: 90, 36
+  offset: 0, 0
+  index: -1
+Sword2InHand
+  rotate: false
+  xy: 1808, 1
+  size: 36, 66
+  orig: 36, 66
+  offset: 0, 0
+  index: -1

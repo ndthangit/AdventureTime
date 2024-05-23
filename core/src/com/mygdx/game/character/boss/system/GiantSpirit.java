@@ -8,6 +8,7 @@ import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.behaviors.Arrive;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.audio.AudioType;
 import com.mygdx.game.character.ai.SteerableAgent;
 import com.mygdx.game.character.boss.BossSkillType;
 import com.mygdx.game.effect.DamageArea;
@@ -125,6 +126,7 @@ public class GiantSpirit {
         thisGame.getEcsEngine().createDamageArea(area);
         PlayerCameraSystem.cameraShake(thisGame, 1.f, 1.f, Gdx.graphics.getDeltaTime());
         isCharge = true;
+        thisGame.getAudioManager().playAudio(AudioType.ALERT);
     }
 
     private static void createSkill1(Entity entity) {
@@ -133,6 +135,7 @@ public class GiantSpirit {
         DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, DirectionType.DOWN, type.getWidth(), type.getHeight(), type.getDamage(), type.getEffectType(), false, 0);
         thisGame.getEcsEngine().createDamageArea(area);
         bossCmp.isSkill1 = false;
+        thisGame.getAudioManager().playAudio(AudioType.EXPLOSION);
     }
 
     private static void createSkill2(Entity entity) {

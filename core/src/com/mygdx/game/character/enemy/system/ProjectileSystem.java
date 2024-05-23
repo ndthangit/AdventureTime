@@ -2,6 +2,7 @@ package com.mygdx.game.character.enemy.system;
 
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.audio.AudioType;
 import com.mygdx.game.character.enemy.EnemyDetailSkillType;
 import com.mygdx.game.effect.DamageArea;
 import com.mygdx.game.effect.EffectType;
@@ -22,6 +23,16 @@ public class ProjectileSystem {
                 Vector2 bulletStart = new Vector2(enemyPos.x - box2DCmp.width/2, enemyPos.y - box2DCmp.height/2);// Mục tiêu là vị trí ngang của Player và dọc của Boss
                 DamageArea area = new DamageArea(enemyPos, CoreGame.BIT_ENEMY, enemyCom.direction, type.getWidth(), type.getHeight(), type.getDamage(), type.getEffectType(), true, type.getSpeed());
                 game.getEcsEngine().createDamageArea(area); // Tạo đạn với tốc độ 1.0f
+                switch (type) {
+                    case FIRE_BALL:
+                        game.getAudioManager().playAudio(AudioType.FIREBALL);
+                        break;
+                    case SHURIKEN:
+                        game.getAudioManager().playAudio(AudioType.POWERUP);
+                        break;
+
+                }
+
                 enemyCom.timeSinceLastShot = 0;
                 enemyCom.timeDelayForBullet = 1f;
             }

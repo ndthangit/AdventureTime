@@ -1,0 +1,47 @@
+lifebar.png
+size: 20, 206
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+LeftHealth
+  rotate: false
+  xy: 2, 2
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+LeftLife
+  rotate: false
+  xy: 2, 36
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+MiddleHealth
+  rotate: false
+  xy: 2, 70
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+MiddleLife
+  rotate: false
+  xy: 2, 104
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+RightHealth
+  rotate: false
+  xy: 2, 138
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+RightLife
+  rotate: false
+  xy: 2, 172
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1

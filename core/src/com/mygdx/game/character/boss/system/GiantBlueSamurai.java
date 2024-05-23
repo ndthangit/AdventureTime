@@ -8,6 +8,7 @@ import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.behaviors.Arrive;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.audio.AudioType;
 import com.mygdx.game.character.ai.SteerableAgent;
 import com.mygdx.game.character.boss.BossSkillType;
 import com.mygdx.game.character.boss.BossType;
@@ -185,6 +186,7 @@ public class GiantBlueSamurai {
         BossSkillType type = bossCmp.type.getSkill1();
         DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, bossCmp.direction,bossCmp.type.getWidth(), bossCmp.type.getHeight(), type.getDamage() , type.getEffectType(), true, type.getSpeed());
         thisGame.getEcsEngine().createDamageArea(area);
+        thisGame.getAudioManager().playAudio(AudioType.FIREBALL);
     }
     private static void createSkill2(Entity entity) {
         BossComponent bossCmp = ECSEngine.bossCmpMapper.get(entity);

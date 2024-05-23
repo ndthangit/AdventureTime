@@ -56,8 +56,10 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 		assetManager.load("Items/Food/food.atlas", TextureAtlas.class);
 		assetManager.load("Items/items.atlas", TextureAtlas.class);
 
-		assetManager.load("HUD/HeartAtlas.atlas", TextureAtlas.class);
+		assetManager.load("HUD/HeartAtlasN.atlas", TextureAtlas.class);
+		assetManager.load("HUD/miniheart.atlas", TextureAtlas.class);
 		assetManager.load("number/Number.atlas", TextureAtlas.class);
+		assetManager.load("HUD/lifebar.atlas", TextureAtlas.class);
 		assetManager.load("Items/Key.atlas", TextureAtlas.class);
 
 		//audio

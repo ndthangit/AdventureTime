@@ -90,7 +90,7 @@ public class CoreGame extends Game {
 		worldContactListener = new WorldContactListener();
 		world.setContactListener(worldContactListener);
 		box2DDebugRenderer = new Box2DDebugRenderer();
-		box2DDebugRenderer.setDrawBodies(true);
+		box2DDebugRenderer.setDrawBodies(false);
 
 		rayHandler = new RayHandler(world);
 		rayHandler.setAmbientLight(0, 0, 0, 0.05f);
@@ -127,7 +127,7 @@ public class CoreGame extends Game {
 		gameRenderer = new GameRenderer(this);
 		
 		screenCache = new EnumMap<ScreenType, Screen> (ScreenType.class);		
-		mapManager.setNextMapType(MapType.SAMU_BOSS);
+		mapManager.setNextMapType(MapType.DOJO);
 		screenType = ScreenType.MENU;
 		setScreen(ScreenType.MENU);
 	}

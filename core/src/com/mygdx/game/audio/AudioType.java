@@ -10,14 +10,21 @@ public enum AudioType {
 	LOL1("Musics/1 - Adventure Begin.ogg", true, 0.2f),
 	CHILL("Musics/27 - Chill.ogg", false, 0.3f),
 	GOLD1("Sounds/Game/Gold1.wav",false,0.3f),
-	HIT("Sounds/Game/Hit1.wav",false, 0.3f),
-	HIT1("Sounds/Game/Hit3.wav",false, 0.3f),
-	HIT2("Sounds/Game/Hit2.wav", false, 0.3f),
+	HIT("Sounds/Game/Hit.wav",false, 0.5f),
+	HIT1("Sounds/Game/Hit3.wav",false, 0.5f),
+	HIT2("Sounds/Game/Hit2.wav", false, 0.5f),
 	KILL("Sounds/Game/Kill.wav", false, 0.5f),
 	REVELATION("Musics/3 - Revelation.ogg", true, 0.3f),
-	TEMPLE("Musics/12 - Temple.ogg", true, 0.3f),
-	DUNGEON("Musics/21 - Dungeon.ogg", true, 0.3f),
-	END("Musics/20 - Good Time.ogg", true, 0.2f),;
+	TEMPLE("Musics/12 - Temple.ogg", true, 0.5f),
+	DUNGEON("Musics/21 - Dungeon.ogg", true, 0.5f),
+	FX("Sounds/Game/Fx.wav", false, 0.5f),
+	FOOTSTEPS("Sounds/Game/FootSteps3.mp3", false, 0.5f),
+	EXPLOSION("Sounds/Game/Explosion2.wav",false ,0.5f ),
+	ALERT("Sounds/Game/Alert.wav", false, 0.5f),
+	POWERUP("Sounds/Game/PowerUp1.wav", false, 0.5f),
+	FIREBALL("Sounds/Game/Fireball.wav",false,0.5f),
+	END("Musics/20 - Good Time.ogg", true, 0.3f),
+	SWORD2("Sounds/Game/Sword2.wav", false, 0.5f),;
 	
 	private final String filePath;
 	private final boolean isMusic;

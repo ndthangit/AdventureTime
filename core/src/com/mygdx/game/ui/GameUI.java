@@ -2,39 +2,18 @@ package com.mygdx.game.ui;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Scaling;
 import com.mygdx.game.CoreGame;
-import com.mygdx.game.effect.Effect;
-import com.mygdx.game.entity.component.AnimationComponent;
-import com.mygdx.game.entity.component.Box2DComponent;
-import com.mygdx.game.entity.component.GameObjectComponent;
+import com.mygdx.game.character.boss.Boss;
+import com.mygdx.game.entity.component.BossComponent;
 import com.mygdx.game.entity.component.PlayerComponent;
-import com.mygdx.game.input.GameKey;
-import com.mygdx.game.items.Item;
-import com.mygdx.game.items.food.Food;
-import com.mygdx.game.items.food.FoodType;
-import com.mygdx.game.items.weapon.Weapon;
-import com.mygdx.game.items.weapon.WeaponType;
 import com.mygdx.game.screens.ScreenType;
-import com.mygdx.game.view.DirectionType;
-
-import static com.mygdx.game.items.weapon.WeaponType.BIGSWORD;
 
 public class GameUI extends Table {
 	private final CoreGame game;
@@ -49,6 +28,7 @@ public class GameUI extends Table {
 	private final Stack[] stacks;
 
 	private final Table numTable;
+	private final Table lifeBar;
 	
 	public GameUI(Skin skin, CoreGame game) {
 		super(skin);
@@ -57,8 +37,9 @@ public class GameUI extends Table {
 		playerCmp = player.getComponent(PlayerComponent.class);
 
 
-		this.heartBG = new Table();
+		this.heartBG = new Table(skin);
 		this.bagTable = new Table(skin);
+		this.lifeBar = new Table(skin);
 		this.bagItems = new ImageButton[5];
 		this.stacks = new Stack[5];
 
@@ -67,12 +48,11 @@ public class GameUI extends Table {
 		heart = new Array<Image>();
 		setFillParent(true);
 		this.numTable = new Table();
-
+		setDebug(false, false);
 		bagTable.setFillParent(true);
 		createHeart();
 		createBag();
 		createNumTable();
-
 	}
 
 	public Entity getPlayer() {
@@ -84,7 +64,7 @@ public class GameUI extends Table {
 		Image heartBGImage = new Image(new Texture(Gdx.files.internal("Backgrounds/FacesetBox10.png")));
 		heartBG.add(heartBGImage);
 		this.addActor(heartBG);
-		heartBG.setPosition(-585, 305);
+		heartBG.setPosition(-565, 305);
 		heartTable.setFillParent(true);
 
 		Stack stack = new Stack();
@@ -93,7 +73,7 @@ public class GameUI extends Table {
 		Image character = new Image(new Texture(Gdx.files.internal("Actor/Characters/BlackNinjaMage/Faceset.png")));
 		stack.add(character);
 //        stack.debug();
-		heartTable.add(stack);
+		heartTable.add(stack).pad(15);
 
 		int i;
 		for (i = 4; i <= playerCmp.maxLife; i += 4) {
@@ -109,11 +89,11 @@ public class GameUI extends Table {
 			i += 4;
 		}
 		for (i = 0; i < playerCmp.maxLife / 4; i++) {
-			heartTable.add(heart.get(i)).pad(15);
+			heartTable.add(heart.get(i)).pad(10);
 		}
 
 		this.addActor(heartTable);
-		heartTable.setPosition(-445, 305);
+		heartTable.setPosition(-460, 305);
 //        heartTable.debug();
 	}
 
@@ -127,9 +107,7 @@ public class GameUI extends Table {
 		stack.add(characterBG);
 		Image character = new Image(new Texture(Gdx.files.internal("Actor/Characters/BlackNinjaMage/Faceset.png")));
 		stack.add(character);
-//        stack.debug();
-//        add(stack).top();
-		heartTable.add(stack);
+		heartTable.add(stack).pad(15);
 		heart.clear();
 		int i;
 
@@ -146,7 +124,7 @@ public class GameUI extends Table {
 			i += 4;
 		}
 		for (i = 0; i < playerCmp.maxLife / 4; i++) {
-			heartTable.add(heart.get(i)).pad(15);
+			heartTable.add(heart.get(i)).pad(10);
 		}
 		if (playerCmp.life <= 0) {
 			game.setScreen(ScreenType.DEAD);
@@ -154,7 +132,7 @@ public class GameUI extends Table {
 	}
 
 	private Drawable setHeartImage(int i) {
-		TextureAtlas atlas = game.getAssetManager().get("HUD/HeartAtlas.atlas", TextureAtlas.class);
+		TextureAtlas atlas = game.getAssetManager().get("HUD/HeartAtlasN.atlas", TextureAtlas.class);
 		TextureAtlas.AtlasRegion region = atlas.findRegion("Heart-" + i);
 		Drawable drawable = new TextureRegionDrawable(region);
 		return drawable;
@@ -165,16 +143,13 @@ public class GameUI extends Table {
 		Image wpBG = new Image(new Texture(Gdx.files.internal("Backgrounds/wpBG2.png")));
 		stacks[0] = new Stack();
 		stacks[0].add(wpBG);
-
 		TextureAtlas atlas = game.getAssetManager().get(playerCmp.weaponList.get(playerCmp.indWeapon).atlasPath, TextureAtlas.class);
 		TextureAtlas.AtlasRegion region = atlas.findRegion(playerCmp.weaponList.get(playerCmp.indWeapon).key);
 
 		Drawable drawable = new TextureRegionDrawable(region);
-		drawable.setMinHeight(120);
-		drawable.setMinWidth(50);
 		bagItems[0] = new ImageButton(drawable);
 		stacks[0].add(bagItems[0]);
-
+		System.out.println("size : "+ stacks[0].getChildren().size);
 		bagTable.add(stacks[0]).center().row();
 		bagTable.row();
 
@@ -189,7 +164,6 @@ public class GameUI extends Table {
 		// Set table position
 		bagTable.setPosition(0, (Gdx.graphics.getHeight() / 2) - 270);
 		bagTable.bottom().left();
-        bagTable.debug();
 	}
 
 	public void updateBag() {
@@ -199,8 +173,6 @@ public class GameUI extends Table {
 			TextureAtlas atlasWP = game.getAssetManager().get(playerCmp.weaponList.get(playerCmp.indWeapon).atlasPath, TextureAtlas.class);
 			TextureAtlas.AtlasRegion regionWP = atlasWP.findRegion(playerCmp.weaponList.get(playerCmp.indWeapon).key);
 			Drawable drawableWP = new TextureRegionDrawable(regionWP);
-			drawableWP.setMinHeight(50);
-			drawableWP.setMinWidth(120);
 			bagItems[0] = new ImageButton(drawableWP);
 			stacks[0].add(bagItems[0]);
 		}
@@ -242,7 +214,6 @@ public class GameUI extends Table {
 		}
 		this.addActor(numTable);
 		numTable.setPosition(-555, -90);
-//        numTable.debug();
 	}
 
 	public void updateNumTable() {
@@ -269,6 +240,89 @@ public class GameUI extends Table {
 				numTable.add(numImage).padRight(60).padTop(60).row();
 			}
 		}
+	}
+
+	public void createLifeBar(Boss boss) {
+		lifeBar.clearChildren();
+		lifeBar.setFillParent(true);
+		TextureAtlas atlas = game.getAssetManager().get("HUD/lifebar.atlas", TextureAtlas.class);
+		TextureAtlas.AtlasRegion region = atlas.findRegion("LeftHealth");
+		Drawable drawable = new TextureRegionDrawable(region);
+		drawable.setMinHeight(20);
+		drawable.setMinWidth(20);
+
+		Image numImage = new Image(drawable);
+		lifeBar.add(numImage);
+		for (int i = 1; i < 60 ; i++) {
+			region = atlas.findRegion("MiddleHealth");
+			drawable = new TextureRegionDrawable(region);
+			drawable.setMinHeight(20);
+			drawable.setMinWidth(20);
+
+			numImage = new Image(drawable);
+			lifeBar.add(numImage);
+		}
+
+		region = atlas.findRegion("RightHealth");
+		drawable = new TextureRegionDrawable(region);
+		drawable.setMinHeight(20);
+		drawable.setMinWidth(20);
+
+		numImage = new Image(drawable);
+		lifeBar.add(numImage);
+		this.addActor(lifeBar);
+		lifeBar.setPosition(0, -300);
+	}
+
+	public void updateLifeBar(BossComponent bossCmp) {
+		lifeBar.clearChildren();
+		TextureAtlas atlas = game.getAssetManager().get("HUD/lifebar.atlas", TextureAtlas.class);
+		TextureAtlas.AtlasRegion region = atlas.findRegion("LeftHealth");
+		Drawable drawable = new TextureRegionDrawable(region);
+		drawable.setMinHeight(20);
+		drawable.setMinWidth(20);
+
+		Image numImage = new Image(drawable);
+		lifeBar.add(numImage);
+		int i;
+		for (i = 1; i < bossCmp.life ; i++) {
+			region = atlas.findRegion("MiddleHealth");
+			drawable = new TextureRegionDrawable(region);
+			drawable.setMinHeight(20);
+			drawable.setMinWidth(20);
+
+			numImage = new Image(drawable);
+			lifeBar.add(numImage);
+		}
+
+		for (; i < bossCmp.maxLife ; i++) {
+			region = atlas.findRegion("MiddleLife");
+			drawable = new TextureRegionDrawable(region);
+			drawable.setMinHeight(20);
+			drawable.setMinWidth(20);
+
+			numImage = new Image(drawable);
+			lifeBar.add(numImage);
+		}
+
+		if (bossCmp.life == bossCmp.maxLife) {
+			region = atlas.findRegion("RightHealth");
+			drawable = new TextureRegionDrawable(region);
+			drawable.setMinHeight(20);
+			drawable.setMinWidth(20);
+		}
+		else {
+			region = atlas.findRegion("RightLife");
+			drawable = new TextureRegionDrawable(region);
+			drawable.setMinHeight(20);
+			drawable.setMinWidth(20);
+		}
+		numImage = new Image(drawable);
+		lifeBar.add(numImage);
+	}
+
+	public void destroyLifeBar() {
+		lifeBar.clearChildren();
 	}
 }
 ;

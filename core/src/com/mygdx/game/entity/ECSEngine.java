@@ -41,7 +41,8 @@ public class ECSEngine extends PooledEngine{
 	public static final ComponentMapper<DoorLayerComponent> doorLayerCmpMapper = ComponentMapper.getFor(DoorLayerComponent.class);
 	public static final ComponentMapper<BossComponent> bossCmpMapper = ComponentMapper.getFor(BossComponent.class);
 	public static final ComponentMapper<DamageAreaComponent> damageAreaCmpMapper = ComponentMapper.getFor(DamageAreaComponent.class);
-	public static final ComponentMapper<EntityComponent> entityCmpMapper = ComponentMapper.getFor(EntityComponent.class);
+	public static final ComponentMapper<UIComponent> uiCmpMapper = ComponentMapper.getFor(UIComponent.class);
+
 
 	private final World world;
 
@@ -126,7 +127,7 @@ public class ECSEngine extends PooledEngine{
 		PolygonShape pShape = new PolygonShape();
 		pShape.setAsBox(width * 0.5f, height * 0.5f);
 		CoreGame.FIXTURE_DEF.filter.categoryBits = CoreGame.BIT_PLAYER;
-		CoreGame.FIXTURE_DEF.filter.maskBits = -1;
+		CoreGame.FIXTURE_DEF.filter.maskBits = -1 ^ CoreGame.BIT_WEAPON;
 		CoreGame.FIXTURE_DEF.shape = pShape;
 		box2DComponent.body.createFixture(CoreGame.FIXTURE_DEF);
 
@@ -470,6 +471,12 @@ public class ECSEngine extends PooledEngine{
 		box2DComponent.body.createFixture(CoreGame.FIXTURE_DEF);
 		pShape.dispose();
 		enemyEnity.add(box2DComponent);
+
+		// UI component
+		UIComponent uiComponent = this.createComponent(UIComponent.class);
+		uiComponent.isShow = false;
+		enemyEnity.add(uiComponent);
+
 		this.addEntity(enemyEnity);
 	}
 

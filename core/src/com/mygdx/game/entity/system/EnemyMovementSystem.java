@@ -40,6 +40,7 @@ public class EnemyMovementSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         if (getPlayerEntity() == null) return;
         Box2DComponent playerCom = ECSEngine.box2dCmpMapper.get(getPlayerEntity());
+        PlayerComponent playerCmp = ECSEngine.playerCmpMapper.get(getPlayerEntity());
         EnemyComponent enemyCom = ECSEngine.enemyCmpMapper.get(entity);
         Box2DComponent b2dComponent = ECSEngine.box2dCmpMapper.get(entity);
 
@@ -48,7 +49,7 @@ public class EnemyMovementSystem extends IteratingSystem {
         float distance = playerPos.dst(enemyPos);
         final Vector2 speed = new Vector2(enemyCom.speed * 0.3f, enemyCom.speed * 0.3f);
         if (enemyCom.stop == false) {
-            if (distance < enemyCom.type.getRange() || game.getMapManager().getCurrentMap().isHasBoss()) {
+            if ((distance < enemyCom.type.getRange() || game.getMapManager().getCurrentMap().isHasBoss()) && !playerCmp.vincible) {
                 enemyCom.focus = true;
                 // Đuổi theo Player
                 Box2DComponent b2dPlayer = ECSEngine.box2dCmpMapper.get(getPlayerEntity());

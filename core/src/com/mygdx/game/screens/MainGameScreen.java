@@ -49,6 +49,15 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 				case BEGIN_FOREST:
 					audioManager.playAudio(AudioType.LOL1);
 					break;
+				case TOWN:
+					audioManager.playAudio(AudioType.REVELATION);
+					break;
+				case SAMU_BOSS:
+					audioManager.playAudio(AudioType.TEMPLE);
+					break;
+				case CAVE:
+					audioManager.playAudio(AudioType.DUNGEON);
+					break;
 			} // them am thanh map
 		}
 	}
@@ -57,6 +66,7 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 
 	@Override
 	public void dispose() {
+		
 	}
 
 	@Override

@@ -27,7 +27,8 @@ public class MapManager {
 	public static final String TAG = MapManager.class.getSimpleName();
 
 	private final ECSEngine ecsEngine;
-	
+	private final CoreGame game;
+
 	private final World world;
 	private final Array<Body> bodies;
 	private final AssetManager assetManager;
@@ -43,6 +44,7 @@ public class MapManager {
 		currentMap = null;
 		world = game.getWorld();
 		ecsEngine = game.getEcsEngine();
+		this.game = game;
 		assetManager = game.getAssetManager();
 		bodies = new Array<Body>();
 		mapCache = new EnumMap<MapType, Map>(MapType.class);
@@ -94,7 +96,7 @@ public class MapManager {
 
 	public void spawnPlayer() {
 		if (ecsEngine.getPlayerEntity() == null) {
-			Weapon weapon = new Weapon(WeaponType.KATANA,new Effect(WeaponType.KATANA.getEffect(),CoreGame.BIT_WEAPON, Vector2.Zero, DirectionType.DOWN), Vector2.Zero, DirectionType.DOWN);
+			Weapon weapon = new Weapon(WeaponType.SWORD2,new Effect(WeaponType.SWORD2.getEffect(),CoreGame.BIT_WEAPON, Vector2.Zero, DirectionType.DOWN), Vector2.Zero, DirectionType.DOWN);
 			ecsEngine.createPlayer(this.getCurrentMap().getStartPosition("START"), PlayerType.BLACK_NINJA_MAGE, 0.75f, 0.75f, weapon);
 		}
 		else {
@@ -141,7 +143,9 @@ public class MapManager {
 	private void spawnBoss() {
 		if (currentMap.isBossKilled()) {return;}
 		for (final Boss boss: currentMap.getBosses()) {
+			if (boss.isDead()) continue;
 			ecsEngine.createBoss(boss);
+			game.getGameUI().createLifeBar(boss);
 		}
 	}
 

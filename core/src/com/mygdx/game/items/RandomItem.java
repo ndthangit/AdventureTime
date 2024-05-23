@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Random;
 
 public class RandomItem {
+    static List<WeaponType> listWeapon = new ArrayList<>();
+    static int index = 0;
     public static FoodType randomFood() {
         FoodType listFood[] = FoodType.values();
         Random random = new Random();
@@ -28,12 +30,13 @@ public class RandomItem {
     }
 
     public static WeaponType randomHotWeapon() {
-        List<WeaponType> listWeapon = new ArrayList<>();
-        listWeapon.add(WeaponType.BIGSWORD);
-        listWeapon.add(WeaponType.CLUB);
-//        listWeapon.add(WeaponType.HAMMER);
-        Random random = new Random();
-        int randomNumber = random.nextInt(1000);
-        return listWeapon.get(randomNumber % listWeapon.size());
+        if (listWeapon.size() == 0) {
+            for (WeaponType type : WeaponType.values()) {
+                if (type != WeaponType.SWORD2)
+                listWeapon.add(type);
+            }
+        }
+        index++;
+        return listWeapon.get(index % listWeapon.size());
     }
 }

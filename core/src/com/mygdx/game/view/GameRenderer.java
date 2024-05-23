@@ -53,6 +53,7 @@ public class GameRenderer implements Disposable, MapListener{
 	private final ImmutableArray<Entity> itemEntities;
 	private final ImmutableArray<Entity> hideEntities;
 	private final ImmutableArray<Entity> damageEntities;
+	private final ImmutableArray<Entity> uiEntities;
 	private final OrthogonalTiledMapRenderer mapRenderer;
 	private final Array<TiledMapTileLayer> tiledMapLayers;
 	
@@ -85,6 +86,7 @@ public class GameRenderer implements Disposable, MapListener{
 		hideEntities = game.getEcsEngine().getEntitiesFor(Family.all(HideLayerComponent.class, AnimationComponent.class).get());
 		damageEntities = game.getEcsEngine().getEntitiesFor(Family.all(DamageAreaComponent.class,Box2DComponent.class, AnimationComponent.class).get());
 		bossEntities = game.getEcsEngine().getEntitiesFor(Family.all(BossComponent.class).get());
+		uiEntities = game.getEcsEngine().getEntitiesFor(Family.all(UIComponent.class).get());
 		this.mapRenderer = new OrthogonalTiledMapRenderer(null, UNIT_SCALE, game.getSpriteBatch());
 		game.getMapManager().addMapListener(this);
 		tiledMapLayers = new Array<TiledMapTileLayer>();
@@ -151,6 +153,10 @@ public class GameRenderer implements Disposable, MapListener{
 
 			for (final Entity entity : hideEntities) {
 				renderHideLayer(entity, delta);
+			}
+
+			for (final Entity entity : uiEntities) {
+				renderUI(entity, delta);
 			}
 
 			spriteBatch.end();
@@ -287,6 +293,28 @@ public class GameRenderer implements Disposable, MapListener{
 		if (animation.getPlayMode() == Animation.PlayMode.NORMAL && animation.isAnimationFinished(effectComponent.aniTime)) {
 				entity.add(new RemoveComponent());
 		}
+	}
+
+	private void renderUI (Entity entity, float delta) {
+		final UIComponent uiComponent = ECSEngine.uiCmpMapper.get(entity);
+		if (!uiComponent.isShow) return;
+		final Box2DComponent box2DComponent = ECSEngine.box2dCmpMapper.get(entity);
+		final EnemyComponent enemyComponent = ECSEngine.enemyCmpMapper.get(entity);
+		final AtlasRegion atlasUnderRegion = assetManager.get("HUD/miniheart.atlas", TextureAtlas.class).findRegion("LifeBarMiniUnder");
+		final Sprite underframe;
+		underframe = new Sprite(atlasUnderRegion);
+		underframe.setBounds(box2DComponent.renderPosition.x - box2DComponent.width/2, box2DComponent.renderPosition.y + box2DComponent.height, 1, 2 * UNIT_SCALE);
+		underframe.setOriginCenter();
+		underframe.draw(spriteBatch);
+
+		float width = ((float) enemyComponent.life) / enemyComponent.maxLife;
+
+		final AtlasRegion atlasLifeRegion = assetManager.get("HUD/miniheart.atlas", TextureAtlas.class).findRegion("LifeBarMiniProgress");
+		final Sprite lifeframe;
+		lifeframe = new Sprite(atlasLifeRegion);
+		lifeframe.setBounds(box2DComponent.renderPosition.x - box2DComponent.width/2, box2DComponent.renderPosition.y + box2DComponent.height, width, 2 * UNIT_SCALE);
+		lifeframe.setOriginCenter();
+		lifeframe.draw(spriteBatch);
 	}
 
 	private Animation<Sprite> getAnimation(String path, AnimationType aniType, int width, int height, boolean isSquare) {

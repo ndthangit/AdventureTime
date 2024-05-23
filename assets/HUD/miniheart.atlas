@@ -1,0 +1,19 @@
+miniheart.png
+size: 114, 16
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+LifeBarMiniProgress
+  rotate: false
+  xy: 2, 2
+  size: 54, 12
+  orig: 54, 12
+  offset: 0, 0
+  index: -1
+LifeBarMiniUnder
+  rotate: false
+  xy: 58, 2
+  size: 54, 12
+  orig: 54, 12
+  offset: 0, 0
+  index: -1

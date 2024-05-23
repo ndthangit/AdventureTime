@@ -1,5 +1,6 @@
 package com.mygdx.game.entity.component;
 
+import com.mygdx.game.character.boss.Boss;
 import com.mygdx.game.character.boss.BossType;
 import com.mygdx.game.view.DirectionType;
 
@@ -18,6 +19,8 @@ public class BossComponent extends EntityComponent {
     public float timeRest;
     public DirectionType direction;
     public boolean isRest;
+
+    public Boss boss;
 
     @Override
     public void reset() {

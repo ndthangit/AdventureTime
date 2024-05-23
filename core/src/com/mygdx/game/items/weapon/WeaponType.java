@@ -5,9 +5,14 @@ import com.mygdx.game.effect.EffectType;
 import static com.mygdx.game.effect.EffectType.SLASHCURVED;
 
 public enum WeaponType {
-    KATANA ("Items/Weapons/weapon.atlas","Katana", SLASHCURVED, 5, 0.05f, 7, 12, 0.5f),
-    BIGSWORD("Items/Weapons/weapon.atlas", "BigSword", SLASHCURVED, 3, 0.05f, 7, 16, 0.75f),
-    CLUB("Items/Weapons/weapon.atlas", "Club", SLASHCURVED, 3, 0.05f, 8, 14, 0.5f),;
+    SWORD2 ("Items/Weapons/weapon.atlas","Sword2", SLASHCURVED, 3, 0.05f, 7, 12, 0.75f),
+    BIGSWORD("Items/Weapons/weapon.atlas", "BigSword", SLASHCURVED, 4, 0.05f, 7, 12, 0.5f),
+    AXE("Items/Weapons/weapon.atlas", "Axe", SLASHCURVED, 6, 0.05f, 11, 8, 0.9f),
+    FORK("Items/Weapons/weapon.atlas", "Fork", SLASHCURVED, 4, 0.05f, 7, 12, 0.5f),
+    HAMMER("Items/Weapons/weapon.atlas", "Hammer", SLASHCURVED, 4, 0.05f, 9, 9, 0.5f),
+    LANCE("Items/Weapons/weapon.atlas", "Lance", SLASHCURVED, 4, 0.05f, 6, 16, 0.5f),
+    SAI("Items/Weapons/weapon.atlas", "Sai", SLASHCURVED, 4, 0.05f, 7, 8, 0.5f),
+    ;
 
     private final String atlasPath;
     private final String atlasKey;
