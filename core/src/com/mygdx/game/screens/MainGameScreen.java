@@ -58,6 +58,12 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 				case CAVE:
 					audioManager.playAudio(AudioType.DUNGEON);
 					break;
+				case ABANDONVIL:
+					audioManager.playAudio(AudioType.ABANDON);
+					break;
+				case SPIRIT_BOSS:
+					audioManager.playAudio(AudioType.SPIRIT);
+					break;
 			} // them am thanh map
 		}
 	}

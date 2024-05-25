@@ -5,14 +5,13 @@ import com.mygdx.game.effect.EffectType;
 import static com.mygdx.game.effect.EffectType.SLASHCURVED;
 
 public enum WeaponType {
-    SWORD2 ("Items/Weapons/weapon.atlas","Sword2", SLASHCURVED, 3, 0.05f, 7, 12, 0.75f),
-    BIGSWORD("Items/Weapons/weapon.atlas", "BigSword", SLASHCURVED, 4, 0.05f, 7, 12, 0.5f),
-    AXE("Items/Weapons/weapon.atlas", "Axe", SLASHCURVED, 6, 0.05f, 11, 8, 0.9f),
-    FORK("Items/Weapons/weapon.atlas", "Fork", SLASHCURVED, 4, 0.05f, 7, 12, 0.5f),
-    HAMMER("Items/Weapons/weapon.atlas", "Hammer", SLASHCURVED, 4, 0.05f, 9, 9, 0.5f),
-    LANCE("Items/Weapons/weapon.atlas", "Lance", SLASHCURVED, 4, 0.05f, 6, 16, 0.5f),
-    SAI("Items/Weapons/weapon.atlas", "Sai", SLASHCURVED, 4, 0.05f, 7, 8, 0.5f),
-    ;
+    SWORD2 ("Items/Weapons/weapon.atlas","Sword2", SLASHCURVED, 4, 0.05f, 7, 12, 0.5f),
+    BIGSWORD("Items/Weapons/weapon.atlas", "BigSword", SLASHCURVED, 6, 0.05f, 7, 12, 0.5f),
+    AXE("Items/Weapons/weapon.atlas", "Axe", SLASHCURVED, 12, 0.05f, 11, 8, 1.25f),
+    FORK("Items/Weapons/weapon.atlas", "Fork", SLASHCURVED, 7, 0.05f, 7, 12, 0.75f),
+    HAMMER("Items/Weapons/weapon.atlas", "Hammer", SLASHCURVED, 10, 0.05f, 9, 9, 1.25f),
+    LANCE("Items/Weapons/weapon.atlas", "Lance", SLASHCURVED, 8, 0.05f, 6, 16, 1f),
+    SAI("Items/Weapons/weapon.atlas", "Sai", SLASHCURVED, 2, 0.05f, 7, 8, 0.1f);
 
     private final String atlasPath;
     private final String atlasKey;
