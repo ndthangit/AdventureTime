@@ -18,7 +18,7 @@ public enum AudioType {
 	TEMPLE("Musics/12 - Temple.ogg", true, 0.5f),
 	DUNGEON("Musics/21 - Dungeon.ogg", true, 0.5f),
 	FX("Sounds/Game/Fx.wav", false, 0.5f),
-	FOOTSTEPS("Sounds/Game/FootSteps3.wav", false, 0.09f),
+	FOOTSTEPS("Sounds/Game/FootSteps3.wav", false, 0.3f),
 	EXPLOSION("Sounds/Game/Explosion2.wav",false ,0.5f ),
 	ALERT("Sounds/Game/Alert.wav", false, 0.5f),
 	POWERUP("Sounds/Game/PowerUp1.wav", false, 0.5f),
