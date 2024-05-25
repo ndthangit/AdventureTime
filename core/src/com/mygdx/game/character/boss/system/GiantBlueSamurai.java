@@ -138,7 +138,7 @@ public class GiantBlueSamurai {
             if (!attacking) {
                 float localPositionX = bossCmp.direction == DirectionType.LEFT ? -b2dCmp.width/2: b2dCmp.width/2;
                 Vector2 position = new Vector2(b2dCmp.renderPosition.x + localPositionX, b2dCmp.renderPosition.y);
-                DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, bossCmp.direction,bossCmp.type.getWidth(), 3*bossCmp.type.getHeight()/2, bossCmp.attack, EffectType.NONE, false, 0);
+                DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, bossCmp.direction,bossCmp.type.getWidth(), 3*bossCmp.type.getHeight()/2, bossCmp.attack, EffectType.NONE, false, 0, false);
                 game.getEcsEngine().createDamageArea(area);
                 attacking = true;
             }
@@ -184,7 +184,7 @@ public class GiantBlueSamurai {
         float localPositionX = bossCmp.direction == DirectionType.LEFT ? -b2dCmp.width/2: + b2dCmp.width/2;
         Vector2 position = new Vector2(b2dCmp.renderPosition.x + localPositionX, b2dCmp.renderPosition.y);
         BossSkillType type = bossCmp.type.getSkill1();
-        DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, bossCmp.direction,bossCmp.type.getWidth(), bossCmp.type.getHeight(), type.getDamage() , type.getEffectType(), true, type.getSpeed());
+        DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, bossCmp.direction,bossCmp.type.getWidth(), bossCmp.type.getHeight(), type.getDamage() , type.getEffectType(), true, type.getSpeed(), false);
         thisGame.getEcsEngine().createDamageArea(area);
         thisGame.getAudioManager().playAudio(AudioType.FIREBALL);
     }

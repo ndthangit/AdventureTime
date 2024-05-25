@@ -9,7 +9,6 @@ public class BossComponent extends EntityComponent {
     public BossType type;
     public float reload;
     public float time;
-    public float timeCharge;
     public float timeAttack;
     public boolean isCharge;
     public boolean isAttack;
@@ -20,6 +19,7 @@ public class BossComponent extends EntityComponent {
     public DirectionType direction;
     public float duration = 2;
     public boolean invincible;
+    public boolean isUsedSkill2 = false;
 
     public Boss boss;
 

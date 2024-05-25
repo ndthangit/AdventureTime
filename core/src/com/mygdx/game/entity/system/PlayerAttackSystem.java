@@ -127,7 +127,7 @@ public class PlayerAttackSystem extends IteratingSystem implements KeyInputListe
 		final Box2DComponent b2DComponent = ECSEngine.box2dCmpMapper.get(entity);
 		PlayerType type = playerComponent.aniType;
 		Vector2 position = new Vector2(b2DComponent.body.getPosition().x, b2DComponent.body.getPosition().y);
-		DamageArea area = new DamageArea(position, BIT_PLAYER, playerComponent.direction, type.getSkillType1().getWidth(), type.getSkillType1().getHeight(), type.getSkillType1().getDamage(), type.getSkillType1().getEffectType(), true, type.getSkillType1().getSpeed());
+		DamageArea area = new DamageArea(position, BIT_PLAYER, playerComponent.direction, type.getSkillType1().getWidth(), type.getSkillType1().getHeight(), type.getSkillType1().getDamage(), type.getSkillType1().getEffectType(), true, type.getSkillType1().getSpeed(), playerComponent.upgradeSkill1);
 		game.getEcsEngine().createDamageArea(area);
 		isSkill1 = false;
 		readySkill1 = false;
@@ -139,7 +139,7 @@ public class PlayerAttackSystem extends IteratingSystem implements KeyInputListe
 		final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(entity);
 		PlayerType type = playerComponent.aniType;
 		Vector2 position = new Vector2(b2DComponent.body.getPosition().x, b2DComponent.body.getPosition().y);
-		DamageArea area = new DamageArea(position, BIT_PLAYER, playerComponent.direction, type.getSkillType2().getWidth(), type.getSkillType2().getHeight(), type.getSkillType2().getDamage(), type.getSkillType2().getEffectType(), type.getSkillType2().isBullet(), type.getSkillType2().getSpeed());
+		DamageArea area = new DamageArea(position, BIT_PLAYER, playerComponent.direction, type.getSkillType2().getWidth(), type.getSkillType2().getHeight(), type.getSkillType2().getDamage(), type.getSkillType2().getEffectType(), type.getSkillType2().isBullet(), type.getSkillType2().getSpeed(), false);
 		game.getEcsEngine().createDamageArea(area);
 		isSkill2 = false;
 		readySkill2 = false;

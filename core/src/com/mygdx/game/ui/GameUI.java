@@ -18,6 +18,7 @@ import com.mygdx.game.screens.ScreenType;
 public class GameUI extends Table {
 	private final CoreGame game;
 	private final Table heartBG;
+	private final Stack faceSet;
 	private final Image heartImage[];
 	private final Array<Image> heart;
 	private final Table heartTable;
@@ -36,7 +37,7 @@ public class GameUI extends Table {
 		player = game.getEcsEngine().getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
 		playerCmp = player.getComponent(PlayerComponent.class);
 
-
+		this.faceSet = new Stack();
 		this.heartBG = new Table(skin);
 		this.bagTable = new Table(skin);
 		this.lifeBar = new Table(skin);
@@ -67,13 +68,12 @@ public class GameUI extends Table {
 		heartBG.setPosition(-565, 305);
 		heartTable.setFillParent(true);
 
-		Stack stack = new Stack();
 		Image characterBG = new Image(new Texture(Gdx.files.internal("Backgrounds/FacesetBox1.png")));
-		stack.add(characterBG);
+		faceSet.add(characterBG);
 		Image character = new Image(new Texture(Gdx.files.internal("Actor/Characters/BlackNinjaMage/Faceset.png")));
-		stack.add(character);
+		faceSet.add(character);
 //        stack.debug();
-		heartTable.add(stack).pad(15);
+		heartTable.add(faceSet).pad(15);
 
 		int i;
 		for (i = 4; i <= playerCmp.maxLife; i += 4) {
@@ -93,12 +93,13 @@ public class GameUI extends Table {
 		}
 
 		this.addActor(heartTable);
-		heartTable.setPosition(-460, 305);
+		heartTable.left().top().padLeft(30).padTop(10);
 //        heartTable.debug();
 	}
 
 
 	public void updateHeart() {
+
 		heartTable.clearChildren();
 
 		heartTable.setFillParent(true);

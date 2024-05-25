@@ -1083,8 +1083,8 @@
   <object id="37" name="GRASS" gid="2715" x="624" y="640" width="16" height="16"/>
   <object id="38" name="GRASS" gid="2715" x="624" y="656" width="16" height="16"/>
   <object id="39" name="GRASS" gid="2687" x="624" y="672" width="16" height="16"/>
-  <object id="40" gid="2715" x="624" y="688" width="16" height="16"/>
-  <object id="41" gid="2687" x="624" y="704" width="16" height="16"/>
+  <object id="40" name="GRASS" gid="2715" x="624" y="688" width="16" height="16"/>
+  <object id="41" name="GRASS" gid="2687" x="624" y="704" width="16" height="16"/>
   <object id="42" name="GRASS" gid="2715" x="640" y="624" width="16" height="16"/>
   <object id="43" gid="2716" x="656" y="608" width="16" height="16"/>
   <object id="440" name="CHEST" gid="2573" x="0" y="736" width="16" height="16"/>

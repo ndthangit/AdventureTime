@@ -10,6 +10,7 @@ public class DamageAreaComponent implements Component, Pool.Poolable {
     public int damage;
     public boolean isbullet;
     public short owner;
+    public boolean upgrade;
     public EffectType type;
     public float bulletSpeed;
     public DirectionType direction;

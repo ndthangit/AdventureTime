@@ -54,7 +54,7 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
 		assetManager.load("FX/Effect.atlas", TextureAtlas.class);
 		assetManager.load("Items/Food/food.atlas", TextureAtlas.class);
-		assetManager.load("Items/items.atlas", TextureAtlas.class);
+		assetManager.load("Items/special.atlas", TextureAtlas.class);
 
 		assetManager.load("HUD/HeartAtlasN.atlas", TextureAtlas.class);
 		assetManager.load("HUD/miniheart.atlas", TextureAtlas.class);

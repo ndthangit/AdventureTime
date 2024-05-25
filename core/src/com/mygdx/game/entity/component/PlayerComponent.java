@@ -9,6 +9,7 @@ import com.mygdx.game.character.player.PlayerType;
 import com.mygdx.game.items.Item;
 import com.mygdx.game.items.food.Food;
 import com.mygdx.game.items.food.FoodType;
+import com.mygdx.game.items.special.Special;
 import com.mygdx.game.items.weapon.Weapon;
 import com.mygdx.game.view.AnimationType;
 
@@ -31,7 +32,6 @@ public class PlayerComponent extends EntityComponent {
 
 	public float reloadSkill1;
 	public float reloadSkill2;
-	public float durationSmoke;
 	public float durationSkill2;
 
 	public float timeBuff;
@@ -39,6 +39,8 @@ public class PlayerComponent extends EntityComponent {
 	public int damageBuff;
 	public float speedBuff;
 	public float speedBuffSkill2 = 0;
+
+	public boolean upgradeSkill1 = false;
 
 
 	@Override
@@ -89,6 +91,19 @@ public class PlayerComponent extends EntityComponent {
 		}
 		else if (newItem instanceof Weapon){
 			weaponList.add((Weapon) newItem);
+			return true;
+		}
+		else if (newItem instanceof Special) {
+			Special special = (Special) newItem;
+			switch (special.type) {
+				case SCROLLFIRE:
+					upgradeSkill1 = true;
+					break;
+				case LIFEPOT:
+					maxLife += 4;
+					life = maxLife;
+					break;
+			}
 			return true;
 		}
 		return false;

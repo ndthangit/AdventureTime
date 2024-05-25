@@ -11,6 +11,8 @@ import com.mygdx.game.CoreGame;
 import com.mygdx.game.audio.AudioType;
 import com.mygdx.game.character.ai.SteerableAgent;
 import com.mygdx.game.character.boss.BossSkillType;
+import com.mygdx.game.character.enemy.Enemy;
+import com.mygdx.game.character.enemy.EnemyType;
 import com.mygdx.game.effect.DamageArea;
 import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
@@ -27,6 +29,7 @@ public class GiantSpirit {
     private static CoreGame thisGame;
     private static SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<>(Vector2.Zero);
     static boolean isCharge;
+    public static boolean isUsedSkill2 = false;
     private static Vector2 position = new Vector2();
 
     public static void GS_movement(CoreGame game, Entity entity, Entity player, float deltaTime) {
@@ -56,8 +59,10 @@ public class GiantSpirit {
             }
         }
 
+        if (bossCmp.life <= bossCmp.maxLife/2) {
+            bossCmp.isSkill2 = true;
+        }
         if (bossCmp.isHit) { // bi danh trung
-            bossCmp.resetState();
 
             if (aniCmp.isFinished && aniCmp.aniType == AnimationType.B_HIT) {
                 bossCmp.isHit = false;
@@ -106,8 +111,8 @@ public class GiantSpirit {
         if (bossCmp.isSkill1 && bossCmp.isAttack) {
             createSkill1(entity);
         }
-        if (bossCmp.isSkill2 && bossCmp.isAttack) {
-
+        if (bossCmp.isSkill2 && !bossCmp.isUsedSkill2) {
+            createSkill2(entity);
         }
     }
 
@@ -122,9 +127,9 @@ public class GiantSpirit {
         Box2DComponent box2DCmp = ECSEngine.box2dCmpMapper.get(entity);
         BossComponent bossCmp = ECSEngine.bossCmpMapper.get(entity);
         BossSkillType type = BossSkillType.BLAST;
-        DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, DirectionType.DOWN, type.getWidth(), type.getHeight(), 0, EffectType.AURA, false, 0);
+        DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, DirectionType.DOWN, type.getWidth(), type.getHeight(), 0, EffectType.AURA, false, 0, false);
         thisGame.getEcsEngine().createDamageArea(area);
-        PlayerCameraSystem.cameraShake(thisGame, 1.f, 1.f, Gdx.graphics.getDeltaTime());
+        PlayerCameraSystem.cameraShake(thisGame, 1f, 1f, Gdx.graphics.getDeltaTime());
         isCharge = true;
         thisGame.getAudioManager().playAudio(AudioType.ALERT);
     }
@@ -132,22 +137,24 @@ public class GiantSpirit {
     private static void createSkill1(Entity entity) {
         BossComponent bossCmp = ECSEngine.bossCmpMapper.get(entity);
         BossSkillType type = BossSkillType.BLAST;
-        DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, DirectionType.DOWN, type.getWidth(), type.getHeight(), type.getDamage(), type.getEffectType(), false, 0);
+        DamageArea area = new DamageArea(position, CoreGame.BIT_BOSS, DirectionType.DOWN, type.getWidth(), type.getHeight(), type.getDamage(), type.getEffectType(), false, 0, false);
         thisGame.getEcsEngine().createDamageArea(area);
         bossCmp.isSkill1 = false;
         thisGame.getAudioManager().playAudio(AudioType.EXPLOSION);
     }
 
     private static void createSkill2(Entity entity) {
-
-    }
-
-    private static Entity getPlayerEntity() {
-        ImmutableArray<Entity> entities = thisGame.getEcsEngine().getEntitiesFor(Family.all(PlayerComponent.class).get());
-        if (entities.size() > 0) {
-            return entities.first();
+        BossComponent bossCmp = ECSEngine.bossCmpMapper.get(entity);
+        Box2DComponent b2dCmp = ECSEngine.box2dCmpMapper.get(entity);
+        int dir[][] = {{1, 1}, {1, -1}, {-1, -1}, {-1, 1}};
+        EnemyType enemyType[] = {EnemyType.SPIRIT, EnemyType.SPIRIT, EnemyType.SKULLBLUE, EnemyType.SKULL};
+        for (int i=0; i<4; i++) {
+            Vector2 position = new Vector2(b2dCmp.body.getPosition().x + dir[i][0] * b2dCmp.width , b2dCmp.body.getPosition().y + dir[i][1] * b2dCmp.height);
+            Enemy enemy = new Enemy(enemyType[i], position, 16, 16);
+            thisGame.getEcsEngine().createEnemy(enemy);
         }
-        return null;
+        bossCmp.isSkill2 = false;
+        bossCmp.isUsedSkill2 = true;
     }
 }
 

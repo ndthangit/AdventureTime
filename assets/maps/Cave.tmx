@@ -152,7 +152,7 @@
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="5" name="gameObject">
+ <objectgroup id="5" name="gameObjects">
   <object id="4" name="CHEST" gid="1228" x="48" y="176" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="10" name="collision">

@@ -45,7 +45,7 @@ public class AttackSystem {
                         break;
                 }
                 Vector2 position = new Vector2(b2dComponent.renderPosition.x + localPositionX, b2dComponent.renderPosition.y + localPositionY);
-                DamageArea area = new DamageArea(position, CoreGame.BIT_ENEMY, enemyCom.direction, 16, 16, enemyCom.attack, EffectType.SLASHCURVED, false, 0);
+                DamageArea area = new DamageArea(position, CoreGame.BIT_ENEMY, enemyCom.direction, 16, 16, enemyCom.attack, EffectType.SLASHCURVED, false, 0, false);
                 game.getEcsEngine().createDamageArea(area);
                 enemyCom.isAttacking=true;
             }

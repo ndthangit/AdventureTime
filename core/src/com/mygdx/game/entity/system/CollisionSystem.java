@@ -10,13 +10,17 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.WorldContactListener.CollisionListener;
 import com.mygdx.game.audio.AudioType;
+import com.mygdx.game.character.boss.Boss;
 import com.mygdx.game.character.boss.BossType;
+import com.mygdx.game.effect.DamageArea;
 import com.mygdx.game.effect.Effect;
 import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.*;
 import com.mygdx.game.items.food.Food;
 import com.mygdx.game.items.food.FoodType;
+import com.mygdx.game.items.special.Special;
+import com.mygdx.game.items.special.SpecialType;
 import com.mygdx.game.items.weapon.Weapon;
 import com.mygdx.game.items.weapon.WeaponType;
 import com.mygdx.game.map.GameObject;
@@ -26,6 +30,8 @@ import com.mygdx.game.map.MapType;
 import com.mygdx.game.screens.ScreenType;
 import com.mygdx.game.view.DirectionType;
 
+import static com.mygdx.game.CoreGame.BIT_PLAYER;
+import static com.mygdx.game.CoreGame.UNIT_SCALE;
 import static com.mygdx.game.items.RandomItem.randomFood;
 import static com.mygdx.game.items.RandomItem.randomHotWeapon;
 
@@ -40,6 +46,12 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+        DamageAreaComponent damageAreaComponent = ECSEngine.damageAreaCmpMapper.get(entity);
+        Box2DComponent box2DComponent = ECSEngine.box2dCmpMapper.get(entity);
+        if (damageAreaComponent != null && damageAreaComponent.upgrade) {
+            DamageArea damageArea = new DamageArea(box2DComponent.body.getPosition(), BIT_PLAYER, DirectionType.DOWN, 32, 32, 4, EffectType.BLAST, false, 0, false);
+            game.getEcsEngine().createDamageArea(damageArea);
+        }
         getEngine().removeEntity(entity);
     }
 
@@ -65,12 +77,12 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
 //            WeaponType weaponType = RandomItem.randomWeapon();
             if (game.getMapManager().getCurrentMapType() == MapType.CAVE) {
-                game.getGameUI().playerCmp.maxLife += 4;
-                game.getGameUI().playerCmp.life =  game.getGameUI().playerCmp.maxLife;
+                Special special = new Special(SpecialType.LIFEPOT, box2DCmp.body.getPosition());
+                game.getEcsEngine().getItemArray().add(special);
             }
             else {
                 WeaponType weaponType = randomHotWeapon();
-                Vector2 positionObj = gameObj.getComponent(Box2DComponent.class).body.getPosition();
+                Vector2 positionObj = box2DCmp.body.getPosition();
                 positionObj.y -= 1f;
                 positionObj.x -= 0f;
                 Weapon weapon1 = new Weapon(weaponType, new Effect(EffectType.SLASHCURVED, CoreGame.BIT_PLAYER, positionObj, DirectionType.DOWN), positionObj, DirectionType.DOWN);
@@ -134,8 +146,13 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
                 game.getAudioManager().playAudio(AudioType.KILL);
                 game.getMapManager().getCurrentMap().setBossKilled(true);
                 game.getGameUI().destroyLifeBar();
-                if(bossCmp.type == BossType.GIANTBLUESAMURAI){
-                    game.setScreen(ScreenType.END);
+                switch (bossCmp.type) {
+                    case GIANTSPIRIT:
+                        Special special = new Special(SpecialType.SCROLLFIRE, box2dEnCmp.body.getPosition());
+                        game.getEcsEngine().getItemArray().add(special);
+                        break;
+                    case GIANTBLUESAMURAI:
+                        game.setScreen(ScreenType.END);
                 }
                 enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
             }
@@ -155,6 +172,11 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             }
         }
         else if (itemCmp.item instanceof Weapon) {
+            playerCmp.addItem(itemCmp.item);
+            game.getAudioManager().playAudio(AudioType.GOLD1);
+            item.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+        }
+        else if (itemCmp.item instanceof Special) {
             playerCmp.addItem(itemCmp.item);
             game.getAudioManager().playAudio(AudioType.GOLD1);
             item.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
@@ -207,11 +229,12 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
                 b2dCmp.light.attachToBody(b2dCmp.body);
             }
             game.getAudioManager().playAudio(AudioType.FX);
-            damageArea.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+            if(damageAreaCmp.isbullet) {
+                damageArea.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+            }
             if (enemyCmp != null) {
                 b2dCmp.body.applyLinearImpulse(-b2dCmp.body.getLinearVelocity().x*b2dCmp.body.getMass(), -b2dCmp.body.getLinearVelocity().y*b2dCmp.body.getMass(), b2dCmp.body.getPosition().x, b2dCmp.body.getPosition().y, true);
                 enemyCmp.life -= damageAreaCmp.damage;
-                enemyCmp.stop = true;
                 uiCmp.isShow = true;
                 if (enemyCmp.life <= 0) {
                     // thêm tạo cửa sổ để them do
@@ -233,8 +256,13 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
                     game.getAudioManager().playAudio(AudioType.KILL);
                     game.getMapManager().getCurrentMap().setBossKilled(true);
                     game.getGameUI().destroyLifeBar();
-                    if(bossCmp.type == BossType.GIANTBLUESAMURAI){
-                        game.setScreen(ScreenType.END);
+                    switch (bossCmp.type) {
+                        case GIANTSPIRIT:
+                            Special special = new Special(SpecialType.SCROLLFIRE, b2dCmp.body.getPosition());
+                            game.getEcsEngine().getItemArray().add(special);
+                            break;
+                        case GIANTBLUESAMURAI:
+                            game.setScreen(ScreenType.END);
                     }
                     enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
                 }

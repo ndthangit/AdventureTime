@@ -21,7 +21,7 @@ public class ProjectileSystem {
             Vector2 dir = new Vector2(playerPos.x > enemyPos.x ? 1 : -1, 0);
             if (enemyCom.timeSinceLastShot >= 2) {
                 Vector2 bulletStart = new Vector2(enemyPos.x - box2DCmp.width/2, enemyPos.y - box2DCmp.height/2);// Mục tiêu là vị trí ngang của Player và dọc của Boss
-                DamageArea area = new DamageArea(enemyPos, CoreGame.BIT_ENEMY, enemyCom.direction, type.getWidth(), type.getHeight(), type.getDamage(), type.getEffectType(), true, type.getSpeed());
+                DamageArea area = new DamageArea(enemyPos, CoreGame.BIT_ENEMY, enemyCom.direction, type.getWidth(), type.getHeight(), type.getDamage(), type.getEffectType(), true, type.getSpeed(), false);
                 game.getEcsEngine().createDamageArea(area); // Tạo đạn với tốc độ 1.0f
                 switch (type) {
                     case FIRE_BALL:
@@ -40,7 +40,7 @@ public class ProjectileSystem {
             // Nếu có, Boss sẽ bắn đạn theo phương ngang đó
             Vector2 dir = new Vector2(0, playerPos.y > enemyPos.y ? 1 : -1);
             if (enemyCom.timeSinceLastShot >= 2) {
-                DamageArea area = new DamageArea(enemyPos, CoreGame.BIT_ENEMY, enemyCom.direction, type.getWidth(), type.getHeight(), type.getDamage(), type.getEffectType(), true, type.getSpeed());
+                DamageArea area = new DamageArea(enemyPos, CoreGame.BIT_ENEMY, enemyCom.direction, type.getWidth(), type.getHeight(), type.getDamage(), type.getEffectType(), true, type.getSpeed(),false);
                 game.getEcsEngine().createDamageArea(area);
                 enemyCom.timeSinceLastShot = 0;
                 enemyCom.timeDelayForBullet = 1f;

@@ -1,19 +1,19 @@
-items.atals.png
-size: 60, 33
+special.png
+size: 192, 96
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 LifePot
   rotate: false
   xy: 0, 0
-  size: 27, 33
-  orig: 27, 33
+  size: 54, 66
+  orig: 54, 66
   offset: 0, 0
   index: -1
-Medipack
+ScrollFire
   rotate: false
-  xy: 30, 0
-  size: 30, 30
-  orig: 30, 30
+  xy: 96, 0
+  size: 96, 96
+  orig: 96, 96
   offset: 0, 0
   index: -1

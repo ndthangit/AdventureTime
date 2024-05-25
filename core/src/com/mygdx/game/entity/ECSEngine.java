@@ -328,6 +328,7 @@ public class ECSEngine extends PooledEngine{
 		damageAreaComponent.bulletSpeed = area.speed;
 		damageAreaComponent.direction = area.direction;
 		damageAreaComponent.type = area.type;
+		damageAreaComponent.upgrade = area.upgrade;
 		damAreaEnity.add(damageAreaComponent);
 
 		// effect component
