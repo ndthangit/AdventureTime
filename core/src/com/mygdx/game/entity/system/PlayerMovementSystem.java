@@ -62,15 +62,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 					b2dComponent.body.getWorldCenter().x,
 					b2dComponent.body.getWorldCenter().y, true);
 		}
-//		if (speed > 0) {
-//			game.getAudioManager().playAudio(AudioType.FOOTSTEPS);
-////			if(playerComponent.speedBuff>0||playerComponent.speedBuffSkill2>0){
-////				game.getAudioManager().playAudio(AudioType.SPEEDBOOST);
-////			}
-//		}
-
-
-		if (playerComponent.speed > 0) {
+		if (speed > 0) {
 			mTimeToNextStep -= deltaTime;
 			if (mTimeToNextStep < 0) {
 				game.getAudioManager().playAudio(AudioType.FOOTSTEPS);
@@ -78,9 +70,23 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 					mTimeToNextStep += TIME_BETWEEN_STEP_SOUNDS;
 				}
 			}
-		} else {
-			mTimeToNextStep = 0; // Đặt lại thời gian cho lần phát tiếng bước chân đầu tiên
+//			if(playerComponent.speedBuff>0||playerComponent.speedBuffSkill2>0){
+//				game.getAudioManager().playAudio(AudioType.SPEEDBOOST);
+//			}
 		}
+
+
+//		if (speed > 0) {
+//			mTimeToNextStep -= deltaTime;
+//			if (mTimeToNextStep < 0) {
+//				game.getAudioManager().playAudio(AudioType.FOOTSTEPS);
+//				while (mTimeToNextStep < 0) {
+//					mTimeToNextStep += TIME_BETWEEN_STEP_SOUNDS;
+//				}
+//			}
+//		} else {
+//			game.getAudioManager().stopCurrentMusic(); // Đặt lại thời gian cho lần phát tiếng bước chân đầu tiên
+//		}
 	}
 
 	@Override
