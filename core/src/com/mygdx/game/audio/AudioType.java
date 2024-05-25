@@ -4,12 +4,12 @@ public enum AudioType {
 	PEACEFUL("Musics/5 - Peaceful.ogg", true, 0.3f),
 	ACCEPT("Sounds/Menu/Accept.wav", false, 0.5f),
 	CANCEL ("Sounds/Menu/Cancel.wav",false,0.3f),
-	GAMEOVER2 ("Sounds/Game/GameOver2.wav", false, 0.3f),
+	GAMEOVER2 ("Sounds/Game/GameOver2.wav", false, 0.6f),
 	SWORD("Sounds/Game/Sword.wav", false, 0.5f),
 	LOL("Musics/4 - Village.ogg", true, 0.3f),
 	LOL1("Musics/1 - Adventure Begin.ogg", true, 0.2f),
 	CHILL("Musics/27 - Chill.ogg", false, 0.3f),
-	GOLD1("Sounds/Game/Gold1.wav",false,0.3f),
+	GOLD1("Sounds/Game/Gold1.wav",false,0.5f),
 	HIT("Sounds/Game/Hit.wav",false, 0.5f),
 	HIT1("Sounds/Game/Hit3.wav",false, 0.5f),
 	HIT2("Sounds/Game/Hit2.wav", false, 0.5f),
@@ -24,7 +24,12 @@ public enum AudioType {
 	POWERUP("Sounds/Game/PowerUp1.wav", false, 0.5f),
 	FIREBALL("Sounds/Game/Fireball.wav",false,0.5f),
 	END("Musics/20 - Good Time.ogg", true, 0.3f),
-	SWORD2("Sounds/Game/Sword2.wav", false, 0.5f),;
+	SWORD2("Sounds/Game/Sword2.wav", false, 0.5f),
+	SPIRIT("Musics/2 - The Cave.ogg", true, 0.5f),
+	ABANDON("Musics/10 - Dark Castle.ogg", true, 0.5f),
+	MAGIC("Sounds/Game/Magic1.wav", false, 0.5f),
+	LEAF("Sounds/Game/FootSteps3.mp3", false, 0.5f),
+	CHEST("Sounds/Menu/Menu12.wav", false, 0.5f);
 	
 	private final String filePath;
 	private final boolean isMusic;

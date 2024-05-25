@@ -56,8 +56,10 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             Effect effect = new Effect(EffectType.CUTLEAVES, CoreGame.BIT_GAME_OBJECT , box2DCmp.body.getPosition(), DirectionType.DOWN);
             game.getEcsEngine().createEffect(effect);
             gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+            game.getAudioManager().playAudio(AudioType.LEAF);
         }
         if (gameObjCmp.type == GameObjectType.CHEST) {
+            game.getAudioManager().playAudio(AudioType.CHEST);
             GameObjectComponent gameObjectCmp = ECSEngine.gameObjCmpMapper.get(gameObj);
             gameObjectCmp.gameObject.setIsUsed(true);
             gameObj.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));

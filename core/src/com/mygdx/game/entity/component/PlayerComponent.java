@@ -5,6 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.mygdx.game.CoreGame;
+import com.mygdx.game.audio.AudioManager;
+import com.mygdx.game.audio.AudioType;
 import com.mygdx.game.character.player.PlayerType;
 import com.mygdx.game.items.Item;
 import com.mygdx.game.items.food.Food;
@@ -51,7 +54,9 @@ public class PlayerComponent extends EntityComponent {
 	}
 
 	public boolean useItem(int i) {
+
 		if (inventory[i] != null) {
+
 			Item item = inventory[i];
 			if (item instanceof Food){
 				Food food = (Food) item;

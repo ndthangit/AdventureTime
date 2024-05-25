@@ -58,6 +58,12 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 				case CAVE:
 					audioManager.playAudio(AudioType.DUNGEON);
 					break;
+				case ABANDONVIL:
+					audioManager.playAudio(AudioType.ABANDON);
+					break;
+				case SPIRIT_BOSS:
+					audioManager.playAudio(AudioType.SPIRIT);
+					break;
 			} // them am thanh map
 		}
 	}
@@ -80,16 +86,16 @@ public class MainGameScreen extends AbstractScreen<GameUI> implements MapListene
 
 		switch (gameKey) {
 			case USE_ITEM_1:
-				playerCmp.useItem(0);
+				if(playerCmp.useItem(0)) game.getAudioManager().playAudio(AudioType.MAGIC);
 				break;
 			case USE_ITEM_2:
-				playerCmp.useItem(1);
+				if(playerCmp.useItem(1)) game.getAudioManager().playAudio(AudioType.MAGIC);
 				break;
 			case USE_ITEM_3:
-				playerCmp.useItem(2);
+				if(playerCmp.useItem(2)) game.getAudioManager().playAudio(AudioType.MAGIC);
 				break;
 			case USE_ITEM_4:
-				playerCmp.useItem(3);
+				if(playerCmp.useItem(3)) game.getAudioManager().playAudio(AudioType.MAGIC);
 				break;
 			// error
             case SWAP_WEAPON:
