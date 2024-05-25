@@ -18,13 +18,14 @@ public enum AudioType {
 	TEMPLE("Musics/12 - Temple.ogg", true, 0.5f),
 	DUNGEON("Musics/21 - Dungeon.ogg", true, 0.5f),
 	FX("Sounds/Game/Fx.wav", false, 0.5f),
-	FOOTSTEPS("Sounds/Game/runningsteps.mp3", false, 1.0f),
+	FOOTSTEPS("Sounds/Game/FootSteps3.wav", false, 0.09f),
 	EXPLOSION("Sounds/Game/Explosion2.wav",false ,0.5f ),
 	ALERT("Sounds/Game/Alert.wav", false, 0.5f),
 	POWERUP("Sounds/Game/PowerUp1.wav", false, 0.5f),
 	FIREBALL("Sounds/Game/Fireball.wav",false,0.5f),
 	END("Musics/20 - Good Time.ogg", true, 0.3f),
-	SWORD2("Sounds/Game/Sword2.wav", false, 0.5f),;
+	SWORD2("Sounds/Game/Sword2.wav", false, 0.5f),
+	SPEEDBOOST("Sounds/Game/speedboost.mp3", false, 0.3f);
 	
 	private final String filePath;
 	private final boolean isMusic;
