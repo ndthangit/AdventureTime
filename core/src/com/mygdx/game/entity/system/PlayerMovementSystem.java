@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.CoreGame;
+import com.mygdx.game.audio.AudioType;
 import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
 import com.mygdx.game.entity.component.Box2DComponent;
@@ -60,6 +61,12 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 												 speedy - b2dComponent.body.getLinearVelocity().y * b2dComponent.body.getMass(), 
 												 b2dComponent.body.getWorldCenter().x, 
 												 b2dComponent.body.getWorldCenter().y, true);
+		}
+		if(speed>0){
+			game.getAudioManager().playAudio(AudioType.FOOTSTEPS);
+//			if(playerComponent.speedBuff>0||playerComponent.speedBuffSkill2>0){
+//				game.getAudioManager().playAudio(AudioType.SPEEDBOOST);
+//			}
 		}
 	}
 
