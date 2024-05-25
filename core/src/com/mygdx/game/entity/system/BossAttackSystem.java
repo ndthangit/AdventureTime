@@ -29,6 +29,7 @@ public class BossAttackSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float v) {
         BossComponent bossCmp = ECSEngine.bossCmpMapper.get(entity);
+        EffectComponent effectCmp = ECSEngine.effectCmpMapper.get(entity);
         switch (bossCmp.type) {
             case GIANTBLUESAMURAI:
                 GiantBlueSamurai.GBS_attack(game, entity, v);
@@ -46,7 +47,14 @@ public class BossAttackSystem extends IteratingSystem {
             }
             bossCmp.resetState();
         }
-    // them am thanh khi boss dung ki nang
+        if (bossCmp.invincible) {
+            bossCmp.duration -= v;
+            if (bossCmp.duration <= 0) {
+                bossCmp.duration = 2;
+                bossCmp.invincible = false;
+                effectCmp.type = EffectType.NONE;
+            }
+        }
     }
 
     public void destroyArea () {

@@ -143,8 +143,8 @@ public class GameUI extends Table {
 		Image wpBG = new Image(new Texture(Gdx.files.internal("Backgrounds/wpBG2.png")));
 		stacks[0] = new Stack();
 		stacks[0].add(wpBG);
-		TextureAtlas atlas = game.getAssetManager().get(playerCmp.weaponList.get(playerCmp.indWeapon).atlasPath, TextureAtlas.class);
-		TextureAtlas.AtlasRegion region = atlas.findRegion(playerCmp.weaponList.get(playerCmp.indWeapon).key);
+		TextureAtlas atlas = game.getAssetManager().get(playerCmp.weapon.atlasPath, TextureAtlas.class);
+		TextureAtlas.AtlasRegion region = atlas.findRegion(playerCmp.weapon.key);
 
 		Drawable drawable = new TextureRegionDrawable(region);
 		bagItems[0] = new ImageButton(drawable);
@@ -170,8 +170,8 @@ public class GameUI extends Table {
 
 		if (playerCmp.weaponList.size > 0) {
 			stacks[0].removeActor(bagItems[0]);
-			TextureAtlas atlasWP = game.getAssetManager().get(playerCmp.weaponList.get(playerCmp.indWeapon).atlasPath, TextureAtlas.class);
-			TextureAtlas.AtlasRegion regionWP = atlasWP.findRegion(playerCmp.weaponList.get(playerCmp.indWeapon).key);
+			TextureAtlas atlasWP = game.getAssetManager().get(playerCmp.weapon.atlasPath, TextureAtlas.class);
+			TextureAtlas.AtlasRegion regionWP = atlasWP.findRegion(playerCmp.weapon.key);
 			Drawable drawableWP = new TextureRegionDrawable(regionWP);
 			bagItems[0] = new ImageButton(drawableWP);
 			stacks[0].add(bagItems[0]);

@@ -18,7 +18,8 @@ public class BossComponent extends EntityComponent {
     public boolean isHit;
     public float timeRest;
     public DirectionType direction;
-    public boolean isRest;
+    public float duration = 2;
+    public boolean invincible;
 
     public Boss boss;
 

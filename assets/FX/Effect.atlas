@@ -1,5 +1,5 @@
 Effect.png
-size: 1260, 1056
+size: 1260, 1152
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
@@ -66,16 +66,23 @@ Rock
   orig: 1260, 90
   offset: 0, 0
   index: -1
-Blast
+Shield
   rotate: false
   xy: 0, 864
+  size: 432, 78
+  orig: 432, 78
+  offset: 0, 0
+  index: -1
+Blast
+  rotate: false
+  xy: 0, 960
   size: 384, 96
   orig: 384, 96
   offset: 0, 0
   index: -1
 WhiteAura
   rotate: false
-  xy: 0, 960
+  xy: 0, 1056
   size: 384, 96
   orig: 384, 96
   offset: 0, 0

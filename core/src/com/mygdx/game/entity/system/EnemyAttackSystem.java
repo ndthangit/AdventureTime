@@ -10,9 +10,11 @@ import com.mygdx.game.CoreGame;
 import com.mygdx.game.character.enemy.EnemySkillType;
 import com.mygdx.game.character.enemy.system.AttackSystem;
 import com.mygdx.game.character.enemy.system.ProjectileSystem;
+import com.mygdx.game.character.enemy.system.ProtectSystem;
 import com.mygdx.game.effect.DamageArea;
 import com.mygdx.game.effect.EffectType;
 import com.mygdx.game.entity.ECSEngine;
+import com.mygdx.game.entity.component.BossComponent;
 import com.mygdx.game.entity.component.Box2DComponent;
 import com.mygdx.game.entity.component.EnemyComponent;
 import com.mygdx.game.entity.component.PlayerComponent;
@@ -44,6 +46,10 @@ public class EnemyAttackSystem extends IteratingSystem {
                 case ATTACK:
                     AttackSystem.attackSystem(game, enemyCom, b2dComponent);
                     break;
+                case PROTECT:
+                    Entity bossEntity = getBossEntity();
+                    ProtectSystem.protect(game, enemyCom, bossEntity, v);
+                    break;
             }
         }
 
@@ -53,6 +59,14 @@ public class EnemyAttackSystem extends IteratingSystem {
 
     public Entity getPlayerEntity() {
         ImmutableArray<Entity> entities = game.getEcsEngine().getEntitiesFor(Family.all(PlayerComponent.class).get());
+        if (entities.size() > 0) {
+            return entities.first();
+        }
+        return null;
+    }
+
+    public Entity getBossEntity() {
+        ImmutableArray<Entity> entities = game.getEcsEngine().getEntitiesFor(Family.all(BossComponent.class).get());
         if (entities.size() > 0) {
             return entities.first();
         }

@@ -18,7 +18,6 @@ import com.mygdx.game.effect.Effect;
 import com.mygdx.game.entity.ECSEngine;
 
 import com.badlogic.ashley.core.Entity;
-import com.mygdx.game.entity.component.PlayerComponent;
 import com.mygdx.game.items.weapon.Weapon;
 import com.mygdx.game.items.weapon.WeaponType;
 import com.mygdx.game.view.DirectionType;
@@ -145,6 +144,7 @@ public class MapManager {
 		for (final Boss boss: currentMap.getBosses()) {
 			if (boss.isDead()) continue;
 			ecsEngine.createBoss(boss);
+			if (game.getGameUI() == null) continue;
 			game.getGameUI().createLifeBar(boss);
 		}
 	}
@@ -200,5 +200,9 @@ public class MapManager {
 
 	public void setNextMapType(MapType nextMapType) {
 		this.nextMapType = nextMapType;
+	}
+
+	public EnumMap<MapType, Map> getMapCache() {
+		return mapCache;
 	}
 }

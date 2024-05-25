@@ -19,7 +19,9 @@ import com.mygdx.game.items.food.Food;
 import com.mygdx.game.items.food.FoodType;
 import com.mygdx.game.items.weapon.Weapon;
 import com.mygdx.game.items.weapon.WeaponType;
+import com.mygdx.game.map.GameObject;
 import com.mygdx.game.map.GameObjectType;
+import com.mygdx.game.map.Map;
 import com.mygdx.game.map.MapType;
 import com.mygdx.game.screens.ScreenType;
 import com.mygdx.game.view.DirectionType;
@@ -93,14 +95,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         aniComponent.isDamaged = true;
 
         if (playerCmp.life <= 0) {
-            for (int i=0; i<4; i++) {
-                playerCmp.inventory[i] = null;
-            }
-            playerCmp.weaponList.clear();
-            game.getGameUI().updateBag();
-            game.getGameUI().updateNumTable();
-            game.getGameUI().destroyLifeBar();
-            player.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+            reset(player, playerCmp);
         }
         game.getGameUI().updateHeart();
     }
@@ -130,6 +125,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             }
         }
         else {
+            if (bossCmp.invincible) return;
             bossCmp.life -= weaponCmp.attack;
             bossCmp.isHit = true;
             aniCmp.isFinished = false;
@@ -189,14 +185,7 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
             aniCmp.isDamaged = true;
 
             if (playerCmp.life <= 0) {;
-                for (int i=0; i<4; i++) {
-                    playerCmp.inventory[i] = null;
-                }
-                playerCmp.weaponList.clear();
-                game.getGameUI().updateBag();
-                game.getGameUI().updateNumTable();
-                game.getGameUI().destroyLifeBar();
-                player.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+                reset(player, playerCmp);
             }
             game.getGameUI().updateHeart();
         }
@@ -235,15 +224,16 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
                 }
             }
             else {
+                if (bossCmp.invincible) return;
                 bossCmp.life -= damageAreaCmp.damage;
                 bossCmp.isHit = true;
                 aniCmp.isFinished = false;
                 game.getGameUI().updateLifeBar(bossCmp);
                 if (bossCmp.life <= 0) {
                     game.getAudioManager().playAudio(AudioType.KILL);
-                    bossCmp.boss.setDead(true);
+                    game.getMapManager().getCurrentMap().setBossKilled(true);
                     game.getGameUI().destroyLifeBar();
-                    if(bossCmp.type == BossType.GIANTSPIRIT){
+                    if(bossCmp.type == BossType.GIANTBLUESAMURAI){
                         game.setScreen(ScreenType.END);
                     }
                     enemy.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
@@ -268,5 +258,22 @@ public class CollisionSystem extends IteratingSystem implements CollisionListene
         }
     }
 
+    public void reset(Entity player, PlayerComponent playerCmp) {
+        for (int i=0; i<4; i++) {
+            playerCmp.inventory[i] = null;
+        }
+        playerCmp.indWeapon = 0;
+        playerCmp.weaponList.clear();
+        game.getGameUI().updateBag();
+        game.getGameUI().updateNumTable();
+        game.getGameUI().destroyLifeBar();
+        for (Map map: game.getMapManager().getMapCache().values()) {
+            for (GameObject gameObject : map.getGameObjects()) {
+                gameObject.setIsUsed(false);
+            }
+            map.setBossKilled(false);
+        }
+        player.add(((ECSEngine) getEngine()).createComponent(RemoveComponent.class));
+    }
 
 }

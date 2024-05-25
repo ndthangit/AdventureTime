@@ -12,11 +12,6 @@ public class EnemyComponent extends EntityComponent {
     public EnemyType type;
     //
     public Vector2 startPosition = new Vector2();
-    //
-    public Vector2 wanderingDirection = new Vector2();
-    public float timeSinceLastDirectionChange = 0;
-    public float directionChangeInterval = 5; // giây
-    public float wanderDir;
     public boolean stop;
     public boolean focus;
 
@@ -25,9 +20,7 @@ public class EnemyComponent extends EntityComponent {
     public float time;
     public DirectionType direction;
     public float reload = 0.5f;
-
     //Bullet
-    public float shootDelay = 1f;
     public float timeSinceLastShot = 0f;
     public float timeDelayForBullet = 0f;
     @Override

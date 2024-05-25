@@ -17,6 +17,7 @@ public enum EffectType {
     BLAST("FX/Effect.atlas", "Blast", 0.1f, 16, 16, 0, Animation.PlayMode.NORMAL),
     CUTLEAVES( "FX/Effect.atlas", "Grass", 0.1f, 6, 6, 0, Animation.PlayMode.NORMAL),
     LOOP_AURA("FX/Effect.atlas", "WhiteAura", 0.1f, 16, 16, 0, Animation.PlayMode.LOOP),
+    SHIELD("FX/Effect.atlas", "Shield", 0.1f, 12, 13, 0, Animation.PlayMode.LOOP)
     ;
 
     private final String atlasPath;

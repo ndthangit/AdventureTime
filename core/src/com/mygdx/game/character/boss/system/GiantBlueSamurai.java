@@ -192,9 +192,10 @@ public class GiantBlueSamurai {
         BossComponent bossCmp = ECSEngine.bossCmpMapper.get(entity);
         Box2DComponent b2dCmp = ECSEngine.box2dCmpMapper.get(entity);
         int dir[][] = {{1, 1}, {1, -1}, {-1, -1}, {-1, 1}};
-        for (int sub[] : dir) {
-            Vector2 position = new Vector2(b2dCmp.body.getPosition().x + sub[0] * b2dCmp.width , b2dCmp.body.getPosition().y + sub[1] * b2dCmp.height);
-            Enemy enemy = new Enemy(EnemyType.REDSAMURAI, position, 16, 16);
+        EnemyType enemyType[] = {EnemyType.REDSAMURAI, EnemyType.SAMURAI, EnemyType.REDNINJA, EnemyType.ORANGESORCERER};
+        for (int i=0; i<4; i++) {
+            Vector2 position = new Vector2(b2dCmp.body.getPosition().x + dir[i][0] * b2dCmp.width , b2dCmp.body.getPosition().y + dir[i][1] * b2dCmp.height);
+            Enemy enemy = new Enemy(enemyType[i], position, 16, 16);
             thisGame.getEcsEngine().createEnemy(enemy);
         }
         bossCmp.isSkill2 = false;

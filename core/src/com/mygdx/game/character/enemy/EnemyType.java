@@ -11,7 +11,7 @@ public enum EnemyType {
     REDNINJA2("Actor/Characters/RedNinja2/redninja2.atlas", "REDNINJA2", EnemySkillType.PROJECTILE, EnemyDetailSkillType.SHURIKEN, 28, 2, 2, 6),
     REDSAMURAI("Actor/Characters/RedSamurai/redsamurai.atlas", "REDSAMURAI", EnemySkillType.ATTACK, EnemyDetailSkillType.ATTACK_SLASH, 32, 2, 1.5f, 3),
     SAMURAI("Actor/Characters/Samurai/samurai.atlas", "SAMURAI",EnemySkillType.ATTACK, EnemyDetailSkillType.ATTACK_SLASH,32, 2, 1.5f, 3),
-    ORANGESORCERER("Actor/Characters/OrangeSorcerer/orangeSorcerer.atlas", "ORANGESORCERER", EnemySkillType.SPAWN, EnemyDetailSkillType.SWAP_ROCK, 20, 4, 1, 6),
+    ORANGESORCERER("Actor/Characters/OrangeSorcerer/orangeSorcerer.atlas", "ORANGESORCERER", EnemySkillType.PROTECT, EnemyDetailSkillType.SWAP_ROCK, 20, 4, 1, 6),
     SKELETON("Actor/Characters/Skeleton/skeleton.atlas", "SKELETON", EnemySkillType.NULL,null, 20, 4, 1, 6),
     CYCLOPE("Actor/Monsters/Cyclope/Cyclope.atlas", "CYCLOPE", EnemySkillType.PROJECTILE, EnemyDetailSkillType.FIRE_BALL, 20, 2, 1, 6),
     SKULL("Actor/Monsters/Skull/skull.atlas", "SKULL", EnemySkillType.PROJECTILE, EnemyDetailSkillType.FIRE_BALL, 20, 2, 1, 6),

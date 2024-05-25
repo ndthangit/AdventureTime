@@ -303,6 +303,17 @@ public class ECSEngine extends PooledEngine{
 		box2DComponent.body.createFixture(CoreGame.FIXTURE_DEF);
 		pShape.dispose();
 		bossEnity.add(box2DComponent);
+
+		// effect component
+		final EffectComponent effectComponent = this.createComponent(EffectComponent.class);
+		effectComponent.type = EffectType.NONE;
+		effectComponent.position = new Vector2(box2DComponent.body.getPosition().x, box2DComponent.body.getPosition().y);
+		effectComponent.direction = DOWN;
+		effectComponent.path = EffectType.SHIELD.getAtlasPath();
+		effectComponent.width = boss.getWidth() * UNIT_SCALE;
+		effectComponent.height = boss.getWidth() * UNIT_SCALE;
+		effectComponent.owner = CoreGame.BIT_BOSS;
+		bossEnity.add(effectComponent);
 		this.addEntity(bossEnity);
 	}
 
@@ -393,12 +404,29 @@ public class ECSEngine extends PooledEngine{
 		final float angleRad = -weapon.getDirection().getCode() * MathUtils.degreesToRadians * 90;
 		final Box2DComponent box2DComponent = this.createComponent(Box2DComponent.class);
 		CoreGame.BODY_DEF.type = BodyDef.BodyType.DynamicBody;
-		CoreGame.BODY_DEF.position.set(weapon.getPosition().x + weapon.posDirection[weapon.direction.getCode()].x , weapon.getPosition().y + weapon.posDirection[weapon.direction.getCode()].y);
+		float height = (weapon.height - 12*UNIT_SCALE)/2;
+		switch (weapon.direction) {
+			case LEFT:
+				CoreGame.BODY_DEF.position.set(weapon.getPosition().x + weapon.posDirection[weapon.direction.getCode()].x - height, weapon.getPosition().y + weapon.posDirection[weapon.direction.getCode()].y);
+				break;
+			case RIGHT:
+				CoreGame.BODY_DEF.position.set(weapon.getPosition().x + weapon.posDirection[weapon.direction.getCode()].x + height, weapon.getPosition().y + weapon.posDirection[weapon.direction.getCode()].y);
+				break;
+			case UP:
+				CoreGame.BODY_DEF.position.set(weapon.getPosition().x + weapon.posDirection[weapon.direction.getCode()].x, weapon.getPosition().y + weapon.posDirection[weapon.direction.getCode()].y + height);
+				break;
+			case DOWN:
+				CoreGame.BODY_DEF.position.set(weapon.getPosition().x + weapon.posDirection[weapon.direction.getCode()].x + height, weapon.getPosition().y + weapon.posDirection[weapon.direction.getCode()].y - height);
+				break;
+
+		}
+
 		box2DComponent.body = world.createBody(CoreGame.BODY_DEF);
 		box2DComponent.body.setUserData(weaponEntity);
 		box2DComponent.width = weapon.getWidth();
 		box2DComponent.height = weapon.getHeight();
-		Vector2 position = new Vector2(weapon.getPosition().x + weapon.effDirection[weapon.direction.getCode()].x , weapon.getPosition().y + weapon.effDirection[weapon.direction.getCode()].y);
+
+		Vector2 position = new Vector2(weapon.getPosition().x + weapon.effDirection[weapon.direction.getCode()].x, weapon.getPosition().y + weapon.effDirection[weapon.direction.getCode()].y);
 		weapon.effect.setPosition(position);
 
 		// save position before rotation - Tiled is rotated around the bottom left corner instead of the center of a Tile
