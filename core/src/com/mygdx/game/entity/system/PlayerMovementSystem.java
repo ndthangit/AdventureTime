@@ -24,7 +24,8 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 	private int xFactor;
 	private int yFactor;
 	private float time;
-
+	private float mTimeToNextStep = 0f;
+	private static final float TIME_BETWEEN_STEP_SOUNDS = 0.3f;
 	public PlayerMovementSystem(final CoreGame game) {
 		super(Family.all(PlayerComponent.class, Box2DComponent.class).get());
 		game.getInputManager().addInputListener(this);
@@ -43,8 +44,7 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 		if (playerComponent.timeBuff <= 0) {
 			playerComponent.resetBuff();
 			effectComponent.type = EffectType.NONE;
-		}
-		else {
+		} else {
 			effectComponent.type = EffectType.LOOP_AURA;
 		}
 
@@ -58,15 +58,28 @@ public class PlayerMovementSystem extends IteratingSystem implements KeyInputLis
 
 		if (directionChange) {
 			b2dComponent.body.applyLinearImpulse(speedx - b2dComponent.body.getLinearVelocity().x * b2dComponent.body.getMass(),
-												 speedy - b2dComponent.body.getLinearVelocity().y * b2dComponent.body.getMass(), 
-												 b2dComponent.body.getWorldCenter().x, 
-												 b2dComponent.body.getWorldCenter().y, true);
+					speedy - b2dComponent.body.getLinearVelocity().y * b2dComponent.body.getMass(),
+					b2dComponent.body.getWorldCenter().x,
+					b2dComponent.body.getWorldCenter().y, true);
 		}
-		if(speed>0){
-			game.getAudioManager().playAudio(AudioType.FOOTSTEPS);
-//			if(playerComponent.speedBuff>0||playerComponent.speedBuffSkill2>0){
-//				game.getAudioManager().playAudio(AudioType.SPEEDBOOST);
-//			}
+//		if (speed > 0) {
+//			game.getAudioManager().playAudio(AudioType.FOOTSTEPS);
+////			if(playerComponent.speedBuff>0||playerComponent.speedBuffSkill2>0){
+////				game.getAudioManager().playAudio(AudioType.SPEEDBOOST);
+////			}
+//		}
+
+
+		if (playerComponent.speed > 0) {
+			mTimeToNextStep -= deltaTime;
+			if (mTimeToNextStep < 0) {
+				game.getAudioManager().playAudio(AudioType.FOOTSTEPS);
+				while (mTimeToNextStep < 0) {
+					mTimeToNextStep += TIME_BETWEEN_STEP_SOUNDS;
+				}
+			}
+		} else {
+			mTimeToNextStep = 0; // Đặt lại thời gian cho lần phát tiếng bước chân đầu tiên
 		}
 	}
 
