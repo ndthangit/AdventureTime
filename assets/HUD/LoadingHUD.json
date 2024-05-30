@@ -5,6 +5,12 @@
             "g":1,
             "b":1,
             "a":1
+        },
+        "black": {
+            "r":0,
+            "g":0,
+            "b":0,
+            "a":1
         }
     },
     "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
@@ -23,6 +29,10 @@
         "huge": {
             "font": "font_36",
             "fontColor": "white"
+        },
+        "black": {
+            "font": "font_36",
+            "fontColor": "black"
         },
         "title": {
             "font": "font_48",

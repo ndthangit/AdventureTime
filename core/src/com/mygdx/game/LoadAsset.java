@@ -40,12 +40,14 @@ public class LoadAsset {
 		assetManager.load("HUD/LoadingHUD.json", Skin.class, skinParameter);
 		assetManager.finishLoading();
 		loadingSkin = assetManager.get("HUD/LoadingHUD.json", Skin.class);
+		context.setSkin(loadingSkin);
 	}
 	
 	public void getGameAssetUI() {
 		//setup markup color
 		Colors.put("Red", Color.RED);
 		Colors.put("Blue", Color.BLUE);
+		Colors.put("Black", Color.BLACK);
 		
 		//generate ttf bitmaps
 		final ObjectMap<String, Object> resources = new ObjectMap<String, Object>();

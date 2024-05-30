@@ -1,10 +1,14 @@
 package com.mygdx.game.ui;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.screens.ScreenType;
 
@@ -21,7 +25,9 @@ public class EndUI extends Table {
         this.game = game;
 
         menu = new Table();
+//        menu.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("OOP_Project 3 (2).png")))));
         screen = new Table();
+        screen.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("OOP_Project 3 (2).png")))));
         createScreen();
         add(screen).expand().fill();
         setDebug(false, false);

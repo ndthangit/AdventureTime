@@ -1,12 +1,19 @@
 package com.mygdx.game.ui;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.mygdx.game.CoreGame;
 import com.mygdx.game.screens.ScreenType;
+
 public class DeadUI extends Table {
     private final Skin skin;
     private final CoreGame game;
@@ -21,6 +28,7 @@ public class DeadUI extends Table {
 
         menu = new Table();
         screen = new Table();
+        screen.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("OOP_Project 3 (2).png")))));
         createScreen();
         add(screen).expand().fill();
         setDebug(false, false);

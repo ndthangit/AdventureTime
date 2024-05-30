@@ -1,10 +1,14 @@
 package com.mygdx.game.ui;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.CoreGame;
 
 public class MenuUI extends Table  {
@@ -20,7 +24,9 @@ public class MenuUI extends Table  {
         this.game = game;
 
         menu = new Table();
+
         screen = new Table();
+        screen.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("OOP_Project.png")))));
         createScreen();
         add(screen).expand().fill();
         setDebug(false, false);
@@ -29,12 +35,13 @@ public class MenuUI extends Table  {
     void createScreen() {
         screen.clearChildren();
         createTitle();
+//        screen.add(bg).expand().fill();
         screen.add(menu).expand().fillX().bottom().padBottom(100).row();
         createMenu();
     }
 
     void createTitle() {
-        TextButton title = new TextButton("ADVENTURE TIME", skin, "huge");
+        TextButton title = new TextButton("ADVENTURE TIME", skin, "black huge");
         screen.add(title).expandX().fillX().padTop(200).top().row();
     }
 
@@ -46,7 +53,7 @@ public class MenuUI extends Table  {
     }
 
     void createStartGame() {
-        TextButton startButton = new TextButton("START", skin, "huge");
+        TextButton startButton = new TextButton("START", skin, "black huge");
         startButton.getLabel().setWrap(true);
         startButton.addListener(new InputListener() {
             @Override
@@ -58,7 +65,7 @@ public class MenuUI extends Table  {
         menu.add(startButton).expand().fillX().padBottom(50).row();
     }
     void createOptionGame() {
-        TextButton optionButton = new TextButton("OPTION", skin, "huge");
+        TextButton optionButton = new TextButton("OPTION", skin, "black huge");
         optionButton.getLabel().setWrap(true);
         optionButton.addListener(new InputListener() {
             @Override
@@ -71,7 +78,7 @@ public class MenuUI extends Table  {
     }
 
     void createQuitGame() {
-        TextButton quitButton = new TextButton("QUIT", skin, "huge");
+        TextButton quitButton = new TextButton("QUIT", skin, "black huge");
         quitButton.getLabel().setWrap(true);
         quitButton.addListener(new InputListener() {
             @Override
