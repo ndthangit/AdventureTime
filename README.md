@@ -4,6 +4,8 @@
 
 This is a Phaser Editor 2D v3 project template.
 
+## you can see the demo on https://www.youtube.com/watch?v=SpDS0n0kZI0
+
 ## Configuration
 
 * It includes the latest Phaser v3 runtime as a node package.
